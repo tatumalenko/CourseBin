@@ -9,7 +9,7 @@ const passport = require('./server/passport');
 const configs = require('./configs/configs');
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 // Route requires
 const user = require('./server/routes/user');
 
