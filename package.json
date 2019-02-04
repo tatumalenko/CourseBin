@@ -39,6 +39,6 @@
     "start": "concurrently \"yarn run server\" \"serve -s ./client/build\"",
     "server": "node server.js",
     "client": "node start-client.js",
-    "heroku-postbuild": "cd client && yarn build"
+    "heroku-postbuild": "cd client && yarn install && yarn build"
   }
 }
