@@ -20,7 +20,8 @@
   ],
   "devDependencies": {
     "concurrently": "^4.1.0",
-    "eslint-config-airbnb": "^17.1.0"
+    "eslint-config-airbnb": "^17.1.0",
+    "serve": "^10.1.1"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -35,8 +36,9 @@
     "passport-local": "^1.0.0"
   },
   "scripts": {
-    "start": "concurrently \"yarn run server\" \"yarn run client\"",
+    "start": "concurrently \"yarn run server\" \"serve -s ./client/build\"",
     "server": "node server.js",
-    "client": "node start-client.js"
+    "client": "node start-client.js",
+    "heroku-postbuild": "cd client && yarn build"
   }
 }
