@@ -36,9 +36,11 @@
     "passport-local": "^1.0.0"
   },
   "scripts": {
-    "start": "concurrently \"yarn run server\" \"serve -s ./client/build\"",
+    "start": "yarn build && concurrently \"yarn run server\" \"serve -s ./client/build\"",
+    "build": "cd client && yarn build",
     "server": "node server.js",
     "client": "node start-client.js",
-    "heroku-postbuild": "cd client && yarn install && yarn build"
+    "dev": "concurrently \"yarn run server\" \"yarn run client\"",
+    "heroku-postbuild": "cd client && yarn install"
   }
 }
