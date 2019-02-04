@@ -1,43 +1,42 @@
 {
-  "name": "soen341-program-planner",
+  "name": "coursebin",
   "version": "0.0.1",
   "description": "SOEN341 Program Planner App - CourseBin.",
-  "license": "GNU GPL V3.0",
+  "license": "GPL-3.0-only",
   "readmeFilename": "README.md",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tatumalenko/soen341-program-planner.git"
+    "url": "https://github.com/tatumalenko/coursebin.git"
   },
   "bugs": {
-    "url": "https://github.com/tatumalenko/soen341-program-planner/issues"
+    "url": "https://github.com/tatumalenko/coursebin/issues"
   },
   "tags": [
     "orm",
-    "typescript",
-    "typescript-orm",
     "rest-api",
     "mongodb",
-    "express"
+    "express",
+    "react"
   ],
   "devDependencies": {
-    "@types/body-parser": "^1.16.8",
-    "@types/express": "^4.11.1",
-    "@types/node": "^9.6.5",
-    "tslint": "^5.12.1",
-    "typescript": "^2.9.2"
+    "concurrently": "^4.1.0",
+    "eslint-config-airbnb": "^17.1.0"
   },
   "dependencies": {
-    "bcrypt": "^3.0.3",
-    "body-parser": "^1.18.2",
-    "express": "^4.16.3",
-    "jsonwebtoken": "^8.4.0",
-    "mongodb": "^3.1.12",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "connect-mongo": "^2.0.3",
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "mongoose": "^5.4.9",
+    "morgan": "^1.9.1",
     "passport": "^0.4.0",
-    "passport-jwt": "^4.0.0",
-    "routing-controllers": "^0.7.7",
-    "typeorm": "^0.2.0"
+    "passport-local": "^1.0.0"
   },
   "scripts": {
-    "start": "tsc && node dist/server/server.js"
+    "start": "concurrently \"yarn run server\" \"yarn run client\"",
+    "server": "node server.js",
+    "client": "node start-client.js"
   }
 }
