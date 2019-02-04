@@ -35,7 +35,7 @@
     "passport-local": "^1.0.0"
   },
   "scripts": {
-    "start": "concurrently \"yarn run server\" \"yarn run client\"",
+    "start": "yarn run server && yarn run client",
     "server": "node server.js",
     "client": "node start-client.js"
   }
