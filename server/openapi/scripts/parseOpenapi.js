@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const compJson = require('../openapi/comp.json');
-const soenJson = require('../openapi/soen.json');
+const compJson = require('../comp.json');
+const soenJson = require('../soen.json');
 
 const jsonData = {
   comp: compJson,
