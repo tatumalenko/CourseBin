@@ -8,4 +8,5 @@ module.exports = {
       user: 'users',
     },
   },
+  nodeEnv: 'production',
 };

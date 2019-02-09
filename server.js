@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
@@ -39,6 +40,16 @@ app.use(passport.session()); // calls the deserializeUser
 
 // Routes
 app.use('/user', user);
+
+if (configs.nodeEnv === 'production') {
+  // Exprees will serve up production assets
+  app.use(express.static('client/build'));
+
+  // Express serve up index.html file if it doesn't recognize route
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  });
+}
 
 // Starting Server
 app.listen(PORT, () => {
