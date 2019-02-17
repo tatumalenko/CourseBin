@@ -8,7 +8,7 @@ This is an important guideline to follow because we want to contain revisions of
 That being said, the basic process of creating branches, committing code to them, and opening pull-requests are are follow:
 * If you haven't already, clone the repository locally in some folder of your choosing:
 ```
-git clone https://github.com/tatumalenko/soen341-program-planner.git
+git clone https://github.com/tatumalenko/CourseBin.git
 ```
 * After each sprint has been planned and you have been assigned issues, it is time to create a new branch to start your work on
     * Issues in GitHub all have numbers associated to them. Take the name of the issue and create the name the branch based off it with the issue number appended to it. For example, say we have "#1 Good first issue" as the title of an issue, an ideal name for your new branch would be `good-first-issue-1`
