@@ -1,0 +1,47 @@
+{
+  "name": "coursebin",
+  "version": "0.0.1",
+  "description": "SOEN341 Program Planner App - CourseBin.",
+  "license": "GPL-3.0-only",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tatumalenko/coursebin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tatumalenko/coursebin/issues"
+  },
+  "tags": [
+    "orm",
+    "rest-api",
+    "mongodb",
+    "express",
+    "react"
+  ],
+  "devDependencies": {
+    "concurrently": "^4.1.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "serve": "^10.1.1"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "connect-mongo": "^2.0.3",
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "mongoose": "^5.4.9",
+    "morgan": "^1.9.1",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0"
+  },
+  "scripts": {
+    "start": "yarn prodstart",
+    "prodstart": "yarn build && yarn run server",
+    "build": "cd client && yarn build",
+    "server": "node server.js",
+    "client": "node start-client.js",
+    "dev": "concurrently \"yarn run server\" \"yarn run client\"",
+    "heroku-postbuild": "cd client && yarn install"
+  }
+}

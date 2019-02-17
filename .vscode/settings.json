@@ -1,0 +1,21 @@
+{
+  "eslint.enable": true,
+  "eslint.autoFixOnSave": true,
+  "eslint.nodePath": "client/node_modules/eslint",
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    {
+      "language": "html",
+      "autoFix": true
+    }
+  ],
+  "eslint.workingDirectories": [
+    "./client",
+    "./server"
+  ],
+  "eslint.trace.server": "messages",
+  "markdown.styles": [
+    "./.vscode/github.css"
+  ]
+}
