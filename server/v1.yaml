@@ -1,0 +1,89 @@
+openapi: 3.0.0
+
+info:
+  description: >-
+    API docs.
+  version: 1.0.0
+  title: CourseBin API
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    email: coursebin341@outlook.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+
+tags:
+  - name: user
+    description: Users
+  - name: carts
+    description: Shopping Carts
+
+paths:
+  '/user':
+    get:
+      tags:
+        - user
+      summary: Get currently logged in user
+      description: 'Gets the currently logged in user authenticated using connect.sid cookie (if no cookie found, returns null).'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  username:
+                    type: string
+        '400':
+          description: Invalid product supplied
+        '404':
+          description: Product not found
+  '/user/login':
+    post:
+      tags:
+        - user
+      summary: Login user
+      description: 'Login the user given username and password and save to local session in connect.sid cookie.'
+      operationId: 'findUser'
+      requestBody:
+        description: Username and password
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid username or password supplied
+        '404':
+          description: User not found
+
+components:
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header
+
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+
+externalDocs:
+  description: Find out more about Swagger
+  url: 'http://swagger.io'

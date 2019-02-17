@@ -32,8 +32,7 @@ class LoginForm extends Component {
         password,
       })
       .then((response) => {
-        console.log('login response: ');
-        console.log(response);
+        console.log('Login response: ', response);
         if (response.status === 200) {
           // update App.js state
           updateUser({
@@ -46,8 +45,7 @@ class LoginForm extends Component {
           });
         }
       }).catch((error) => {
-        console.log('login error: ');
-        console.log(error);
+        console.error('Login error: ', error);
       });
   }
 

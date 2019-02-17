@@ -11,7 +11,6 @@ const configs = require('./configs/configs');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-// Route requires
 const user = require('./server/routes/user');
 
 // MIDDLEWARE
@@ -37,7 +36,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session()); // calls the deserializeUser
 
-
 // Routes
 app.use('/user', user);
 
@@ -51,7 +49,7 @@ if (configs.nodeEnv === 'production') {
   });
 }
 
-// Starting Server
+// Start server
 app.listen(PORT, () => {
   console.log(`App listening on PORT: ${PORT}`);
 });

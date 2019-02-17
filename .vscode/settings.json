@@ -14,5 +14,8 @@
     "./client",
     "./server"
   ],
-  "eslint.trace.server": "messages"
+  "eslint.trace.server": "messages",
+  "markdown.styles": [
+    "./.vscode/github.css"
+  ]
 }
