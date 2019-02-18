@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'Phosphate';
+  src: url('PhosphateInline.woff2') format('woff2'),
+      url('PhosphateInline.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .App {
   text-align: center;
 }
@@ -6,7 +14,8 @@
 
 .title-wrapper{
   margin-top: 100px;
-  font-family: phosphate;
+  text-transform: uppercase;
+  font-family: Phosphate;
 }
 .title-wrapper h1{
     color: #A98638;
@@ -63,7 +72,7 @@
 
 .App-header .text-secondary{
   color: #571D2E!important;
-  font-family: phosphate;
+  font-family: Phosphate;
   font-size: 1em;
 }
 
@@ -76,6 +85,7 @@
 }
 
 .navbar {
+  text-transform: uppercase;
   margin-top: auto;
 }
 
