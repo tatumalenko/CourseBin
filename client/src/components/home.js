@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import concordiaLogo from '../assets/concordia-logo.jpeg';
 
 class Home extends Component {
   // eslint-disable-next-line no-useless-constructor
@@ -8,17 +9,15 @@ class Home extends Component {
 
 
   render() {
-    const imageStyle = {
-      width: 400,
-    };
+
     return (
-      <div>
-        <p>It's good to be home</p>
-        <img
-          style={imageStyle}
-          src='https://i.ytimg.com/vi/N1icEHtgb3g/maxresdefault.jpg'
-          alt="It's good to be home"
-        />
+      <div className="home-body-container container">
+        <div className="title-wrapper">
+          <h1>Coursebin</h1>
+        </div>
+        <div class="home-bottom">
+          <img src={concordiaLogo} alt="Concordia University"></img>
+        </div>
       </div>
     );
   }

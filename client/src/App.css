@@ -2,16 +2,69 @@
   text-align: center;
 }
 
+/* global styles */
+
+.title-wrapper{
+  margin-top: 100px;
+  font-family: phosphate;
+}
+.title-wrapper h1{
+    color: #A98638;
+    font-size: 120px;
+    text-align: center;
+}
+
+/* login and registration */
+.form-horizontal{
+  margin-left: 40%;
+  margin-right: 40%;
+}
+
+.form-horizontal .btn-primary{
+  width: 100%;
+}
+
+.form-horizontal .register-msg{
+  text-decoration: none;
+  color: white;
+}
+
+.form-horizontal Link:hover{
+  text-decoration: none;
+  color: white;
+}
+
+.home-bottom{
+  width: 100%;
+  margin-left: -15px;
+  margin-top: 150px;
+  height: 100px;
+  position: absolute;
+  bottom: 0;
+  background-color: white;
+}
+
+.home-bottom img{
+  width: 325px;
+  float: left;
+}
+
+/* nvbR STUFF*/
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 80px;
 }
 
 .App-header {
-  background-color: #222;
-  height: 150px;
+  background-color:#A98638;
+  height: 90px;
   padding: 20px;
-  color: white;
+}
+
+.App-header .text-secondary{
+  color: #571D2E!important;
+  font-family: phosphate;
+  font-size: 1em;
 }
 
 .App-title {
