@@ -10,7 +10,11 @@ class LoginForm extends Component {
       username: '',
       password: '',
       redirectTo: null,
+<<<<<<< HEAD
       err: false,
+=======
+      invalid: false,
+>>>>>>> 9f906ef... [#40] Add client side password validation
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -28,6 +32,8 @@ class LoginForm extends Component {
     const { username, password } = this.state;
     const { updateUser } = this.props;
 
+    if(password.length >= 4 && !(password == username)){
+      this.setState({invalid : false});
     axios
       .post('/user/login', {
         username,
@@ -56,6 +62,10 @@ class LoginForm extends Component {
         this.setState({ err: true });
       });
   }
+  else{
+    this.setState({invalid : true});
+  }
+}
 
   render() {
     const {
@@ -63,6 +73,10 @@ class LoginForm extends Component {
     } = this.state;
     if (redirectTo) {
       return <Redirect to={{ pathname: redirectTo }} />;
+    }
+    let invalidPassword = ''
+    if (this.state.invalid){
+      invalidPassword = "Username and Password must be different. Password must be at least 4 characters long.";
     }
     return (
 
@@ -97,6 +111,7 @@ class LoginForm extends Component {
                 value={password}
                 onChange={this.handleChange}
               />
+<<<<<<< HEAD
             </Col>
             <Col xs={5} />
             <Col xs={5} />
@@ -134,6 +149,24 @@ class LoginForm extends Component {
 
 
         </Form>
+=======
+            </div>
+          </div>
+          <div className='form-group '>
+            <div className='col-7' />
+            <button
+              className='btn btn-primary col-1 col-mr-auto'
+
+              onClick={this.handleSubmit}
+              type='submit'
+            >
+              Login
+            </button>
+            
+          </div>
+        </form>
+        <div>{invalidPassword}</div>
+>>>>>>> 9f906ef... [#40] Add client side password validation
       </div>
 
     );
