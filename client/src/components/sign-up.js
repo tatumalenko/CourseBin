@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
+let x;
+
 class Signup extends Component {
   constructor() {
     super();
@@ -31,7 +33,6 @@ class Signup extends Component {
       password,
     })
       .then((response) => {
-        console.log(response);
         if (!response.data.errmsg) {
           console.log('successful signup');
           this.setState({ // redirect to login page
@@ -42,7 +43,7 @@ class Signup extends Component {
         }
       }).catch((error) => {
         console.log('signup error: ');
-        console.log(error);
+        console.log(error.response); //Error response with error message
       });
   }
 
@@ -51,13 +52,14 @@ class Signup extends Component {
     const { username, password } = this.state;
     return (
       <div className='SignupForm'>
-        <h4>Sign up</h4>
-        <form className='form-horizontal'>
-          <div className='form-group'>
-            <div className='col-1 col-ml-auto'>
-              <label className='form-label' htmlFor='username'>Username: </label>
-            </div>
-            <div className='col-3 col-mr-auto'>
+        <div className="home-body-container container">
+
+          <div className="title-wrapper">
+            <h1>Coursebin</h1>
+          </div>
+
+          <form className='form-horizontal'>
+            <div className='form-group col-xs-12'>
               <input
                 className='form-input'
                 type='text'
@@ -68,12 +70,7 @@ class Signup extends Component {
                 onChange={this.handleChange}
               />
             </div>
-          </div>
-          <div className='form-group'>
-            <div className='col-1 col-ml-auto'>
-              <label className='form-label' htmlFor='password'>Password: </label>
-            </div>
-            <div className='col-3 col-mr-auto'>
+            <div className='form-group col-xs-12'>
               <input
                 className='form-input'
                 placeholder='password'
@@ -83,19 +80,17 @@ class Signup extends Component {
                 onChange={this.handleChange}
               />
             </div>
-          </div>
-          <div className='form-group '>
-            <div className='col-7' />
-            <button
-              className='btn btn-primary col-1 col-mr-auto'
-              onClick={this.handleSubmit}
-              type='submit'
-            >
-Sign up
-
+            <div className='form-group col-xs-12'>
+              <button
+                className='btn btn-primary'
+                onClick={this.handleSubmit}
+                type='submit'
+              >
+                Sign up
             </button>
-          </div>
-        </form>
+            </div>
+          </form>
+        </div>
       </div>
 
     );

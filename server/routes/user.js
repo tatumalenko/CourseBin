@@ -17,7 +17,22 @@ router.post('/', async (req, res) => {
         .json({
           message: `Sorry, a user already exists with the username: ${username}`,
         });
-    } else {
+    } 
+    else if(username == password){
+      res
+      .status(400)
+      .json({
+        message: `Username and password cannot be the same.`,
+      });
+    }
+    else if(password.length < 6){
+      res
+      .status(400)
+      .json({
+        message: `Password must be 6 characters or more.`,
+      });
+    }
+    else {
       const newUser = new User({
         username,
         password,
