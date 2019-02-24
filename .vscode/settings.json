@@ -1,4 +1,5 @@
 {
+  "editor.tabSize": 2,
   "eslint.enable": true,
   "eslint.autoFixOnSave": true,
   "eslint.nodePath": "client/node_modules/eslint",
