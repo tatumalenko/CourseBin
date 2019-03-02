@@ -291,7 +291,7 @@ router.post('/', async (req, res) => {
         res
         .status(400)
         .json({
-          message: 'Password is invalid.',
+          message: 'Password is too simple.',
         })
       }
       if (username.has().not().lowercase()) { // password does not have any lowercase letters
