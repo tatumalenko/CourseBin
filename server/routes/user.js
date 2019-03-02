@@ -1,8 +1,14 @@
 const express = require('express');
 
 const router = express.Router();
+<<<<<<< HEAD
 const { User } = require('../database/models/User');
 const passport = require('../passport/index');
+=======
+const User = require('../database/models/User');
+const passport = require('../passport');
+const passwordValidator = require('password-validator');
+>>>>>>> e125ee2... changed password validation to be more robust
 
 router.post('/', async (req, res) => {
   try {
@@ -11,14 +17,31 @@ router.post('/', async (req, res) => {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
 
-    if (user) {
+    var passwordRules = new passwordValidator();
+
+    // password rules
+    passwordRules
+    .is().min(6)  // minimum length of 6
+    .is().max(20) // maximum length of 20
+    .has().not().spaces() // no spaces allowed
+    .is().not().oneOf([username, 'password']); // list of invalid passwords
+    
+
+    if (user) { // user already exists
       res
         .status(400)
         .json({
+<<<<<<< HEAD
           message: `Sorry, a user already exists with the username: ${username}`,
           user: null,
         });
     } else {
+=======
+          message: 'Sorry, a user already exists with the username: ${username}',
+        });
+    }
+    else if (passwordRules.validate(password)) { // valid password
+>>>>>>> e125ee2... changed password validation to be more robust
       const newUser = new User({
         username,
         password,
@@ -30,6 +53,29 @@ router.post('/', async (req, res) => {
           message: 'OK',
           user: savedUser,
         });
+    }
+    else { // invalid password
+      if (username.equals(password)) {
+        res
+        .status(400)
+        .json({
+          message: 'Username and password cannot be the same.',
+        });
+      }
+      if (password.length < 6) {
+        res
+        .status(400)
+        .json({
+        message: 'Password must be 6 characters or more.',
+        });
+      }
+      if (password.has().spaces()) {
+        res
+        .status(400)
+        .json({
+        message: 'Password cannot contain spaces',
+        });
+      }
     }
   } catch (err) {
     res
