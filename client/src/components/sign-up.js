@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 let x;
@@ -36,7 +37,7 @@ class Signup extends Component {
         if (!response.data.errmsg) {
           console.log('successful signup');
           this.setState({ // redirect to login page
-            redirectTo: '/login',
+            redirectTo: '/',
           });
         } else {
           console.log('username already taken');
@@ -89,6 +90,9 @@ class Signup extends Component {
                 Sign up
             </button>
             </div>
+            <Link to='/'>
+              <p class="register-msg">Already a user? Login here!</p>
+            </Link>
           </form>
         </div>
       </div>
