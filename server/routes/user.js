@@ -24,7 +24,8 @@ router.post('/', async (req, res) => {
     .is().min(6)  // minimum length of 6
     .is().max(20) // maximum length of 20
     .has().not().spaces() // no spaces allowed
-    .is().not().oneOf([username, 'password']); // list of invalid passwords
+    .has().lowercase() // must have lowercase letters
+    .is().not().oneOf([username, 'password', 'abcdef', '123456']); // list of invalid passwords
     
 
     if (user) { // user already exists
