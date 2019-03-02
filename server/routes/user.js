@@ -60,7 +60,7 @@ router.post('/', async (req, res) => {
         });
     }
     else { // invalid password
-      if (username.equals(password)) {
+      if (username === password) {
         res
         .status(400)
         .json({
