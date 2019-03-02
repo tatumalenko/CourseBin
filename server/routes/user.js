@@ -27,7 +27,7 @@ router.post('/', async (req, res) => {
       res
         .status(400)
         .json({
-          `Sorry, a user already exists with the username: ${user.username}`
+          message: `Sorry, a user already exists with the username: ${username}`,
         });
     }
     else if (passwordRules.validate(password)) { // valid password
@@ -38,7 +38,7 @@ router.post('/', async (req, res) => {
       const savedUser = await newUser.save();
       res.json(savedUser);
     }
-    else { // invalid password
+    else { // password does not respect the rules
       if (username === password) {
         res
         .status(400)
@@ -46,18 +46,32 @@ router.post('/', async (req, res) => {
           message: 'Username and password cannot be the same.',
         });
       }
-      if (password.length < 6) {
+      if (username.is().oneOf(['password', 'abcdef', '123456'])) { // password too simple
+        res
+        .status(400)
+        .json({
+          message: 'Password is invalid.',
+        })
+      }
+      if (username.has().not().lowercase()) { // password does not have any lowercase letters
+        res
+        .status(400)
+        .json({
+          message: 'Password must contain lowercase letters.',
+        })
+      }
+      if (password.length < 6) { // password too short
         res
         .status(400)
         .json({
         message: 'Password must be 6 characters or more.',
         });
       }
-      if (password.has().spaces()) {
+      if (password.has().spaces()) { // password contains spaces
         res
         .status(400)
         .json({
-        message: 'Password cannot contain spaces',
+          message: 'Password cannot contain spaces.',
         });
       }
     }
