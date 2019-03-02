@@ -33,12 +33,16 @@ router.post('/', async (req, res) => {
         .status(400)
         .json({
 <<<<<<< HEAD
+<<<<<<< HEAD
           message: `Sorry, a user already exists with the username: ${username}`,
           user: null,
         });
     } else {
 =======
           message: 'Sorry, a user already exists with the username: ${username}',
+=======
+          `Sorry, a user already exists with the username: ${user.username}`
+>>>>>>> 0d14ded... Update server/routes/user.js
         });
     }
     else if (passwordRules.validate(password)) { // valid password
