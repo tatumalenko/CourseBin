@@ -27,7 +27,7 @@ router.post('/', async (req, res) => {
       res
         .status(400)
         .json({
-          message: 'Sorry, a user already exists with the username: ${username}',
+          `Sorry, a user already exists with the username: ${user.username}`
         });
     }
     else if (passwordRules.validate(password)) { // valid password
