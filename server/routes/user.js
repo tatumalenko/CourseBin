@@ -66,11 +66,14 @@ router.post('/logout', (req, res) => {
 
 // ============== ALWAYS KEEP THIS AS THE LAST ROUTE ==============
 
-router.get('*', (req, res) => {
-  console.log('404 error');
-  res.status(404);
+router.post('*', (req, res) => {
+  //console.log('404 error');
+  //res.status(404);
   //res.send({ message: 'Page not found.'});
-  res.render('404.jade', {title: '404 Page Not Found'});
+  //res.render('404.jade', {title: '404 Page Not Found'});
+  //res.sendfile(path.join(__dirname, 'client', 'public', '/error_page.html'));
+
+  res.redirect('../signup'); // temporary until 404 page is created by front end
 })
 
 // --- alternative way to handle 404 errors ---
