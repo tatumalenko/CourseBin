@@ -43,10 +43,9 @@ if (configs.nodeEnv === 'production') {
   // Express will serve up production assets
   app.use(express.static('client/build'));
 
-  // Express serve up index.html file if it doesn't recognize route
+  // ============== ALWAYS KEEP THIS AS THE LAST ROUTE ==============
   app.get('*', (req, res) => {
-    //res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-    res.end('Page not found!'); // temporary until 404 page created by front end
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'error_page.html')); // temporary error page until front end stylizes it
   });
 }
 
