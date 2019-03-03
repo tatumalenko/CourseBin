@@ -67,19 +67,8 @@ router.post('/logout', (req, res) => {
 // ============== ALWAYS KEEP THIS AS THE LAST ROUTE ==============
 
 router.post('*', (req, res) => {
-  //console.log('404 error');
-  //res.status(404);
-  //res.send({ message: 'Page not found.'});
-  //res.render('404.jade', {title: '404 Page Not Found'});
-  //res.sendfile(path.join(__dirname, 'client', 'public', '/error_page.html'));
-
-  res.end('Page not found!'); // temporary until 404 page is created by front end
+  console.log("404 page error");
+  res.status(404).sendFile(path.resolve(__dirname, 'client', 'build', 'error_page.html')); // temporary error page until front end stylizes it
 })
-
-// --- alternative way to handle 404 errors ---
-// function errorHandler (err, req, res, next) {
-//   res.status(404)
-//   res.render('error', { error: err })
-// }
 
 module.exports = router;
