@@ -5,7 +5,7 @@ const configs = require('../../../configs/configs');
 
 const courseSchema = new Schema({
   title: { type: String, unique: false, required: true },
-  code: { type: String, unique: false, required: true },
+  code: { type: String, unique: true, required: true },
   credits: { type: Number, unique: false, required: true },
   rawpre: { type: String, unique: false, required: false },
   prerequisiteCodes: { type: [ [ String ] ], unique: false, required: false },

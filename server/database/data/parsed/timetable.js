@@ -1,4 +1,3 @@
-
 const rawTimetable = require('../raw/timetable');
 
 const getTimetableCourses = async () => {
@@ -50,7 +49,9 @@ function parseTerm(course) {
   } else if (startMonth === '06' && endMonth === '08') {
     term = 'SUMMER';
   } else {
-    const noTermFoundError = new Error(`No term found in parseTerm(). startDate: ${startDate} endDate: ${endDate}`);
+    const noTermFoundError = new Error(
+      `No term found in parseTerm(). startDate: ${startDate} endDate: ${endDate}`,
+    );
     console.error(noTermFoundError);
     throw noTermFoundError;
   }
@@ -60,7 +61,7 @@ function parseTerm(course) {
 function parseTimeBlocks(course) {
   const timeBlocks = [];
   const days = [
-    'mondays',
+    'modays', // API has typo :shrug:
     'tuesdays',
     'wednesdays',
     'thursdays',
@@ -73,7 +74,7 @@ function parseTimeBlocks(course) {
       timeBlocks.push({
         startTime: course.classStartTime,
         endTime: course.classEndTime,
-        weekDay: day.toUpperCase().slice(0, day.length - 1),
+        weekDay: day === 'modays' ? 'MONDAY' : day.toUpperCase().slice(0, day.length - 1),
       });
     }
   });

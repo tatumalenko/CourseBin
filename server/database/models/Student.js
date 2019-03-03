@@ -9,23 +9,22 @@ const nameSchema = new Schema({
   last: { type: String, unique: false, required: true },
 });
 
-const courseSchema = new Schema({
-  name: { type: String, unique: false, required: true },
+const completedCourseSchema = new Schema({
   code: { type: String, unique: false, required: true },
-  credits: { type: Number, unique: false, required: true },
+  grade: { type: String, unique: false, required: true },
 });
 
 const recordSchema = new Schema({
   gpa: { type: Number, unique: false, required: false },
-  agpa: { type: Number, unique: false, required: false },
-  cgpa: { type: Number, unique: false, required: false },
+  // agpa: { type: Number, unique: false, required: false },
+  // cgpa: { type: Number, unique: false, required: false },
   standing: {
     type: String,
     enum: [ 'ACCEPTABLE', 'CONDITIONAL', 'FAILED' ],
     unique: true,
     required: false,
   },
-  completedCourses: { type: courseSchema, unique: false, required: false },
+  completedCourses: { type: [ completedCourseSchema ], unique: false, required: false },
 });
 
 const scheduleSchema = new Schema({
@@ -49,3 +48,20 @@ module.exports = {
     configs.dbMongo.schemaCollectionNames.student),
   nameSchema,
 };
+
+// const student = {
+//   id: 40055122,
+//   name: {
+//     first: 'Tatum',
+//     last: 'Alenko',
+//   },
+//   record: {
+//     gpa: 3.5,
+//     standing: 'ACCEPTABLE',
+//     completedCourses: [
+//       'MATH203',
+//       'MATH204',
+//       'MATH205',
+//     ],
+//   },
+// };
