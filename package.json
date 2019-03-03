@@ -39,6 +39,7 @@
     "morgan": "^1.9.1",
     "passport": "^0.4.0",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "passport-local": "^1.0.0",
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -66,6 +67,10 @@
 =======
     "passport-local": "^1.0.0"
 >>>>>>> f1c17b3... [#41] Remove modifications made by running npm install
+=======
+    "passport-local": "^1.0.0",
+    "password-validator": "^4.1.1"
+>>>>>>> 76db477... [#41] Run yarn add password-validator
   },
   "scripts": {
     "start": "yarn prodstart",

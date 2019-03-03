@@ -3306,13 +3306,17 @@ passport@^0.4.0:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> e125ee2... changed password validation to be more robust
+=======
+>>>>>>> 76db477... [#41] Run yarn add password-validator
 password-validator@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/password-validator/-/password-validator-4.1.1.tgz#80f343579834b574913097973f66b2347ed8aaf9"
   integrity sha1-gPNDV5g0tXSRMJeXP2ayNH7Yqvk=
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -3339,6 +3343,9 @@ password-validator@^4.1.1:
 
 =======
 >>>>>>> f1c17b3... [#41] Remove modifications made by running npm install
+=======
+
+>>>>>>> 76db477... [#41] Run yarn add password-validator
 path-exists@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/path-exists/-/path-exists-3.0.0.tgz#ce0ebeaa5f78cb18925ea7d810d7b59b010fd515"
