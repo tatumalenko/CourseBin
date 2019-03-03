@@ -73,7 +73,7 @@ router.post('*', (req, res) => {
   //res.render('404.jade', {title: '404 Page Not Found'});
   //res.sendfile(path.join(__dirname, 'client', 'public', '/error_page.html'));
 
-  res.redirect('../signup'); // temporary until 404 page is created by front end
+  res.end('Page not found!'); // temporary until 404 page is created by front end
 })
 
 // --- alternative way to handle 404 errors ---
