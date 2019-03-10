@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import StudentForm from './student-form';
 
 class Home extends Component {
   // eslint-disable-next-line no-useless-constructor
@@ -14,10 +15,17 @@ class Home extends Component {
         <div className="title-wrapper">
           <h1>Coursebin</h1>
         </div>
-        <p>
-          Welcome, you have logged in successfully!
-        </p>
+        <Route
+          path='/student-form'
+          component={StudentForm}
+          render={() => (
+            <StudentForm
+            />
+          )}
+        />
       </div>
+
+
     );
   }
 }
