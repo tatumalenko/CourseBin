@@ -110,28 +110,44 @@
   margin-right: 200px;
 }
 
-.student-form .semester-form-component li:hover{
+.semester-form-component{
+  text-align: left;
+  margin-left: 100px;
+  margin-bottom: 25px;
+}
 
+.student-form .semester-form-component li:hover{
   text-decoration: none;
   color:#A98638;
   cursor: pointer;
+  background-color:rgba(0, 0, 0, 0.1);
 }
 .student-form .semester-form-component li{
-
   text-decoration: none;
   list-style-type: none;
-  font-family: 'Londrina Solid', cursive;
-  font-size: 30px;
+  font-size: 24px;
   color:#571D2E;
+  border: 2px;
+  border-radius: 8px;
+  padding: 10px;
 }
 
 .student-form .semester-form-component .row{
   display: block;
-  font-size: 18px;
+  font-size: 12px;
   text-align: left;
   margin-left: 150px;
 }
 
 .student-form .semester-form-component #checkbox:hover{
   cursor: pointer;
+}
+
+.student-form .semester-form-component i{
+  margin-top: 6.5px;
+  float: right;
+}
+
+.student-form .semester-form-component .form-group{
+  margin-left: 10px;
 }
