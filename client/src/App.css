@@ -110,6 +110,28 @@
   margin-right: 200px;
 }
 
-.student-form form{
-  
+.student-form .semester-form-component li:hover{
+
+  text-decoration: none;
+  color:#A98638;
+  cursor: pointer;
+}
+.student-form .semester-form-component li{
+
+  text-decoration: none;
+  list-style-type: none;
+  font-family: 'Londrina Solid', cursive;
+  font-size: 30px;
+  color:#571D2E;
+}
+
+.student-form .semester-form-component .row{
+  display: block;
+  font-size: 18px;
+  text-align: left;
+  margin-left: 150px;
+}
+
+.student-form .semester-form-component #checkbox:hover{
+  cursor: pointer;
 }

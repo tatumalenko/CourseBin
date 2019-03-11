@@ -16,6 +16,8 @@ class Home extends Component {
     this.setState({
       showForm: true,
     });
+
+    console.log(this.state.showForm);
   }
 
 
