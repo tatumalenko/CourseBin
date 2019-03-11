@@ -79,6 +79,10 @@
   margin-top: auto;
 }
 
+.error-msg{
+  color: red!important;
+}
+
 #top-filler {
   margin-bottom: auto;
 }
