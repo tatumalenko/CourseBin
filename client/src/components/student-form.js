@@ -77,7 +77,7 @@ class StudentForm extends Component {
 
 
     render() {
-        const { fallChecked, summerChecked, winterChecked } = this.state;
+        const { fallChecked, summerChecked, winterChecked, jsonObject } = this.state;
 
 
         return (
@@ -101,13 +101,12 @@ class StudentForm extends Component {
                                     <Dropdown.Toggle>
                                         Select
                                     </Dropdown.Toggle>
-
                                     <Dropdown.Menu>
-                                        <Dropdown.Item>1</Dropdown.Item>
-                                        <Dropdown.Item>2</Dropdown.Item>
-                                        <Dropdown.Item>3</Dropdown.Item>
-                                        <Dropdown.Item>4</Dropdown.Item>
-                                        <Dropdown.Item>5</Dropdown.Item>
+                                        <Dropdown.Item onClick={jsonObject.fall.numberOfCourses = 1}>1</Dropdown.Item>
+                                        <Dropdown.Item onClick={jsonObject.fall.numberOfCourses = 1}>2</Dropdown.Item>
+                                        <Dropdown.Item onClick={jsonObject.fall.numberOfCourses = 1}>3</Dropdown.Item>
+                                        <Dropdown.Item onClick={jsonObject.fall.numberOfCourses = 1}>4</Dropdown.Item>
+                                        <Dropdown.Item onClick={jsonObject.fall.numberOfCourses = 1}>5</Dropdown.Item>
                                     </Dropdown.Menu>
                                 </Dropdown>
 
