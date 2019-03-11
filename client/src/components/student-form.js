@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-//import Button from 'react-bootstrap';
+import { Button, Navbar, Nav, NavItem, Dropdown, MenuItem } from 'react-bootstrap';
 
 class StudentForm extends Component {
     constructor() {
@@ -58,17 +58,17 @@ class StudentForm extends Component {
             case 'fall':
                 this.setState({
                     fallChecked: !toggle
-                })
+                });
                 break;
-            case 'winter': this.state =
+            case 'winter':
                 this.setState({
                     winterChecked: !toggle
-                })
+                });
                 break;
-            case 'summer': this.state =
+            case 'summer':
                 this.setState({
                     summerChecked: !toggle
-                })
+                });
                 break;
         }
 
@@ -76,9 +76,8 @@ class StudentForm extends Component {
     }
 
 
-
     render() {
-        const { fallChecked, summerChecked, winterChecked, jsonObject } = this.state;
+        const { fallChecked, summerChecked, winterChecked } = this.state;
 
 
         return (
@@ -98,8 +97,23 @@ class StudentForm extends Component {
                                 <label>Please choose how many courses you prefer to take in this semester
                                 </label>
                                 <br />
+                                <Dropdown>
+                                    <Dropdown.Toggle>
+                                        Select
+                                    </Dropdown.Toggle>
+
+                                    <Dropdown.Menu>
+                                        <Dropdown.Item>1</Dropdown.Item>
+                                        <Dropdown.Item>2</Dropdown.Item>
+                                        <Dropdown.Item>3</Dropdown.Item>
+                                        <Dropdown.Item>4</Dropdown.Item>
+                                        <Dropdown.Item>5</Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
+
 
                             </div>
+
                         </div> :
 
                         <div className="semester-form-component">
@@ -109,19 +123,19 @@ class StudentForm extends Component {
 
                     {winterChecked ?
                         <div className="semester-form-component">
-                            <li onClick={() => this.toggleSemesterSection('winter', winterChecked)}> Collapse </li>
+                            <li onClick={() => this.toggleSemesterSection('winter', winterChecked)}>Collapse </li>
                         </div> :
                         <div className="semester-form-component">
-                            <li onClick={() => this.toggleSemesterSection('winter', winterChecked)}> Plan Your Winter Semester</li>
+                            <li onClick={() => this.toggleSemesterSection('winter', winterChecked)}>Plan Your Winter Semester</li>
                         </div>
                     }
 
                     {summerChecked ?
                         <div className="semester-form-component">
-                            <li onClick={() => this.toggleSemesterSection('summer', summerChecked)}> Collapse </li>
+                            <li onClick={() => this.toggleSemesterSection('summer', summerChecked)}>Collapse </li>
                         </div> :
                         <div className="semester-form-component">
-                            <li onClick={() => this.toggleSemesterSection('summer', summerChecked)}> Plan Your Summer Semester </li>
+                            <li onClick={() => this.toggleSemesterSection('summer', summerChecked)}>Plan Your Summer Semester </li>
                         </div>
                     }
 
