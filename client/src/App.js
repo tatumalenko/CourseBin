@@ -12,7 +12,7 @@ import concordiaLogo from './assets/concordia-logo.jpeg';
 class App extends Component {
   constructor() {
     super();
-    //must set state to null otherwise UI will load prematurely before server response
+    // Must set state to null otherwise UI will load prematurely before server response
     this.state = null;
 
     this.getUser = this.getUser.bind(this);
@@ -24,9 +24,8 @@ class App extends Component {
     this.getUser();
   }
 
-
   getUser() {
-    axios.get('/user/').then((response) => {
+    axios.get('/user').then((response) => {
       console.log('Get user response: ');
       console.log(response.data);
       if (response.data.user) {
@@ -44,7 +43,14 @@ class App extends Component {
         });
       }
 
-      console.log("SHOULD RELOAD PAGE HERE");
+      console.log('SHOULD RELOAD PAGE HERE');
+    }).catch((error) => {
+      console.log('Get user: no user');
+      console.error(error);
+      this.setState({
+        loggedIn: false,
+        username: null,
+      });
     });
   }
 
@@ -56,8 +62,8 @@ class App extends Component {
     const { state, updateUser, signup } = this;
 
     if (!this.state) {
-      //show nothing while waiting for axios response
-      return <div />
+      // Show nothing while waiting for axios response
+      return <div />;
     }
     return (
       <div className='App'>
@@ -93,8 +99,8 @@ class App extends Component {
           )}
         />
 
-        <div className="home-bottom">
-          <img src={concordiaLogo} alt="Concordia University"></img>
+        <div className='home-bottom'>
+          <img src={concordiaLogo} alt='Concordia University' />
         </div>
       </div>
     );

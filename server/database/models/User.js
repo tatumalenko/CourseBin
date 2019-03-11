@@ -12,6 +12,7 @@ mongoose.promise = Promise;
 const userSchema = new Schema({
   username: { type: String, unique: false, required: true },
   password: { type: String, unique: false, required: true },
+  studentId: { type: Number, unique: true, required: false },
 });
 
 // Define schema methods
@@ -36,4 +37,5 @@ userSchema.pre('save', function (next) {
 const User = mongoose.model('User',
   userSchema,
   configs.dbMongo.schemaCollectionNames.user);
-module.exports = User;
+
+module.exports = { User };
