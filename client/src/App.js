@@ -7,13 +7,13 @@ import LoginForm from './components/login-form';
 import Navbar from './components/navbar';
 import Home from './components/home';
 
+import concordiaLogo from './assets/concordia-logo.jpeg';
+
 class App extends Component {
   constructor() {
     super();
-    this.state = {
-      loggedIn: false,
-      username: null,
-    };
+    //must set state to null otherwise UI will load prematurely before server response
+    this.state = null;
 
     this.getUser = this.getUser.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
@@ -43,6 +43,8 @@ class App extends Component {
           username: null,
         });
       }
+
+      console.log("SHOULD RELOAD PAGE HERE");
     });
   }
 
@@ -52,6 +54,11 @@ class App extends Component {
 
   render() {
     const { state, updateUser, signup } = this;
+
+    if (!this.state) {
+      //show nothing while waiting for axios response
+      return <div />
+    }
     return (
       <div className='App'>
 
@@ -59,30 +66,26 @@ class App extends Component {
         {/* greet user if logged in: */}
         {state.loggedIn
           && (
-          <p>
-Join the party,
-            {' '}
-            {state.username}
-!
-          </p>
+
+            <Home />
           )
         }
         {/* Routes to different components */}
-        <Route
-          exact
-          path='/'
-          component={Home}
-        />
-        <Route
-          path='/login'
-          render={() => (
-            <LoginForm
-              updateUser={updateUser}
-            />
-          )}
-        />
+        {!state.loggedIn && (
+          <Route
+            exact
+            path='/'
+            render={() => (
+              <LoginForm
+                updateUser={updateUser}
+              />
+            )}
+          />
+        )
+        }
         <Route
           path='/signup'
+          component={Signup}
           render={() => (
             <Signup
               signup={signup}
@@ -90,6 +93,9 @@ Join the party,
           )}
         />
 
+        <div className="home-bottom">
+          <img src={concordiaLogo} alt="Concordia University"></img>
+        </div>
       </div>
     );
   }
