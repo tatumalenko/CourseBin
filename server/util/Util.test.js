@@ -1,104 +1,34 @@
-const _ = require('lodash');
+import test from 'ava';
 
-const { Catalog } = require('./Catalog');
-const { Timetable } = require('./Timetable');
-// const { Util } = require('./../../util/Util');
+const { Util } = require('./Util');
 
-class ScheduleBuilder {
-  static findUncompletedCourses({ requiredCourses, completedCourses }) {
-    return _.difference(requiredCourses, completedCourses);
-  }
+test('Integers - all non-empty arrays', (t) => {
+  t.deepEqual(Util.allCombinations([
+    [ 1, 2, 3 ],
+    [ 4 ],
+    [ 5, 6 ],
+  ]), [
+    [ 1, 4, 5 ],
+    [ 1, 4, 6 ],
+    [ 2, 4, 5 ],
+    [ 2, 4, 6 ],
+    [ 3, 4, 5 ],
+    [ 3, 4, 6 ] ]);
+});
 
-  static hasNoUnmetDependenciesPartial({ completedCourses }) {
-    return async (uncompletedCourse) => {
-      let allDependenciesMet;
-      try {
-        const course = await Catalog.findOne({ code: uncompletedCourse });
-        // Verify if all prerequisites are met
-        allDependenciesMet = course.prerequisiteCodes ? course.prerequisiteCodes.every(
-          prerequisiteOrCodes => prerequisiteOrCodes.some(
-            prerequisiteCode => completedCourses.includes(prerequisiteCode),
-          ),
-        ) : true;
+test('Integers - 1 empty array', (t) => {
+  t.deepEqual(Util.allCombinations([
+    [ 1, 2, 3 ],
+    [ 4 ],
+    [ ],
+  ]), [
+    [ 1, 4 ],
+    [ 2, 4 ],
+    [ 3, 4 ] ]);
+});
 
-        // If the prerequisites are not satisfied, don't bother checking corequisites
-        if (allDependenciesMet) {
-          // Verify if all corequisites are met
-          allDependenciesMet = course.corequisiteCodes ? course.corequisiteCodes.every(
-            corequisiteOrCodes => corequisiteOrCodes.some(
-              corequisiteCode => completedCourses.includes(corequisiteCode),
-            ),
-          ) : true;
-        }
-      } catch (err) {
-        console.error(
-          `Error caught for hasUnmetDependencies with uncompletedCourse: ${uncompletedCourse}`,
-        );
-        console.error(err);
-      }
-      return allDependenciesMet;
-    };
-  }
-
-  static async findCandidateCourses({ completedCourses, requiredCourses }) {
-    const uncompletedCourses = this.findUncompletedCourses({
-      requiredCourses,
-      completedCourses,
-    });
-
-    const hasNoUnmetDependencies = this.hasNoUnmetDependenciesPartial({ completedCourses });
-
-    const isCandidateCourses = await Promise.all(
-      uncompletedCourses.map(uncompletedCourse => hasNoUnmetDependencies(uncompletedCourse)),
-    );
-
-    return uncompletedCourses.filter((e, i) => isCandidateCourses[i]);
-  }
-
-  static async getMapQueueSections({ candidateCourses, term }) {
-    const mapQueue = new Map();
-
-    let candidateSections = await Promise.all(
-      candidateCourses.map(
-        candidateCourse => Timetable.find({ courseCode: candidateCourse, term }),
-      ),
-    );
-
-    // Filter nested arrays of zero length (i.e. no sections found for a given courseCode)
-    candidateSections = candidateSections.filter(sections => sections.length > 0);
-
-    candidateSections.forEach((sections) => {
-      mapQueue.set(sections[0].courseCode, sections);
-    });
-
-    return mapQueue;
-  }
-
-  static async findCandidateSectionQueueMap({ completedCourses, requiredCourses, term }) {
-    const candidateCourses = await this.findCandidateCourses({ completedCourses, requiredCourses });
-    return this.getMapQueueSections({ candidateCourses, term });
-  }
-
-  static categorizeSectionQueueIntoKind(sectionQueue) {
-    const categorizedSectionQueue = {
-      LEC: [],
-      TUT: [],
-      LAB: [],
-    };
-
-    sectionQueue.forEach((e) => {
-      categorizedSectionQueue[e.kind].push(e);
-    });
-
-    return categorizedSectionQueue;
-  }
-
-  static async findCandidateSchedules({ completedCourses, requiredCourses, term }) {
-    return this.findCandidateSectionQueueMap({ completedCourses, requiredCourses, term });
-  }
-}
-
-module.exports = { ScheduleBuilder };
+// const arr = [ [ 1, 2, 3 ], [ 4 ], [ 5, 6 ] ];
+// console.log(Util.allCombinations(arr));
 
 // const hashQueueMap = {
 //   SOEN331: [ {
@@ -510,5 +440,3 @@ module.exports = { ScheduleBuilder };
 //   },
 //   ],
 // };
-
-// console.log(ScheduleBuilder.categorizeSectionQueueIntoKind(hashQueueMap.SOEN331));

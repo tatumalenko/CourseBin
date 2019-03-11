@@ -1,7 +1,9 @@
+const test = require('ava');
 const mongoose = require('mongoose');
 
 const { ScheduleBuilder } = require('./ScheduleBuilder');
 const { SoftwareEngineeringDegree } = require('./SoftwareEngineeringDegree');
+const { Util } = require('../../util/Util');
 const configs = require('../../../configs/configs');
 
 mongoose.connect(configs.dbMongo.dbPath, { useNewUrlParser: true, useCreateIndex: true });
@@ -29,26 +31,65 @@ const student = {
   },
 };
 
-console.log(
-  ScheduleBuilder.findUncompletedCourses(
+// console.log(
+//   ScheduleBuilder.findUncompletedCourses(
+//     {
+//       completedCourses: student.record.completedCourses.map(e => e.code),
+//       requiredCourses: SoftwareEngineeringDegree.requirements.mandatory,
+//     },
+//   ),
+// );
+
+// ScheduleBuilder.findCandidateCourses(
+//   {
+//     completedCourses: student.record.completedCourses.map(e => e.code),
+//     requiredCourses: SoftwareEngineeringDegree.requirements.mandatory,
+//   },
+// ).then(candidateCourses => console.log(candidateCourses));
+
+// ScheduleBuilder.findCandidateSectionQueueMap(
+//   {
+//     completedCourses: student.record.completedCourses.map(e => e.code),
+//     requiredCourses: SoftwareEngineeringDegree.requirements.mandatory,
+//     term: 'FALL',
+//   },
+// ).then((candidateCourses) => {
+//   console.log(candidateCourses);
+//   const soen331 = ScheduleBuilder.categorizeSectionQueueIntoKind(
+// candidateCourses.get('SOEN331'));
+//   console.log(soen331);
+// });
+
+test('Categorizing', async (t) => {
+  const candidateCourses = await ScheduleBuilder.findCandidateSectionQueueMap(
     {
       completedCourses: student.record.completedCourses.map(e => e.code),
       requiredCourses: SoftwareEngineeringDegree.requirements.mandatory,
+      term: 'FALL',
     },
-  ),
-);
+  );
 
-ScheduleBuilder.findCandidateCourses(
-  {
-    completedCourses: student.record.completedCourses.map(e => e.code),
-    requiredCourses: SoftwareEngineeringDegree.requirements.mandatory,
-  },
-).then(candidateCourses => console.log(candidateCourses));
+  const categorized = {};
+  const allCombos = {};
 
-ScheduleBuilder.findCandidateSchedules(
-  {
-    completedCourses: student.record.completedCourses.map(e => e.code),
-    requiredCourses: SoftwareEngineeringDegree.requirements.mandatory,
-    term: 'FALL',
-  },
-).then(candidateCourses => console.log(candidateCourses));
+  t.log(candidateCourses.get('COMP348'));
+
+  // categorized.soen331 = ScheduleBuilder.categorizeSectionQueueIntoKind(
+  // candidateCourses.get('SOEN331'));
+  // t.log(categorized.soen331);
+
+  // categorized.soen331 = Util.allCombinations([
+  // categorized.soen331.LEC, categorized.soen331.TUT, categorized.soen331.LAB ]);
+  // t.log(categorized.soen331);
+
+  categorized.comp348 = ScheduleBuilder.categorizeSectionQueueIntoKind(
+    candidateCourses.get('COMP348'),
+  );
+  t.log(categorized.comp348);
+
+  allCombos.soen348 = Util.allCombinations([
+    categorized.comp348.LEC,
+    categorized.comp348.TUT,
+    categorized.comp348.LAB ]);
+  t.log(allCombos.soen348[0]);
+});

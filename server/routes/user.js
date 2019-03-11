@@ -16,6 +16,7 @@ router.post('/', async (req, res) => {
         .status(400)
         .json({
           message: `Sorry, a user already exists with the username: ${username}`,
+          user: null,
         });
     } else {
       const newUser = new User({
@@ -23,44 +24,82 @@ router.post('/', async (req, res) => {
         password,
       });
       const savedUser = await newUser.save();
-      res.json(savedUser);
+      res
+        .status(200)
+        .json({
+          message: 'OK',
+          user: savedUser,
+        });
     }
   } catch (err) {
-    res.status(500).json(err);
+    res
+      .status(500)
+      .json({
+        message: err,
+        user: null,
+      });
     console.error('User.js post error: ', err);
   }
 });
 
-router.post(
-  '/login',
-  (req, res, next) => {
-    console.log('req.body: ', req.body);
-    next();
-  },
-  passport.authenticate('local'),
-  (req, res) => {
-    console.log('req.user: ', req.user);
-    res.send({
-      username: req.user.username,
-    });
-  },
-);
-
-router.get('/', (req, res, next) => {
+router.get('/', (req, res) => {
   console.log('req.user: ', req.user);
   if (req.user) {
-    res.json({ user: req.user });
+    res
+      .status(200)
+      .json({
+        message: 'OK',
+        user: req.user,
+      });
   } else {
-    res.json({ user: null });
+    res
+      .status(404)
+      .json({
+        message: 'No user logged in',
+        user: null,
+      });
   }
+});
+
+router.post('/login', (req, res, next) => {
+  console.log('req.body: ', req.body);
+  next();
+},
+passport.authenticate('local'),
+(req, res) => {
+  console.log('req.user: ', req.user);
+  res
+    .status(200)
+    .json({
+      message: 'OK',
+      user: req.user,
+    });
 });
 
 router.post('/logout', (req, res) => {
   if (req.user) {
     req.logout();
-    res.send({ message: 'Logging out.' });
+    res
+      .status(200)
+      .json({ message: 'User logged out' });
   } else {
-    res.send({ message: 'No user to log out.' });
+    res
+      .status(404)
+      .json({ message: 'No user to log out' });
+  }
+});
+
+router.post('/schedule', (req, res) => {
+  // const preferences = req.body;
+
+  if (req.user) {
+    res
+      .status(200)
+      .json({ message: 'Not implemented yet' });
+  } else {
+    res
+      .status(404)
+      .json({ message: 'No user logged in' });
   }
 });
 
