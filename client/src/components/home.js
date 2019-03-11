@@ -3,26 +3,37 @@ import StudentForm from './student-form';
 
 class Home extends Component {
   // eslint-disable-next-line no-useless-constructor
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    this.state = {
+      showForm: false,
+    };
+
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick() {
+    this.setState({
+      showForm: true,
+    });
   }
 
 
   render() {
 
     return (
+
       <div className="home-body-container container">
-        <div className="title-wrapper">
-          <h1>Coursebin</h1>
-        </div>
-        <Route
-          path='/student-form'
-          component={StudentForm}
-          render={() => (
-            <StudentForm
-            />
-          )}
-        />
+
+        {this.state.showForm ?
+          <StudentForm /> :
+          <div>
+            <div className="title-wrapper">
+              <h1>Coursebin</h1>
+            </div>
+            <button onClick={this.handleClick}>Let's Get Started</button>
+          </div>
+        }
       </div>
 
 

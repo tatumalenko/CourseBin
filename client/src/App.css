@@ -10,7 +10,7 @@
   font-family: 'Londrina Solid', cursive;
 }
 .title-wrapper h1{
-    color: #A98638;
+    color:  #571D2E;
     font-size: 120px;
     text-align: center;
 }
@@ -40,7 +40,7 @@
   height: 100px;
   position: fixed;
   bottom: 0;
-  background-color: #A98638;
+  background-color: white;
 }
 
 .home-bottom img{
@@ -55,13 +55,13 @@
 }
 
 .App-header {
-  background-color:#A98638;
+  background-color:#571D2E;
   height: 90px;
   padding: 20px;
 }
 
 .App-header .text-secondary{
-  color: #571D2E!important;
+  color: #A98638!important;
   font-family: 'Londrina Solid', cursive;
   font-size: 1em;
 }
@@ -94,4 +94,18 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+
+.student-form h3{
+  color: #A98638;
+  font-size: 60px;
+  position: relative;
+  bottom: 182px;
+  margin-left: 200px;
+  margin-right: 200px;
+}
+
+.student-form form{
+  
 }

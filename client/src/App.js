@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Route, Link } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
 import Signup from './components/sign-up';
 import LoginForm from './components/login-form';
@@ -85,7 +85,6 @@ class App extends Component {
         }
         <Route
           path='/signup'
-          component={Signup}
           render={() => (
             <Signup
               signup={signup}
