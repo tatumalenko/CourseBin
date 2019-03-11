@@ -46,6 +46,8 @@ class LoginForm extends Component {
         }
       }).catch((error) => {
         console.error('Login error: ', error);
+        document.getElementById("error").innerHTML = "Sorry, this username/password" +
+        " combination is not valid. Please try again or try signing up."
       });
   }
 
@@ -83,6 +85,7 @@ class LoginForm extends Component {
                 onChange={this.handleChange}
               />
             </div>
+            <div id="error" class="error-msg"></div>
             <div className='form-group col-xs-12'>
               <button
                 className='btn btn-primary'
