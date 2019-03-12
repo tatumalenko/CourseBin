@@ -91,5 +91,11 @@ test('Categorizing', async (t) => {
     categorized.comp348.LEC,
     categorized.comp348.TUT,
     categorized.comp348.LAB ]);
-  t.log(allCombos.soen348[0]);
+
+  const prettyPrintCombos = {};
+  prettyPrintCombos.soen348 = allCombos.soen348.map((e) => {
+    const combo = e.map(ee => ({ code: ee.code, courseCode: ee.courseCode, kind: ee.kind }));
+    return combo;
+  });
+  prettyPrintCombos.soen348.forEach(e => t.log(e));
 });
