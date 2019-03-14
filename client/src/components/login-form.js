@@ -47,6 +47,11 @@ class LoginForm extends Component {
           });
         }
       }).catch((error) => {
+        this.setState({
+          username: '',
+          password: '',
+          redirectTo: null,
+        });
         console.error('Login error: ', error);
         this.setState({ err: true });
       });
