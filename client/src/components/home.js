@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import StudentForm from './student-form';
+import { Button } from 'react-bootstrap';
 
 class Home extends Component {
   // eslint-disable-next-line no-useless-constructor
@@ -33,7 +34,7 @@ class Home extends Component {
             <div className="title-wrapper">
               <h1>Coursebin</h1>
             </div>
-            <button onClick={this.handleClick}>Let's Get Started</button>
+            <Button type="primary" onClick={this.handleClick}>Let's Get Started</Button>
           </div>
         }
       </div>
