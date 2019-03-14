@@ -82,16 +82,14 @@
 }
 
 
-.student-form h3{
-  text-shadow: 2px 2px 20px black;
+.header-logo{
+  font-family: 'Londrina Solid', cursive;
   color: #A98638;
   font-size: 60px;
   position: relative;
-  bottom: 182px;
-  margin-left: 200px;
-  margin-right: 200px;
+  bottom: 75px;
+  text-shadow: 2px 2px 800px bisque;
 }
-
 
 .semester-form-component{
   text-align: left;
