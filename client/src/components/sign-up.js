@@ -11,7 +11,7 @@ class Signup extends Component {
       password: '',
       redirectTo: null,
       confirmPassword: '',
-      err: false
+      err: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -52,7 +52,9 @@ class Signup extends Component {
 
 
   render() {
-    const { redirectTo, username, password, err } = this.state;
+    const {
+      redirectTo, username, password, err,
+    } = this.state;
 
     if (redirectTo) {
       return <Redirect to={{ pathname: redirectTo }} />;
@@ -62,13 +64,13 @@ class Signup extends Component {
 
       <div>
 
-        <div className="title-wrapper">
+        <div className='title-wrapper'>
           <h1>Coursebin</h1>
         </div>
 
         <Form>
           <Form.Row>
-            <Col xs={5}></Col>
+            <Col xs={5} />
             <Col xs={2}>
               <Form.Control
                 type='text'
@@ -82,7 +84,7 @@ class Signup extends Component {
           </Form.Row>
 
           <Form.Row>
-            <Col xs={5}></Col>
+            <Col xs={5} />
             <Col xs={2}>
               <Form.Control
                 placeholder='password'
@@ -92,16 +94,18 @@ class Signup extends Component {
                 onChange={this.handleChange}
               />
             </Col>
-            <Col xs={5}></Col>
-            <Col xs={5}></Col>
+            <Col xs={5} />
+            <Col xs={5} />
 
             {/* TODO ADD REGISTRATION ERROR MESSAGE TO STATE */}
-            {err ?
-              (<Col xs={2}>
-                <Form.Label id="error" className="error-msg">
-                  Invalid.
-                </Form.Label>
-              </Col>)
+            {err
+              ? (
+                <Col xs={2}>
+                  <Form.Label id='error' className='error-msg'>
+                    Invalid.
+                  </Form.Label>
+                </Col>
+              )
               : null
             }
           </Form.Row>
@@ -114,7 +118,7 @@ class Signup extends Component {
               >
                 Sign up
 
-            </Button>
+              </Button>
             </Col>
             <Col xs={12}>
               <Form.Label>
@@ -125,7 +129,7 @@ class Signup extends Component {
             </Col>
           </Form.Row>
         </Form>
-      </div >
+      </div>
 
     );
   }

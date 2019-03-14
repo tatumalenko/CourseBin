@@ -12,17 +12,12 @@
 }
 .title-wrapper h1{
     color:  #571D2E;
-    text-shadow: 2px 2px 4px #A98638;
     font-size: 120px;
     text-align: center;
 }
 
 
 .home-bottom{
-  width: 100%;
-  height: 100px;
-  position: fixed;
-  bottom: 0;
   background-color: white;
 }
 
@@ -60,6 +55,7 @@
 .navbar {
   text-transform: uppercase;
   margin-top: auto;
+  display: none;
 }
 
 .error-msg{
@@ -87,6 +83,7 @@
 
 
 .student-form h3{
+  text-shadow: 2px 2px 20px black;
   color: #A98638;
   font-size: 60px;
   position: relative;
@@ -95,19 +92,18 @@
   margin-right: 200px;
 }
 
+
 .semester-form-component{
   text-align: left;
-  margin-left: 100px;
-  margin-bottom: 25px;
 }
 
-.student-form .semester-form-component li:hover{
+.student-form .semester-form-component .season:hover{
   text-decoration: none;
   color:#A98638;
   cursor: pointer;
   background-color:rgba(0, 0, 0, 0.1);
 }
-.student-form .semester-form-component li{
+.student-form .semester-form-component .season{
   text-decoration: none;
   list-style-type: none;
   font-size: 24px;
@@ -115,6 +111,7 @@
   border: 2px;
   border-radius: 8px;
   padding: 10px;
+  width: 100%;
 }
 
 .student-form .semester-form-component .row{
@@ -135,4 +132,36 @@
 
 .student-form .semester-form-component .form-group{
   margin-left: 10px;
+}
+
+.student-form .number-courses{
+  width: 100%;
+  display: inline-flex;
+}
+
+.student-form .number-courses label{
+  max-width: 90%;
+    margin-left: 15px;
+}
+
+.student-form .number-courses select{
+  max-width: 10%;
+  margin-left: 25px;
+}
+
+.student-form .form-section-content{
+  min-width: 500px;
+}
+
+.student-form .form-check{
+  margin-left: 10px;
+}
+
+#student-form-content{
+  margin-bottom: 75px;
+  margin-top: 75px;
+}
+
+.student-form .btn{
+  margin-bottom: 75px;
 }

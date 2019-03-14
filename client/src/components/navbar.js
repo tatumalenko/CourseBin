@@ -47,7 +47,7 @@ class Navbar extends Component {
 
               </section>
             ) : (
-                <section className='navbar-section'>
+              <section className='navbar-section'>
                   <Link to='/' className='btn btn-link text-secondary'>
                     <span className='text-secondary'>login</span>
                   </Link>
@@ -55,7 +55,7 @@ class Navbar extends Component {
                     <span className='text-secondary'>sign up</span>
                   </Link>
                 </section>
-              )}
+            )}
           </div>
         </header>
       </div>

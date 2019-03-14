@@ -10,7 +10,7 @@ class LoginForm extends Component {
       username: '',
       password: '',
       redirectTo: null,
-      err: false
+      err: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -53,7 +53,9 @@ class LoginForm extends Component {
   }
 
   render() {
-    const { redirectTo, username, password, err } = this.state;
+    const {
+      redirectTo, username, password, err,
+    } = this.state;
     if (redirectTo) {
       return <Redirect to={{ pathname: redirectTo }} />;
     }
@@ -62,13 +64,13 @@ class LoginForm extends Component {
 
       <div>
 
-        <div className="title-wrapper">
+        <div className='title-wrapper'>
           <h1>Coursebin</h1>
         </div>
 
         <Form>
           <Form.Row>
-            <Col xs={5}></Col>
+            <Col xs={5} />
             <Col xs={2}>
               <Form.Control
                 type='text'
@@ -81,7 +83,7 @@ class LoginForm extends Component {
             </Col>
           </Form.Row>
           <Form.Row>
-            <Col xs={5}></Col>
+            <Col xs={5} />
             <Col xs={2}>
               <Form.Control
                 placeholder='password'
@@ -91,14 +93,16 @@ class LoginForm extends Component {
                 onChange={this.handleChange}
               />
             </Col>
-            <Col xs={5}></Col>
-            <Col xs={5}></Col>
-            {err ?
-              (<Col xs={2}>
-                <Form.Label id="error" className="error-msg">
-                  Sorry, this username/password combination is not valid. Please try again or try signing up.
-                </Form.Label>
-              </Col>)
+            <Col xs={5} />
+            <Col xs={5} />
+            {err
+              ? (
+                <Col xs={2}>
+                  <Form.Label id='error' className='error-msg'>
+                    Sorry, this username/password combination is not valid. Please try again or try signing up.
+                  </Form.Label>
+                </Col>
+              )
               : null
             }
           </Form.Row>
@@ -108,7 +112,10 @@ class LoginForm extends Component {
               <Button
                 onClick={this.handleSubmit}
                 type='submit'
-              >Login</Button>
+              >
+                Login
+
+              </Button>
             </Col>
             <Col xs={12}>
 
@@ -122,7 +129,7 @@ class LoginForm extends Component {
 
 
         </Form>
-      </div >
+      </div>
 
     );
   }
