@@ -45,6 +45,11 @@ class LoginForm extends Component {
           });
         }
       }).catch((error) => {
+        this.setState({
+          username: '',
+          password: '',
+          redirectTo: null,
+        });
         console.error('Login error: ', error);
         document.getElementById("error").innerHTML = "Sorry, this username/password" +
         " combination is not valid. Please try again or try signing up."
