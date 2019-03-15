@@ -6,6 +6,7 @@ const router = express.Router();
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 const { User } = require('../database/models/User');
 const passport = require('../passport/index');
 =======
@@ -38,6 +39,8 @@ const PasswordValidator = require('password-validator');
 const { SignupValidator } = require('../passport/SignupValidator');
 >>>>>>> f072e1d... [#41] Abstract signup validation logic into separate class and add tests
 =======
+=======
+>>>>>>> b5b09b6... [#41] Merged master into branch, fixed conflicts
 const { SignupValidator } = require('../passport/SignupValidator');
 >>>>>>> f072e1d... [#41] Abstract signup validation logic into separate class and add tests
 const { User } = require('../database/models/User');
@@ -58,6 +61,15 @@ const passport = require('../passport');
 const PasswordValidator = require('password-validator');
 const { User } = require('../database/models/User');
 const passport = require('../passport');
+=======
+const passwordValidator = require('password-validator');
+const { User } = require('../database/models/User');
+const passport = require('../passport');
+
+// const { User } = require('../database/models/User');
+// const passport = require('../passport/index');
+
+>>>>>>> 2434598... [#41] Merged master into branch, fixed conflicts
 
 >>>>>>> 9616f34... [#41] Fix username validation and simplify control flow
 router.post('/', async (req, res) => {
@@ -67,6 +79,7 @@ router.post('/', async (req, res) => {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -90,10 +103,13 @@ router.post('/', async (req, res) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+>>>>>>> b5b09b6... [#41] Merged master into branch, fixed conflicts
     const credentialValidation = SignupValidator.validate({ username, password });
 =======
     const passwordRules = new passwordValidator();
     console.log(passwordRules);
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 9616f34... [#41] Fix username validation and simplify control flow
@@ -187,6 +203,23 @@ router.post('/', async (req, res) => {
 =======
     const credentialValidation = SignupValidator.validate({ username, password });
 >>>>>>> f072e1d... [#41] Abstract signup validation logic into separate class and add tests
+=======
+
+    // password rules
+    passwordRules
+      .is().min(6) // minimum length of 6
+      .is().max(20) // maximum length of 20
+      .has()
+      .not()
+      .spaces() // no spaces allowed
+      .has()
+      .lowercase() // must have lowercase letters
+      .is()
+      .not()
+      .oneOf([ username, 'password', 'abcdef', '123456' ]); // list of invalid passwords
+
+>>>>>>> 2434598... [#41] Merged master into branch, fixed conflicts
+>>>>>>> b5b09b6... [#41] Merged master into branch, fixed conflicts
 
     if (user) { // user already exists
       res
@@ -200,6 +233,7 @@ router.post('/', async (req, res) => {
           message: `Sorry, a user already exists with the username: ${username}`,
           user: null,
         });
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -239,6 +273,8 @@ router.post('/', async (req, res) => {
       const reasons = passwordRules.validate(password, { list: true });
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> b5b09b6... [#41] Merged master into branch, fixed conflicts
     } else if (!credentialValidation.valid) {
 >>>>>>> f072e1d... [#41] Abstract signup validation logic into separate class and add tests
       res
@@ -248,6 +284,7 @@ router.post('/', async (req, res) => {
           user: null,
         });
     } else {
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
           message: 'Sorry, a user already exists with the username: ${username}',
@@ -288,6 +325,11 @@ router.post('/', async (req, res) => {
         });
     } else {
 >>>>>>> 9616f34... [#41] Fix username validation and simplify control flow
+=======
+=======
+    } else if (passwordRules.validate(password)) { // valid password
+>>>>>>> 2434598... [#41] Merged master into branch, fixed conflicts
+>>>>>>> b5b09b6... [#41] Merged master into branch, fixed conflicts
       const newUser = new User({
         username,
         password,
@@ -303,6 +345,9 @@ router.post('/', async (req, res) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> b5b09b6... [#41] Merged master into branch, fixed conflicts
 =======
     } else { // password does not respect the rules
       if (username === password) {
@@ -341,6 +386,7 @@ router.post('/', async (req, res) => {
           });
       }
 >>>>>>> 2434598... [#41] Merged master into branch, fixed conflicts
+<<<<<<< HEAD
 =======
 >>>>>>> 9616f34... [#41] Fix username validation and simplify control flow
     }
@@ -408,6 +454,8 @@ router.post('/', async (req, res) => {
       }
 =======
 >>>>>>> 9616f34... [#41] Fix username validation and simplify control flow
+=======
+>>>>>>> b5b09b6... [#41] Merged master into branch, fixed conflicts
     }
   } catch (err) {
     res

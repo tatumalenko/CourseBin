@@ -46,6 +46,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 =======
@@ -55,6 +56,10 @@
     "password-validator": "^4.1.1",
 >>>>>>> 37d606fc13b8e09ecfa456de7d62e6b3d4faeb45
 =======
+=======
+=======
+>>>>>>> 2434598... [#41] Merged master into branch, fixed conflicts
+>>>>>>> b5b09b6... [#41] Merged master into branch, fixed conflicts
     "password-validator": "^4.1.1",
 >>>>>>> 2434598... [#41] Merged master into branch, fixed conflicts
     "react": "^16.8.4",
