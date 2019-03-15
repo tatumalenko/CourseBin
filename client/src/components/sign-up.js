@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios';
 
 class Signup extends Component {
@@ -9,6 +9,8 @@ class Signup extends Component {
       username: '',
       password: '',
       confirmPassword: '',
+      diplayError: false,
+      redirectTo: null
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -22,10 +24,9 @@ class Signup extends Component {
 
   handleSubmit(event) {
     const { username, password } = this.state;
-    console.log('sign-up handleSubmit, username: ');
-    console.log(username);
+    console.log('sign-up handleSubmit, username: ' + username);
     event.preventDefault();
-
+    
     // request to server to add a new username/password
     axios.post('/user/', {
       username,
@@ -35,21 +36,34 @@ class Signup extends Component {
         console.log(response);
         if (!response.data.errmsg) {
           console.log('successful signup');
-          this.setState({ // redirect to login page
+          this.setState({
             redirectTo: '/',
           });
         } else {
           console.log('username already taken');
+          this.setState({
+            username: '',
+            password: '',
+            confirmPassword: '',
+            diplayError: true
+          })
         }
       }).catch((error) => {
-        console.log('signup error: ');
-        console.log(error);
+        this.setState({
+          username: '',
+          password: '',
+          confirmPassword: '',
+          diplayError: true
+        })
+        console.log('signup error: ' + error);
       });
   }
 
-
   render() {
-    const { username, password } = this.state;
+    const { username, password, redirectTo} = this.state;
+    if (redirectTo) {
+      return <Redirect to={{ pathname: redirectTo }} />;
+    }
     return (
       <div className='SignupForm'>
         <div className="home-body-container container">
@@ -90,6 +104,7 @@ class Signup extends Component {
 
             </button>
             </div>
+            { this.state.diplayError ? <div style={ {color: '#FF0000'} }>The signup process did not work! Please try again</div> : '' }
             <Link to='/'>
               <p class="register-msg">Already a user? Login here!</p>
             </Link>
