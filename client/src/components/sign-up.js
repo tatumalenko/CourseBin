@@ -26,7 +26,7 @@ class Signup extends Component {
 
   handleSubmit(event) {
     const { username, password } = this.state;
-    console.log(`sign-up handleSubmit, username: ${  username}`);
+    console.log(`sign-up handleSubmit, username: ${username}`);
     event.preventDefault();
 
     // request to server to add a new username/password
@@ -49,14 +49,14 @@ class Signup extends Component {
           confirmPassword: '',
           displayError: true,
         });
-        console.log(`signup error: ${  error}`);
+        console.log(`signup error: ${error}`);
       });
   }
 
   render() {
     const {
- username, password, redirectTo, displayError 
-} = this.state;
+      username, password, redirectTo, displayError,
+    } = this.state;
     if (redirectTo) {
       return <Redirect to={{ pathname: redirectTo }} />;
     }
@@ -101,7 +101,7 @@ class Signup extends Component {
               ? (
                 <Col xs={2}>
                   <Form.Label id='error' className='error-msg'>
-                    The signup process did not work! Please try again
+                    The signup process did not work! Please try again.
                   </Form.Label>
                 </Col>
               )
