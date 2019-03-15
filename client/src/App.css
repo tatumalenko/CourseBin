@@ -91,6 +91,10 @@
   text-shadow: 2px 2px 800px bisque;
 }
 
+.title-for-loggedIn{
+  margin-top: 15px;
+}
+
 .semester-form-component{
   text-align: left;
 }
