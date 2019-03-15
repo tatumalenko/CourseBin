@@ -11,7 +11,8 @@ class Signup extends Component {
       password: '',
       redirectTo: null,
       confirmPassword: '',
-      err: false,
+      displayError: false,
+      redirectTo: null
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -25,8 +26,7 @@ class Signup extends Component {
 
   handleSubmit(event) {
     const { username, password } = this.state;
-    console.log('sign-up handleSubmit, username: ');
-    console.log(username);
+    console.log('sign-up handleSubmit, username: ' + username);
     event.preventDefault();
 
     // request to server to add a new username/password
@@ -38,28 +38,26 @@ class Signup extends Component {
         console.log(response);
         if (!response.data.errmsg) {
           console.log('successful signup');
-          this.setState({ // redirect to login page
+          this.setState({
             redirectTo: '/',
           });
-        } else {
-          console.log('username already taken');
         }
       }).catch((error) => {
-        this.setState({ err: true });
-        console.log(error);
+        this.setState({
+          username: '',
+          password: '',
+          confirmPassword: '',
+          displayError: true
+        })
+        console.log('signup error: ' + error);
       });
   }
 
-
   render() {
-    const {
-      redirectTo, username, password, err,
-    } = this.state;
-
+    const { username, password, redirectTo, displayError } = this.state;
     if (redirectTo) {
       return <Redirect to={{ pathname: redirectTo }} />;
     }
-
     return (
 
       <div>
@@ -97,12 +95,11 @@ class Signup extends Component {
             <Col xs={5} />
             <Col xs={5} />
 
-            {/* TODO ADD REGISTRATION ERROR MESSAGE TO STATE */}
-            {err
+            {displayError
               ? (
                 <Col xs={2}>
                   <Form.Label id='error' className='error-msg'>
-                    Invalid.
+                    The signup process did not work! Please try again
                   </Form.Label>
                 </Col>
               )
