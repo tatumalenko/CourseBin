@@ -1,7 +1,7 @@
 const express = require('express');
 
 const router = express.Router();
-const PasswordValidator = require('password-validator');
+const { SignupValidator } = require('../passport/SignupValidator');
 const { User } = require('../database/models/User');
 const passport = require('../passport');
 
@@ -12,40 +12,7 @@ router.post('/', async (req, res) => {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
 
-    const passwordRules = new PasswordValidator();
-    const usernameRules = new PasswordValidator();
-
-    // Username rules
-    usernameRules
-      .is().min(8) // Minimum length 8
-      .is().max(100) // Maximum length 100
-      .has().not().spaces(); // Should not have spaces
-
-    // Password rules
-    passwordRules
-      .is().min(8) // Minimum length 8
-      .is().max(100) // Maximum length 100
-      .has().not().spaces() // Should not have spaces
-      .has().uppercase() // Must have uppercase letters
-      .has().lowercase() // Must have lowercase letters
-      .has().digits() // Must have digits
-      .is().not().oneOf([ 'Passw0rd', 'Password123' ]); // Blacklist these values
-
-    const usernameValidatorMessageMap = {
-      min: 'Username must be 6 characters or more.',
-      max: 'Username must be 100 characters or less.',
-      spaces: 'Username cannot contain spaces.',
-    };
-
-    const passwordValidatorMessageMap = {
-      min: 'Password must be 6 characters or more.',
-      max: 'Password must be 100 characters or less.',
-      spaces: 'Password cannot contain spaces.',
-      uppercase: 'Password must contain uppercase letters.',
-      lowercase: 'Password must contain lowercase letters.',
-      digits: 'Password must contain at least 1 digit.',
-      oneOf: 'Password is too simple.',
-    };
+    const credentialValidation = SignupValidator.validate({ username, password });
 
     if (user) { // user already exists
       res
@@ -54,27 +21,11 @@ router.post('/', async (req, res) => {
           message: `Sorry, a user already exists with the username: ${username}`,
           user: null,
         });
-    } else if (username === password) {
+    } else if (!credentialValidation.valid) {
       res
         .status(400)
         .json({
-          message: 'Username and password cannot be the same.',
-          user: null,
-        });
-    } else if (!usernameRules.validate(username)) {
-      const reasons = usernameRules.validate(username, { list: true });
-      res
-        .status(400)
-        .json({
-          message: usernameValidatorMessageMap[reasons[0]],
-          user: null,
-        });
-    } else if (!passwordRules.validate(password)) {
-      const reasons = passwordRules.validate(password, { list: true });
-      res
-        .status(400)
-        .json({
-          message: passwordValidatorMessageMap[reasons[0]],
+          message: credentialValidation.message,
           user: null,
         });
     } else {
