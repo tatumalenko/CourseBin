@@ -12,7 +12,7 @@ class Signup extends Component {
       redirectTo: null,
       confirmPassword: '',
       displayError: false,
-      redirectTo: null
+      redirectTo: null,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -26,7 +26,7 @@ class Signup extends Component {
 
   handleSubmit(event) {
     const { username, password } = this.state;
-    console.log('sign-up handleSubmit, username: ' + username);
+    console.log(`sign-up handleSubmit, username: ${  username}`);
     event.preventDefault();
 
     // request to server to add a new username/password
@@ -47,14 +47,16 @@ class Signup extends Component {
           username: '',
           password: '',
           confirmPassword: '',
-          displayError: true
-        })
-        console.log('signup error: ' + error);
+          displayError: true,
+        });
+        console.log(`signup error: ${  error}`);
       });
   }
 
   render() {
-    const { username, password, redirectTo, displayError } = this.state;
+    const {
+ username, password, redirectTo, displayError 
+} = this.state;
     if (redirectTo) {
       return <Redirect to={{ pathname: redirectTo }} />;
     }
