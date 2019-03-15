@@ -10,6 +10,7 @@ class LoginForm extends Component {
       username: '',
       password: '',
       redirectTo: null,
+      invalid: false,
       err: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -28,6 +29,7 @@ class LoginForm extends Component {
     const { username, password } = this.state;
     const { updateUser } = this.props;
 
+    this.setState({ invalid: false });
     axios
       .post('/user/login', {
         username,
@@ -59,10 +61,14 @@ class LoginForm extends Component {
 
   render() {
     const {
-      redirectTo, username, password, err,
+      redirectTo, username, password, err, invalid,
     } = this.state;
     if (redirectTo) {
       return <Redirect to={{ pathname: redirectTo }} />;
+    }
+    let invalidPassword = '';
+    if (invalid) {
+      invalidPassword = 'Username and Password must be different. Password must be at least 4 characters long.';
     }
     return (
 
