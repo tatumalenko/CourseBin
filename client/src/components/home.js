@@ -1,23 +1,49 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
+import StudentForm from './student-form';
 
 class Home extends Component {
   // eslint-disable-next-line no-useless-constructor
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    this.state = {
+      showForm: false,
+    };
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick() {
+    this.setState({
+      showForm: true,
+    });
   }
 
 
   render() {
+    const { redirectTo, showForm } = this.state;
+    if (redirectTo) {
+      return <Redirect to={{ pathname: redirectTo }} />;
+    }
 
     return (
-      <div className="home-body-container container">
-        <div className="title-wrapper">
-          <h1>Coursebin</h1>
-        </div>
-        <p>
-          Welcome, you have logged in successfully!
-        </p>
+
+      <div>
+
+        {showForm
+          ? <StudentForm />
+          : (
+            <div>
+              <div className='title-wrapper'>
+                <h1>Coursebin</h1>
+              </div>
+              <Button type='primary' onClick={this.handleClick}>Let's Get Started</Button>
+            </div>
+          )
+        }
       </div>
+
+
     );
   }
 }

@@ -1,4 +1,18 @@
 {
+  "code-runner.executorMap": {
+    "javascript": "npx ava -v",
+    "php": "C:\\php\\php.exe",
+    "python": "python3",
+    "perl": "perl",
+    "ruby": "ruby",
+    "go": "go run",
+    // "html": "\"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe\"",
+    // "java": "cd $dir && javac $fileName && java $fileNameWithoutExt",
+    "java": "cd $dir && find *.java | xargs javac -d ./.java && java -cp ./.java $fileNameWithoutExt",
+    "c": "cd $dir && gcc $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
+    "cpp": "g++ -std=c++14 $fileName -o ./.cpp/$fileNameWithoutExt && ./.cpp/$fileNameWithoutExt"
+  },
+  "editor.tabSize": 2,
   "eslint.enable": true,
   "eslint.autoFixOnSave": true,
   "eslint.nodePath": "client/node_modules/eslint",

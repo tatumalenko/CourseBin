@@ -12,6 +12,9 @@ const configs = require('./configs/configs');
 const app = express();
 const PORT = process.env.PORT || 3001;
 const user = require('./server/routes/user');
+const catalog = require('./server/routes/catalog');
+const timetable = require('./server/routes/timetable');
+const degree = require('./server/routes/degree');
 
 // MIDDLEWARE
 app.use(morgan('dev'));
@@ -38,6 +41,9 @@ app.use(passport.session()); // calls the deserializeUser
 
 // Routes
 app.use('/user', user);
+app.use('/catalog', catalog);
+app.use('/timetable', timetable);
+app.use('/degree', degree);
 
 if (configs.nodeEnv === 'production') {
   // Express will serve up production assets

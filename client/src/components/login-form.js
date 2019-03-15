@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Redirect, Route, Link } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
+import { Form, Button, Col } from 'react-bootstrap';
 import axios from 'axios';
 
 class LoginForm extends Component {
@@ -9,6 +10,8 @@ class LoginForm extends Component {
       username: '',
       password: '',
       redirectTo: null,
+      invalid: false,
+      err: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -26,6 +29,7 @@ class LoginForm extends Component {
     const { username, password } = this.state;
     const { updateUser } = this.props;
 
+    this.setState({ invalid: false });
     axios
       .post('/user/login', {
         username,
@@ -45,26 +49,41 @@ class LoginForm extends Component {
           });
         }
       }).catch((error) => {
+        this.setState({
+          username: '',
+          password: '',
+          redirectTo: null,
+        });
         console.error('Login error: ', error);
+        this.setState({ err: true });
       });
   }
 
   render() {
-    const { redirectTo, username, password } = this.state;
+    const {
+      redirectTo, username, password, err, invalid,
+    } = this.state;
     if (redirectTo) {
       return <Redirect to={{ pathname: redirectTo }} />;
     }
+    let invalidPassword = '';
+    if (invalid) {
+      invalidPassword = 'Username and Password must be different. Password must be at least 4 characters long.';
+    }
     return (
-      <div>
-        <div className="home-body-container container">
 
-          <div className="title-wrapper">
-            <h1>Coursebin</h1>
-          </div>
-          <form className='form-horizontal'>
-            <div className='form-group col-xs-12'>
-              <input
-                className='form-input'
+
+      <div>
+
+        <div className='title-wrapper'>
+          <h1>Coursebin</h1>
+        </div>
+
+        <Form>
+          <Form.Row>
+            <Col xs={5} />
+            <Col xs={2}>
+              <Form.Control
                 type='text'
                 id='username'
                 name='username'
@@ -72,35 +91,57 @@ class LoginForm extends Component {
                 value={username}
                 onChange={this.handleChange}
               />
-            </div>
-            <div className='form-group col-xs-12'>
-              <input
-                className='form-input'
+            </Col>
+          </Form.Row>
+          <Form.Row>
+            <Col xs={5} />
+            <Col xs={2}>
+              <Form.Control
                 placeholder='password'
                 type='password'
                 name='password'
                 value={password}
                 onChange={this.handleChange}
               />
-            </div>
-            <div className='form-group col-xs-12'>
-              <button
-                className='btn btn-primary'
+            </Col>
+            <Col xs={5} />
+            <Col xs={5} />
+            {err
+              ? (
+                <Col xs={2}>
+                  <Form.Label id='error' className='error-msg'>
+                    Sorry, this username/password combination is not valid. Please try again or try signing up.
+                  </Form.Label>
+                </Col>
+              )
+              : null
+            }
+          </Form.Row>
+          <br />
+          <Form.Row>
+            <Col xs={12}>
+              <Button
                 onClick={this.handleSubmit}
                 type='submit'
               >
                 Login
 
-            </button>
-            </div>
-            <Link to='/signup'>
-              <p class="register-msg">Not a user? Signup here!</p>
-            </Link>
-          </form>
+              </Button>
+            </Col>
+            <Col xs={12}>
 
-        </div>
+              <Form.Label>
+                <Link to='/signup'>Not a user? Signup here!</Link>
+              </Form.Label>
 
+            </Col>
+
+          </Form.Row>
+
+
+        </Form>
       </div>
+
     );
   }
 }
