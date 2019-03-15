@@ -7,8 +7,11 @@ import { Redirect } from 'react-router-dom';
 import {
   Form, Row, Col, Button,
 } from 'react-bootstrap';
+<<<<<<< HEAD
 import { stringify } from 'querystring';
 import Schedule from './schedule';
+=======
+>>>>>>> b0f06b0... [#70] Logout button fix & styling
 
 class StudentForm extends Component {
   constructor() {
@@ -151,11 +154,16 @@ class StudentForm extends Component {
 
                 <div className='student-form'>
 <<<<<<< HEAD
+<<<<<<< HEAD
                     <div className='header-logo'> <h3> Coursebin</h3></div>
 =======
                     <div className='header-logo'> <h3 className="title-for-loggedIn"> CourseBin</h3></div>
 >>>>>>> master
                     <Form onSubmit={this.handleGenerateSchedule}>
+=======
+                  <div className='header-logo'><h3 className='title-for-loggedIn'>CourseBin</h3></div>
+                    <Form onSubmit={this.handleSubmit}>
+>>>>>>> b0f06b0... [#70] Logout button fix & styling
                         <h3 id='form-header'>First, we will just need some basic information... </h3>
                         <div id='student-form-content'>
                             <div style={{ display: fallChecked ? 'initial' : 'none' }}>

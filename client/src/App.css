@@ -96,11 +96,19 @@
   bottom: 75px;
   text-shadow: 2px 2px 800px bisque;
 }
+<<<<<<< HEAD
 .title-for-loggedIn{
   position: absolute;
   font-size: 51px;
   margin-left: 43%;
 }
+=======
+
+.title-for-loggedIn{
+  margin-top: 15px;
+}
+
+>>>>>>> b0f06b0... [#70] Logout button fix & styling
 .semester-form-component{
   text-align: left;
 }
