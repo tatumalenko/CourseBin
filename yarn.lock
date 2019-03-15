@@ -3307,6 +3307,9 @@ password-validator@^4.1.1:
   resolved "https://registry.yarnpkg.com/password-validator/-/password-validator-4.1.1.tgz#80f343579834b574913097973f66b2347ed8aaf9"
   integrity sha1-gPNDV5g0tXSRMJeXP2ayNH7Yqvk=
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 2434598... [#41] Merged master into branch, fixed conflicts
   
 path-dirname@^1.0.0:
   version "1.0.2"
