@@ -6,7 +6,14 @@ module.exports = {
     sessionSecret: process.env.SESSION_SECRET,
     schemaCollectionNames: {
       user: 'users',
+      catalog: 'catalog',
+      student: 'students',
+      timetable: 'timetable',
     },
+  },
+  openApi: {
+    username: process.env.OPEN_API_USERNAME,
+    password: process.env.OPEN_API_PASSWORD,
   },
   nodeEnv: 'production',
 };

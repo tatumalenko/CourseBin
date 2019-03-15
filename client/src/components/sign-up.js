@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
+import { Form, Button, Col } from 'react-bootstrap';
 import axios from 'axios';
 
 let x;
@@ -10,7 +11,10 @@ class Signup extends Component {
     this.state = {
       username: '',
       password: '',
+      redirectTo: null,
       confirmPassword: '',
+      displayError: false,
+      redirectTo: null,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -24,8 +28,7 @@ class Signup extends Component {
 
   handleSubmit(event) {
     const { username, password } = this.state;
-    console.log('sign-up handleSubmit, username: ');
-    console.log(username);
+    console.log(`sign-up handleSubmit, username: ${username}`);
     event.preventDefault();
 
     // request to server to add a new username/password
@@ -36,33 +39,42 @@ class Signup extends Component {
       .then((response) => {
         if (!response.data.errmsg) {
           console.log('successful signup');
-          this.setState({ // redirect to login page
+          this.setState({
             redirectTo: '/',
           });
-        } else {
-          console.log('username already taken');
         }
       }).catch((error) => {
         console.log('signup error: ');
         console.log(error.response); //Error response with error message
+        this.setState({
+          username: '',
+          password: '',
+          confirmPassword: '',
+          displayError: true,
+        });
       });
   }
 
-
   render() {
-    const { username, password } = this.state;
+    const {
+      username, password, redirectTo, displayError,
+    } = this.state;
+    if (redirectTo) {
+      return <Redirect to={{ pathname: redirectTo }} />;
+    }
     return (
-      <div className='SignupForm'>
-        <div className="home-body-container container">
 
-          <div className="title-wrapper">
-            <h1>Coursebin</h1>
-          </div>
+      <div>
 
-          <form className='form-horizontal'>
-            <div className='form-group col-xs-12'>
-              <input
-                className='form-input'
+        <div className='title-wrapper'>
+          <h1>Coursebin</h1>
+        </div>
+
+        <Form>
+          <Form.Row>
+            <Col xs={5} />
+            <Col xs={2}>
+              <Form.Control
                 type='text'
                 id='username'
                 name='username'
@@ -70,31 +82,54 @@ class Signup extends Component {
                 value={username}
                 onChange={this.handleChange}
               />
-            </div>
-            <div className='form-group col-xs-12'>
-              <input
-                className='form-input'
+            </Col>
+          </Form.Row>
+
+          <Form.Row>
+            <Col xs={5} />
+            <Col xs={2}>
+              <Form.Control
                 placeholder='password'
                 type='password'
                 name='password'
                 value={password}
                 onChange={this.handleChange}
               />
-            </div>
-            <div className='form-group col-xs-12'>
-              <button
-                className='btn btn-primary'
+            </Col>
+            <Col xs={5} />
+            <Col xs={5} />
+
+            {displayError
+              ? (
+                <Col xs={2}>
+                  <Form.Label id='error' className='error-msg'>
+                    The signup process did not work! Please try again.
+                  </Form.Label>
+                </Col>
+              )
+              : null
+            }
+          </Form.Row>
+          <br />
+          <Form.Row>
+            <Col xs={12}>
+              <Button
                 onClick={this.handleSubmit}
                 type='submit'
               >
                 Sign up
-            </button>
-            </div>
-            <Link to='/'>
-              <p class="register-msg">Already a user? Login here!</p>
-            </Link>
-          </form>
-        </div>
+
+              </Button>
+            </Col>
+            <Col xs={12}>
+              <Form.Label>
+                <Link to='/'>
+                  Already a user? Login here!
+                </Link>
+              </Form.Label>
+            </Col>
+          </Form.Row>
+        </Form>
       </div>
 
     );
