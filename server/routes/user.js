@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 const { SignupValidator } = require('../passport/SignupValidator');
 const { User } = require('../database/models/User');
 const passport = require('../passport');
@@ -18,6 +19,9 @@ const passport = require('../passport');
 
 =======
 const PasswordValidator = require('password-validator');
+=======
+const { SignupValidator } = require('../passport/SignupValidator');
+>>>>>>> f072e1d... [#41] Abstract signup validation logic into separate class and add tests
 const { User } = require('../database/models/User');
 const passport = require('../passport');
 
@@ -29,6 +33,7 @@ router.post('/', async (req, res) => {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     const credentialValidation = SignupValidator.validate({ username, password });
@@ -75,6 +80,9 @@ router.post('/', async (req, res) => {
       oneOf: 'Password is too simple.',
     };
 >>>>>>> 9616f34... [#41] Fix username validation and simplify control flow
+=======
+    const credentialValidation = SignupValidator.validate({ username, password });
+>>>>>>> f072e1d... [#41] Abstract signup validation logic into separate class and add tests
 
     if (user) { // user already exists
       res
@@ -83,6 +91,7 @@ router.post('/', async (req, res) => {
           message: `Sorry, a user already exists with the username: ${username}`,
           user: null,
         });
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     } else if (!credentialValidation.valid) {
@@ -114,10 +123,13 @@ router.post('/', async (req, res) => {
         });
     } else if (!passwordRules.validate(password)) {
       const reasons = passwordRules.validate(password, { list: true });
+=======
+    } else if (!credentialValidation.valid) {
+>>>>>>> f072e1d... [#41] Abstract signup validation logic into separate class and add tests
       res
         .status(400)
         .json({
-          message: passwordValidatorMessageMap[reasons[0]],
+          message: credentialValidation.message,
           user: null,
         });
     } else {
