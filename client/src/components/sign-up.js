@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
+import { Form, Button, Col } from 'react-bootstrap';
 import axios from 'axios';
 
 class Signup extends Component {
@@ -8,7 +9,9 @@ class Signup extends Component {
     this.state = {
       username: '',
       password: '',
+      redirectTo: null,
       confirmPassword: '',
+      err: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -42,26 +45,34 @@ class Signup extends Component {
           console.log('username already taken');
         }
       }).catch((error) => {
-        console.log('signup error: ');
+        this.setState({ err: true });
         console.log(error);
       });
   }
 
 
   render() {
-    const { username, password } = this.state;
+    const {
+      redirectTo, username, password, err,
+    } = this.state;
+
+    if (redirectTo) {
+      return <Redirect to={{ pathname: redirectTo }} />;
+    }
+
     return (
-      <div className='SignupForm'>
-        <div className="home-body-container container">
 
-          <div className="title-wrapper">
-            <h1>Coursebin</h1>
-          </div>
+      <div>
 
-          <form className='form-horizontal'>
-            <div className='form-group col-xs-12'>
-              <input
-                className='form-input'
+        <div className='title-wrapper'>
+          <h1>Coursebin</h1>
+        </div>
+
+        <Form>
+          <Form.Row>
+            <Col xs={5} />
+            <Col xs={2}>
+              <Form.Control
                 type='text'
                 id='username'
                 name='username'
@@ -69,32 +80,55 @@ class Signup extends Component {
                 value={username}
                 onChange={this.handleChange}
               />
-            </div>
-            <div className='form-group col-xs-12'>
-              <input
-                className='form-input'
+            </Col>
+          </Form.Row>
+
+          <Form.Row>
+            <Col xs={5} />
+            <Col xs={2}>
+              <Form.Control
                 placeholder='password'
                 type='password'
                 name='password'
                 value={password}
                 onChange={this.handleChange}
               />
-            </div>
-            <div className='form-group col-xs-12'>
-              <button
-                className='btn btn-primary'
+            </Col>
+            <Col xs={5} />
+            <Col xs={5} />
+
+            {/* TODO ADD REGISTRATION ERROR MESSAGE TO STATE */}
+            {err
+              ? (
+                <Col xs={2}>
+                  <Form.Label id='error' className='error-msg'>
+                    Invalid.
+                  </Form.Label>
+                </Col>
+              )
+              : null
+            }
+          </Form.Row>
+          <br />
+          <Form.Row>
+            <Col xs={12}>
+              <Button
                 onClick={this.handleSubmit}
                 type='submit'
               >
                 Sign up
 
-            </button>
-            </div>
-            <Link to='/'>
-              <p class="register-msg">Already a user? Login here!</p>
-            </Link>
-          </form>
-        </div>
+              </Button>
+            </Col>
+            <Col xs={12}>
+              <Form.Label>
+                <Link to='/'>
+                  Already a user? Login here!
+                </Link>
+              </Form.Label>
+            </Col>
+          </Form.Row>
+        </Form>
       </div>
 
     );

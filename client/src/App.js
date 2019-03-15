@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Route, Link } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
 import Signup from './components/sign-up';
 import LoginForm from './components/login-form';
@@ -8,6 +8,7 @@ import Navbar from './components/navbar';
 import Home from './components/home';
 
 import concordiaLogo from './assets/concordia-logo.jpeg';
+
 
 class App extends Component {
   constructor() {
@@ -66,8 +67,8 @@ class App extends Component {
       return <div />;
     }
     return (
-      <div className='App'>
 
+      <div className='App'>
         <Navbar updateUser={updateUser} loggedIn={state.loggedIn} />
         {/* greet user if logged in: */}
         {state.loggedIn
@@ -89,15 +90,17 @@ class App extends Component {
           />
         )
         }
-        <Route
-          path='/signup'
-          component={Signup}
-          render={() => (
-            <Signup
-              signup={signup}
-            />
-          )}
-        />
+        {!state.loggedIn && (
+          <Route
+            path='/signup'
+            render={() => (
+              <Signup
+                signup={signup}
+              />
+            )}
+          />
+        )}
+
 
         <div className='home-bottom'>
           <img src={concordiaLogo} alt='Concordia University' />
