@@ -90,11 +90,11 @@
   bottom: 75px;
   text-shadow: 2px 2px 800px bisque;
 }
-
 .title-for-loggedIn{
-  margin-top: 15px;
+  position: absolute;
+  font-size: 51px;
+  margin-left: 43%;
 }
-
 .semester-form-component{
   text-align: left;
 }

@@ -7,6 +7,7 @@ import axios from 'axios';
 import {
   Form, Row, Col, Button,
 } from 'react-bootstrap';
+import { stringify } from 'querystring';
 
 class StudentForm extends Component {
   constructor() {
@@ -136,7 +137,7 @@ class StudentForm extends Component {
     return (
 
                 <div className='student-form'>
-                  <div className='header-logo'><h3 className='title-for-loggedIn'>CourseBin</h3></div>
+                     <div className='header-logo'><h3 className='title-for-loggedIn'>CourseBin</h3></div>
                     <Form onSubmit={this.handleSubmit}>
                         <h3 id='form-header'>First, we will just need some basic information... </h3>
                         <div id='student-form-content'>
