@@ -8,10 +8,14 @@ import {
   Form, Row, Col, Button,
 } from 'react-bootstrap';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { stringify } from 'querystring';
 import Schedule from './schedule';
 =======
 >>>>>>> b0f06b0... [#70] Logout button fix & styling
+=======
+import { stringify } from 'querystring';
+>>>>>>> 7b60978... [#70] Styling the header
 
 class StudentForm extends Component {
   constructor() {
@@ -155,6 +159,7 @@ class StudentForm extends Component {
                 <div className='student-form'>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                     <div className='header-logo'> <h3> Coursebin</h3></div>
 =======
                     <div className='header-logo'> <h3 className="title-for-loggedIn"> CourseBin</h3></div>
@@ -162,6 +167,9 @@ class StudentForm extends Component {
                     <Form onSubmit={this.handleGenerateSchedule}>
 =======
                   <div className='header-logo'><h3 className='title-for-loggedIn'>CourseBin</h3></div>
+=======
+                     <div className='header-logo'><h3 className='title-for-loggedIn'>CourseBin</h3></div>
+>>>>>>> 7b60978... [#70] Styling the header
                     <Form onSubmit={this.handleSubmit}>
 >>>>>>> b0f06b0... [#70] Logout button fix & styling
                         <h3 id='form-header'>First, we will just need some basic information... </h3>
