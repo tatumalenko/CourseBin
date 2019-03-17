@@ -1,8 +1,9 @@
 const express = require('express');
 
 const router = express.Router();
+const { SignupValidator } = require('../passport/SignupValidator');
 const { User } = require('../database/models/User');
-const passport = require('../passport/index');
+const passport = require('../passport');
 
 router.post('/', async (req, res) => {
   try {
@@ -11,11 +12,20 @@ router.post('/', async (req, res) => {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
 
-    if (user) {
+    const credentialValidation = SignupValidator.validate({ username, password });
+
+    if (user) { // user already exists
       res
         .status(400)
         .json({
           message: `Sorry, a user already exists with the username: ${username}`,
+          user: null,
+        });
+    } else if (!credentialValidation.valid) {
+      res
+        .status(400)
+        .json({
+          message: credentialValidation.message,
           user: null,
         });
     } else {
