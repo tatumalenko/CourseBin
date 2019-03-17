@@ -131,6 +131,7 @@ router.post('/', async (req, res) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           message: `Sorry, a user already exists with the username: ${username}`,
           user: null,
         });
@@ -185,6 +186,9 @@ router.post('/', async (req, res) => {
 =======
           `Sorry, a user already exists with the username: ${user.username}`
 >>>>>>> 0d14ded... Update server/routes/user.js
+=======
+          message: `Sorry, a user already exists with the username: ${username}`,
+>>>>>>> 3e5c12b... added error messages and fixed missing message: declaration
         });
     }
     else if (passwordRules.validate(password)) { // valid password
@@ -275,7 +279,7 @@ router.post('/', async (req, res) => {
         });
       }
     }
-    else { // invalid password
+    else { // password does not respect the rules
       if (username === password) {
         res
         .status(400)
@@ -283,18 +287,32 @@ router.post('/', async (req, res) => {
           message: 'Username and password cannot be the same.',
         });
       }
-      if (password.length < 6) {
+      if (username.is().oneOf(['password', 'abcdef', '123456'])) { // password too simple
+        res
+        .status(400)
+        .json({
+          message: 'Password is invalid.',
+        })
+      }
+      if (username.has().not().lowercase()) { // password does not have any lowercase letters
+        res
+        .status(400)
+        .json({
+          message: 'Password must contain lowercase letters.',
+        })
+      }
+      if (password.length < 6) { // password too short
         res
         .status(400)
         .json({
         message: 'Password must be 6 characters or more.',
         });
       }
-      if (password.has().spaces()) {
+      if (password.has().spaces()) { // password contains spaces
         res
         .status(400)
         .json({
-        message: 'Password cannot contain spaces',
+          message: 'Password cannot contain spaces.',
         });
       }
     }
