@@ -80,6 +80,7 @@ class Schedule extends Component {
       <div> 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <div className='header-logo'> <h3> Coursebin</h3></div>
 =======
         <div className='header-logo'> <h3 className="title-for-loggedIn"> CourseBin</h3></div>
@@ -87,6 +88,9 @@ class Schedule extends Component {
 =======
         <div className='header-logo'> <h3 className="title-for-loggedIn"> Coursebin</h3></div>
 >>>>>>> d2c5a65... fix the coursebin for schedule
+=======
+        <div className='header-logo'> <h3 className="title-for-loggedIn"> CourseBin</h3></div>
+>>>>>>> 70ac9a8... changed
       
         <MuiThemeProvider theme={theme}>
           <Paper>
