@@ -42,20 +42,22 @@ class StudentForm extends Component {
 
     this.state = {
       jsonObject,
-      showListFlag: false,
       fallChecked: false,
       winterChecked: false,
       summerChecked: false,
       courseMap: null,
       fall: {
+        showListFlag: false,
         selectedFaculty: '',
         selectedCourses: {},
       },
       winter: {
+        showListFlag: false,
         selectedFaculty: '',
         selectedCourses: {},
       },
       summer: {
+        showListFlag: false,
         selectedFaculty: '',
         selectedCourses: {},
       },
@@ -155,24 +157,24 @@ class StudentForm extends Component {
       switch (season) {
         case 'fall':
           this.setState({
-            showListFlag: true,
             fall: {
+              showListFlag: true,
               selectedFaculty: this.faculty,
             },
           });
           break;
         case 'winter':
           this.setState({
-            showListFlag: true,
             winter: {
+              showListFlag: true,
               selectedFaculty: this.faculty,
             },
           });
           break;
         case 'summer':
           this.setState({
-            showListFlag: true,
             summer: {
+              showListFlag: true,
               selectedFaculty: this.faculty,
             },
           });
@@ -242,7 +244,7 @@ class StudentForm extends Component {
 
   render() {
     const {
-      fallChecked, summerChecked, winterChecked, jsonObject, courseMap, showListFlag, fall, winter, summer,
+      fallChecked, summerChecked, winterChecked, jsonObject, courseMap, fall, winter, summer,
     } = this.state;
 
     return (
@@ -325,7 +327,7 @@ class StudentForm extends Component {
                       </Row>
                       <Row>
                       {
-                      showListFlag ?
+                      fall.showListFlag ?
                         (
                         <span>
                           <Form.Label>
@@ -432,7 +434,7 @@ class StudentForm extends Component {
                         </Row>
                         <Row>
                         {
-                        showListFlag ?
+                        winter.showListFlag ?
                           (
                           <span>
                             <Form.Label>
@@ -547,7 +549,7 @@ class StudentForm extends Component {
                         </Row>
                         <Row>
                         {
-                        showListFlag ?
+                        summer.showListFlag ?
                           (
                           <span>
                             <Form.Label>
