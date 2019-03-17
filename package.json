@@ -41,6 +41,7 @@
     "passport-local": "^1.0.0",
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 =======
@@ -58,6 +59,9 @@
 =======
 >>>>>>> 76db477... [#41] Run yarn add password-validator
 >>>>>>> 37d606fc13b8e09ecfa456de7d62e6b3d4faeb45
+=======
+    "password-validator": "^4.1.1"
+>>>>>>> e125ee2... changed password validation to be more robust
   },
   "scripts": {
     "start": "yarn prodstart",

@@ -9,6 +9,7 @@ const passport = require('../passport/index');
 const User = require('../database/models/User');
 const passport = require('../passport');
 const passwordValidator = require('password-validator');
+<<<<<<< HEAD
 >>>>>>> e125ee2... changed password validation to be more robust
 =======
 <<<<<<< HEAD
@@ -25,6 +26,8 @@ const passport = require('../passport');
 // const passport = require('../passport/index');
 
 >>>>>>> 2434598... [#41] Merged master into branch, fixed conflicts
+=======
+>>>>>>> e125ee2... changed password validation to be more robust
 
 =======
 const PasswordValidator = require('password-validator');
@@ -44,6 +47,9 @@ router.post('/', async (req, res) => {
     const user = await User.findOne({ username });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e125ee2... changed password validation to be more robust
     var passwordRules = new passwordValidator();
 
     // password rules
@@ -51,6 +57,7 @@ router.post('/', async (req, res) => {
     .is().min(6)  // minimum length of 6
     .is().max(20) // maximum length of 20
     .has().not().spaces() // no spaces allowed
+<<<<<<< HEAD
     .has().lowercase() // must have lowercase letters
     .is().not().oneOf([username, 'password', 'abcdef', '123456']); // list of invalid passwords
     
@@ -106,11 +113,16 @@ router.post('/', async (req, res) => {
     const credentialValidation = SignupValidator.validate({ username, password });
 >>>>>>> f072e1d... [#41] Abstract signup validation logic into separate class and add tests
 >>>>>>> 37d606fc13b8e09ecfa456de7d62e6b3d4faeb45
+=======
+    .is().not().oneOf([username, 'password']); // list of invalid passwords
+    
+>>>>>>> e125ee2... changed password validation to be more robust
 
     if (user) { // user already exists
       res
         .status(400)
         .json({
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
           message: `Sorry, a user already exists with the username: ${username}`,
@@ -171,6 +183,12 @@ router.post('/', async (req, res) => {
 =======
 >>>>>>> 9616f34... [#41] Fix username validation and simplify control flow
 >>>>>>> 37d606fc13b8e09ecfa456de7d62e6b3d4faeb45
+=======
+          message: 'Sorry, a user already exists with the username: ${username}',
+        });
+    }
+    else if (passwordRules.validate(password)) { // valid password
+>>>>>>> e125ee2... changed password validation to be more robust
       const newUser = new User({
         username,
         password,
@@ -227,6 +245,29 @@ router.post('/', async (req, res) => {
     }
     else { // invalid password
       if (username === password) {
+        res
+        .status(400)
+        .json({
+          message: 'Username and password cannot be the same.',
+        });
+      }
+      if (password.length < 6) {
+        res
+        .status(400)
+        .json({
+        message: 'Password must be 6 characters or more.',
+        });
+      }
+      if (password.has().spaces()) {
+        res
+        .status(400)
+        .json({
+        message: 'Password cannot contain spaces',
+        });
+      }
+    }
+    else { // invalid password
+      if (username.equals(password)) {
         res
         .status(400)
         .json({

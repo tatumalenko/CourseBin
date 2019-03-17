@@ -3304,11 +3304,15 @@ passport@^0.4.0:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> e125ee2... changed password validation to be more robust
 password-validator@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/password-validator/-/password-validator-4.1.1.tgz#80f343579834b574913097973f66b2347ed8aaf9"
   integrity sha1-gPNDV5g0tXSRMJeXP2ayNH7Yqvk=
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -3329,6 +3333,8 @@ password-validator@^4.1.1:
 =======
 >>>>>>> 76db477... [#41] Run yarn add password-validator
 >>>>>>> 37d606fc13b8e09ecfa456de7d62e6b3d4faeb45
+=======
+>>>>>>> e125ee2... changed password validation to be more robust
 
 path-exists@^3.0.0:
   version "3.0.0"
