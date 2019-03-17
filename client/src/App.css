@@ -96,7 +96,27 @@
   bottom: 75px;
   text-shadow: 2px 2px 800px bisque;
 }
+<<<<<<< HEAD
+<<<<<<< HEAD
+.title-for-loggedIn{
+  position: absolute;
+  font-size: 51px;
+  margin-left: 43%;
+}
+=======
 
+=======
+>>>>>>> 7b60978... [#70] Styling the header
+.title-for-loggedIn{
+  position: absolute;
+  font-size: 51px;
+  margin-left: 43%;
+}
+<<<<<<< HEAD
+
+>>>>>>> b0f06b0... [#70] Logout button fix & styling
+=======
+>>>>>>> 7b60978... [#70] Styling the header
 .semester-form-component{
   text-align: left;
 }

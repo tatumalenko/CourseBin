@@ -6,9 +6,13 @@
     "@devexpress/dx-react-core": "^1.10.4",
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "@devexpress/dx-react-grid-material-ui": "^1.10.4",
 =======
 >>>>>>> 8155786... added weekly schedule page
+=======
+    "@devexpress/dx-react-grid-material-ui": "^1.10.4",
+>>>>>>> 3266c17... removed package.lock
 =======
     "@devexpress/dx-react-grid-material-ui": "^1.10.4",
 >>>>>>> 3266c17... removed package.lock

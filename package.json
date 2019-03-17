@@ -40,13 +40,24 @@
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> 2434598... [#41] Merged master into branch, fixed conflicts
+    "password-validator": "^4.1.1",
+>>>>>>> 37d606fc13b8e09ecfa456de7d62e6b3d4faeb45
     "react": "^16.8.4",
     "react-bootstrap": "^1.0.0-beta.5",
     "react-dom": "^16.8.4",
     "react-transition-group": "^2.6.0"
 =======
     "password-validator": "^4.1.1"
+<<<<<<< HEAD
 >>>>>>> e125ee2... changed password validation to be more robust
+=======
+>>>>>>> 76db477... [#41] Run yarn add password-validator
+>>>>>>> 37d606fc13b8e09ecfa456de7d62e6b3d4faeb45
   },
   "scripts": {
     "start": "yarn prodstart",
