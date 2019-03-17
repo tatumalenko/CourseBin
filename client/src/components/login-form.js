@@ -12,10 +12,14 @@ class LoginForm extends Component {
       redirectTo: null,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       invalid: false,
 >>>>>>> 37d606fc13b8e09ecfa456de7d62e6b3d4faeb45
       err: false,
+=======
+      invalid: false,
+>>>>>>> 9f906ef... [#40] Add client side password validation
 =======
       invalid: false,
 >>>>>>> 9f906ef... [#40] Add client side password validation
@@ -37,11 +41,16 @@ class LoginForm extends Component {
     const { updateUser } = this.props;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     if(password.length >= 4 && !(password == username)){
       this.setState({invalid : false});
 =======
     this.setState({ invalid: false });
 >>>>>>> 37d606fc13b8e09ecfa456de7d62e6b3d4faeb45
+=======
+    if(password.length >= 4 && !(password == username)){
+      this.setState({invalid : false});
+>>>>>>> 9f906ef... [#40] Add client side password validation
     axios
       .post('/user/login', {
         username,
@@ -83,6 +92,7 @@ class LoginForm extends Component {
       return <Redirect to={{ pathname: redirectTo }} />;
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
     let invalidPassword = ''
     if (this.state.invalid){
       invalidPassword = "Username and Password must be different. Password must be at least 4 characters long.";
@@ -91,6 +101,11 @@ class LoginForm extends Component {
     if (invalid) {
       invalidPassword = 'Username and Password must be different. Password must be at least 4 characters long.';
 >>>>>>> 37d606fc13b8e09ecfa456de7d62e6b3d4faeb45
+=======
+    let invalidPassword = ''
+    if (this.state.invalid){
+      invalidPassword = "Username and Password must be different. Password must be at least 4 characters long.";
+>>>>>>> 9f906ef... [#40] Add client side password validation
     }
     return (
 
@@ -180,6 +195,9 @@ class LoginForm extends Component {
           </div>
         </form>
         <div>{invalidPassword}</div>
+<<<<<<< HEAD
+>>>>>>> 9f906ef... [#40] Add client side password validation
+=======
 >>>>>>> 9f906ef... [#40] Add client side password validation
       </div>
 
