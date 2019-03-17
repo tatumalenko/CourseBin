@@ -16,6 +16,11 @@
     text-align: center;
 }
 
+.title-for-loggedIn{
+  position: absolute;
+  font-size: 51px;
+  margin-left: 43%;
+}
 
 .home-bottom{
   background-color: white;
