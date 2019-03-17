@@ -3,6 +3,8 @@ import { Redirect, Link } from 'react-router-dom';
 import { Form, Button, Col } from 'react-bootstrap';
 import axios from 'axios';
 
+let x;
+
 class Signup extends Component {
   constructor() {
     super();
@@ -35,7 +37,6 @@ class Signup extends Component {
       password,
     })
       .then((response) => {
-        console.log(response);
         if (!response.data.errmsg) {
           console.log('successful signup');
           this.setState({
@@ -43,13 +44,14 @@ class Signup extends Component {
           });
         }
       }).catch((error) => {
+        console.log('signup error: ');
+        console.log(error.response); //Error response with error message
         this.setState({
           username: '',
           password: '',
           confirmPassword: '',
           displayError: true,
         });
-        console.log(`signup error: ${error}`);
       });
   }
 
