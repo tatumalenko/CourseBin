@@ -15,6 +15,7 @@ class LoginForm extends Component {
 <<<<<<< HEAD
 =======
       invalid: false,
+<<<<<<< HEAD
 >>>>>>> 37d606fc13b8e09ecfa456de7d62e6b3d4faeb45
       err: false,
 =======
@@ -23,6 +24,9 @@ class LoginForm extends Component {
 =======
       invalid: false,
 >>>>>>> 9f906ef... [#40] Add client side password validation
+=======
+      err: false,
+>>>>>>> 2434598... [#41] Merged master into branch, fixed conflicts
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -42,6 +46,7 @@ class LoginForm extends Component {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     if(password.length >= 4 && !(password == username)){
       this.setState({invalid : false});
 =======
@@ -51,6 +56,9 @@ class LoginForm extends Component {
     if(password.length >= 4 && !(password == username)){
       this.setState({invalid : false});
 >>>>>>> 9f906ef... [#40] Add client side password validation
+=======
+    this.setState({ invalid: false });
+>>>>>>> 2434598... [#41] Merged master into branch, fixed conflicts
     axios
       .post('/user/login', {
         username,
@@ -79,10 +87,13 @@ class LoginForm extends Component {
         this.setState({ err: true });
       });
   }
+<<<<<<< HEAD
   else{
     this.setState({invalid : true});
   }
 }
+=======
+>>>>>>> 2434598... [#41] Merged master into branch, fixed conflicts
 
   render() {
     const {
@@ -91,6 +102,7 @@ class LoginForm extends Component {
     if (redirectTo) {
       return <Redirect to={{ pathname: redirectTo }} />;
     }
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     let invalidPassword = ''
@@ -106,6 +118,11 @@ class LoginForm extends Component {
     if (this.state.invalid){
       invalidPassword = "Username and Password must be different. Password must be at least 4 characters long.";
 >>>>>>> 9f906ef... [#40] Add client side password validation
+=======
+    let invalidPassword = '';
+    if (invalid) {
+      invalidPassword = 'Username and Password must be different. Password must be at least 4 characters long.';
+>>>>>>> 2434598... [#41] Merged master into branch, fixed conflicts
     }
     return (
 

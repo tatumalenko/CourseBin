@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 const { User } = require('../database/models/User');
 const passport = require('../passport/index');
 =======
@@ -37,6 +38,15 @@ const { SignupValidator } = require('../passport/SignupValidator');
 const { User } = require('../database/models/User');
 const passport = require('../passport');
 >>>>>>> 37d606fc13b8e09ecfa456de7d62e6b3d4faeb45
+=======
+const passwordValidator = require('password-validator');
+const { User } = require('../database/models/User');
+const passport = require('../passport');
+
+// const { User } = require('../database/models/User');
+// const passport = require('../passport/index');
+
+>>>>>>> 2434598... [#41] Merged master into branch, fixed conflicts
 
 >>>>>>> 9616f34... [#41] Fix username validation and simplify control flow
 router.post('/', async (req, res) => {
@@ -46,6 +56,7 @@ router.post('/', async (req, res) => {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -122,6 +133,24 @@ router.post('/', async (req, res) => {
 >>>>>>> 851dc19... added check for lowercase letters
     
 >>>>>>> e125ee2... changed password validation to be more robust
+=======
+    const passwordRules = new passwordValidator();
+    console.log(passwordRules);
+
+    // password rules
+    passwordRules
+      .is().min(6) // minimum length of 6
+      .is().max(20) // maximum length of 20
+      .has()
+      .not()
+      .spaces() // no spaces allowed
+      .has()
+      .lowercase() // must have lowercase letters
+      .is()
+      .not()
+      .oneOf([ username, 'password', 'abcdef', '123456' ]); // list of invalid passwords
+
+>>>>>>> 2434598... [#41] Merged master into branch, fixed conflicts
 
     if (user) { // user already exists
       res
@@ -135,6 +164,7 @@ router.post('/', async (req, res) => {
           message: `Sorry, a user already exists with the username: ${username}`,
           user: null,
         });
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -202,6 +232,9 @@ router.post('/', async (req, res) => {
     }
     else if (passwordRules.validate(password)) { // valid password
 >>>>>>> e125ee2... changed password validation to be more robust
+=======
+    } else if (passwordRules.validate(password)) { // valid password
+>>>>>>> 2434598... [#41] Merged master into branch, fixed conflicts
       const newUser = new User({
         username,
         password,
@@ -213,6 +246,7 @@ router.post('/', async (req, res) => {
           message: 'OK',
           user: savedUser,
         });
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -280,40 +314,43 @@ router.post('/', async (req, res) => {
       }
     }
     else { // password does not respect the rules
+=======
+    } else { // password does not respect the rules
+>>>>>>> 2434598... [#41] Merged master into branch, fixed conflicts
       if (username === password) {
         res
-        .status(400)
-        .json({
-          message: 'Username and password cannot be the same.',
-        });
+          .status(400)
+          .json({
+            message: 'Username and password cannot be the same.',
+          });
       }
-      if (username.is().oneOf(['password', 'abcdef', '123456'])) { // password too simple
+      if (username.is().oneOf([ 'password', 'abcdef', '123456' ])) { // password too simple
         res
-        .status(400)
-        .json({
-          message: 'Password is too simple.',
-        })
+          .status(400)
+          .json({
+            message: 'Password is too simple.',
+          });
       }
       if (username.has().not().lowercase()) { // password does not have any lowercase letters
         res
-        .status(400)
-        .json({
-          message: 'Password must contain lowercase letters.',
-        })
+          .status(400)
+          .json({
+            message: 'Password must contain lowercase letters.',
+          });
       }
       if (password.length < 6) { // password too short
         res
-        .status(400)
-        .json({
-        message: 'Password must be 6 characters or more.',
-        });
+          .status(400)
+          .json({
+            message: 'Password must be 6 characters or more.',
+          });
       }
       if (password.has().spaces()) { // password contains spaces
         res
-        .status(400)
-        .json({
-          message: 'Password cannot contain spaces.',
-        });
+          .status(400)
+          .json({
+            message: 'Password cannot contain spaces.',
+          });
       }
     }
   } catch (err) {

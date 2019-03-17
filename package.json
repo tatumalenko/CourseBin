@@ -44,12 +44,16 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 =======
 >>>>>>> 2434598... [#41] Merged master into branch, fixed conflicts
     "password-validator": "^4.1.1",
 >>>>>>> 37d606fc13b8e09ecfa456de7d62e6b3d4faeb45
+=======
+    "password-validator": "^4.1.1",
+>>>>>>> 2434598... [#41] Merged master into branch, fixed conflicts
     "react": "^16.8.4",
     "react-bootstrap": "^1.0.0-beta.5",
     "react-dom": "^16.8.4",
