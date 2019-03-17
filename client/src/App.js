@@ -7,6 +7,7 @@ import LoginForm from './components/login-form';
 import Navbar from './components/navbar';
 import Home from './components/home';
 
+
 import concordiaLogo from './assets/concordia-logo.jpeg';
 
 
@@ -75,8 +76,13 @@ class App extends Component {
           && (
 
             <Home />
+            
           )
         }
+        
+
+        
+        {}
         {/* Routes to different components */}
         {!state.loggedIn && (
           <Route
