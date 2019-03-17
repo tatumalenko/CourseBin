@@ -9,7 +9,7 @@ import './index.css';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
-import "react-bootstrap/dist/react-bootstrap.min.js";
+import 'react-bootstrap/dist/react-bootstrap.min.js';
 
 ReactDOM.render(
   <BrowserRouter>

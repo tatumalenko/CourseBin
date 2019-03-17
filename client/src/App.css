@@ -143,7 +143,7 @@
 
 .student-form .number-courses label{
   max-width: 90%;
-    margin-left: 15px;
+  margin-left: 15px;
 }
 
 .student-form .number-courses select{
@@ -166,4 +166,12 @@
 
 .student-form .btn{
   margin-bottom: 75px;
+}
+
+.student-form .evening-checkbox{
+  margin-left: 15px;
+}
+
+.student-form .course-preferences{
+  margin-left: 15px;
 }
