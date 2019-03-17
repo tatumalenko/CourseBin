@@ -54,17 +54,17 @@ class StudentForm extends Component {
       fall: {
         showListFlag: false,
         selectedFaculty: '',
-        selectedCourses: {},
+        selectedCourses: [],
       },
       winter: {
         showListFlag: false,
         selectedFaculty: '',
-        selectedCourses: {},
+        selectedCourses: [],
       },
       summer: {
         showListFlag: false,
         selectedFaculty: '',
-        selectedCourses: {},
+        selectedCourses: [],
       },
     };
 
@@ -84,8 +84,6 @@ class StudentForm extends Component {
 
   getCourseCatalog() {
     axios.get('/catalog').then((response) => {
-      console.log('Get catalog response: ');
-      console.log(response.data);
       if (response.data) {
         console.log('Get Catalog: Catalog found ');
         this.catalog = response.data;
@@ -94,7 +92,6 @@ class StudentForm extends Component {
         console.log('Get Catalog: no data found');
       }
     }).catch((error) => {
-      console.log('Get Catalog: no catalog found');
       console.error(error);
     });
   }
@@ -165,6 +162,7 @@ class StudentForm extends Component {
             fall: {
               showListFlag: true,
               selectedFaculty: this.faculty,
+              selectedCourses: this.requestedCourses.fall,
             },
           });
           break;
@@ -173,6 +171,7 @@ class StudentForm extends Component {
             winter: {
               showListFlag: true,
               selectedFaculty: this.faculty,
+              selectedCourses: this.requestedCourses.winter,
             },
           });
           break;
@@ -181,6 +180,7 @@ class StudentForm extends Component {
             summer: {
               showListFlag: true,
               selectedFaculty: this.faculty,
+              selectedCourses: this.requestedCourses.summer,
             },
           });
           break;
@@ -202,7 +202,7 @@ class StudentForm extends Component {
             fall: {
               showListFlag: true,
               selectedFaculty: this.faculty,
-              selectedCourses: courseName,
+              selectedCourses: this.requestedCourses.fall,
             },
           });
           break;
@@ -212,7 +212,7 @@ class StudentForm extends Component {
             winter: {
               showListFlag: true,
               selectedFaculty: this.faculty,
-              selectedCourses: courseName,
+              selectedCourses: this.requestedCourses.winter,
             },
           });
           break;
@@ -222,7 +222,7 @@ class StudentForm extends Component {
             summer: {
               showListFlag: true,
               selectedFaculty: this.faculty,
-              selectedCourses: courseName,
+              selectedCourses: this.requestedCourses.summer,
             },
           });
           break;
@@ -360,6 +360,13 @@ class StudentForm extends Component {
                           </Form.Control>
                         </span>) : null
                       }
+                      </Row>
+                      <Row className='selected-courses-container'>
+                        {fall.selectedCourses ? Object.keys(fall.selectedCourses).map(index => (
+                            <div className='selected-courses'>
+                              {fall.selectedCourses[index]}
+                            </div>
+                        )) : null}
                       </Row>
                     </div>
                   </div>
