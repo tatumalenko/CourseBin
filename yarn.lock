@@ -3305,6 +3305,7 @@ passport@^0.4.0:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> e125ee2... changed password validation to be more robust
@@ -3336,6 +3337,8 @@ password-validator@^4.1.1:
 =======
 >>>>>>> e125ee2... changed password validation to be more robust
 
+=======
+>>>>>>> f1c17b3... [#41] Remove modifications made by running npm install
 path-exists@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/path-exists/-/path-exists-3.0.0.tgz#ce0ebeaa5f78cb18925ea7d810d7b59b010fd515"
