@@ -151,13 +151,34 @@ class StudentForm extends Component {
     event.preventDefault();
     if (event && event.target && event.target.value) {
       this.faculty = event.target.value;
-      console.log(this.faculty);
-      this.setState({
-        showListFlag: true,
-        fall: {
-          selectedFaculty: this.faculty,
-        },
-      });
+      const season = event.target.name;
+      switch (season) {
+        case 'fall':
+          this.setState({
+            showListFlag: true,
+            fall: {
+              selectedFaculty: this.faculty,
+            },
+          });
+          break;
+        case 'winter':
+          this.setState({
+            showListFlag: true,
+            winter: {
+              selectedFaculty: this.faculty,
+            },
+          });
+          break;
+        case 'summer':
+          this.setState({
+            showListFlag: true,
+            summer: {
+              selectedFaculty: this.faculty,
+            },
+          });
+          break;
+        default:
+      }
     }
   }
 
@@ -165,13 +186,35 @@ class StudentForm extends Component {
     event.preventDefault();
     if (event && event.target && event.target.value) {
       const courseName = event.target.value;
-      this.setState({
-        fall: {
-          selectedFaculty: this.faculty,
-          selectedCourses: courseName,
-        },
-      });
-      console.log(this.state);
+      const season = (event.target.name);
+
+      switch (season) {
+        case 'fall':
+          this.setState({
+            fall: {
+              selectedFaculty: this.faculty,
+              selectedCourses: courseName,
+            },
+          });
+          break;
+        case 'winter':
+          this.setState({
+            winter: {
+              selectedFaculty: this.faculty,
+              selectedCourses: courseName,
+            },
+          });
+          break;
+        case 'summer':
+          this.setState({
+            summer: {
+              selectedFaculty: this.faculty,
+              selectedCourses: courseName,
+            },
+          });
+          break;
+        default:
+      }
     }
   }
 
@@ -199,7 +242,7 @@ class StudentForm extends Component {
 
   render() {
     const {
-      fallChecked, summerChecked, winterChecked, jsonObject, courseMap, showListFlag, fall,
+      fallChecked, summerChecked, winterChecked, jsonObject, courseMap, showListFlag, fall, winter, summer,
     } = this.state;
 
     return (
@@ -270,7 +313,7 @@ class StudentForm extends Component {
                         <Form.Control
                           as='select'
                           model={fall.selectedFaculty}
-                          name='fall.selectedFaculty'
+                          name='fall'
                           onChange={this.handleFacultySelection}
                         >
                           {courseMap ? Object.keys(courseMap).map(faculty => (
@@ -291,7 +334,7 @@ class StudentForm extends Component {
                           <Form.Control 
                             as='select'
                             model={fall.selectedCourses}
-                            name='fall.selectedCourses'
+                            name='fall'
                             onChange={this.handleCourseSelection}
                           >
                               { courseMap && fall.selectedFaculty && courseMap[fall.selectedFaculty] ? Object.keys(courseMap[fall.selectedFaculty]).map(index => (
@@ -361,6 +404,59 @@ class StudentForm extends Component {
                       </Form.Control>
                     </div>
 
+                    <div className='course-preferences'>
+                      <div className='course-selection-box'>
+                        <Form.Label>
+                          Add a Course
+                          <i className='material-icons'>
+                            add
+                          </i>
+                        </Form.Label>
+                        <br />
+                        <Row>
+                          <Form.Label>
+                          Department:
+                          </Form.Label>
+                          <Form.Control
+                            as='select'
+                            model={winter.selectedFaculty}
+                            name='winter'
+                            onChange={this.handleFacultySelection}
+                          >
+                            {courseMap ? Object.keys(courseMap).map(faculty => (
+                              <option key={faculty} value={faculty}>
+                                {faculty}
+                              </option>
+                            )) : null}
+                          </Form.Control>
+                        </Row>
+                        <Row>
+                        {
+                        showListFlag ?
+                          (
+                          <span>
+                            <Form.Label>
+                              Class:
+                            </Form.Label>
+                            <Form.Control 
+                              as='select'
+                              model={winter.selectedCourses}
+                              name='winter'
+                              onChange={this.handleCourseSelection}
+                            >
+                                { courseMap && winter.selectedFaculty && courseMap[winter.selectedFaculty] ? Object.keys(courseMap[winter.selectedFaculty]).map(index => (
+                                  <option key={courseMap[winter.selectedFaculty][index]} value={courseMap[winter.selectedFaculty][index]}>
+                                    {courseMap[winter.selectedFaculty][index]}
+                                  </option>
+                                )) : null
+                            }
+                            </Form.Control>
+                          </span>) : null
+                        }
+                        </Row>
+                      </div>
+                    </div>
+
                   </Col>
                   <Col xs={3} />
                 </Form.Group>
@@ -421,6 +517,59 @@ class StudentForm extends Component {
                         <option value={4}>4</option>
                         <option value={5}>5</option>
                       </Form.Control>
+                    </div>
+
+                    <div className='course-preferences'>
+                      <div className='course-selection-box'>
+                        <Form.Label>
+                          Add a Course
+                          <i className='material-icons'>
+                            add
+                          </i>
+                        </Form.Label>
+                        <br />
+                        <Row>
+                          <Form.Label>
+                          Department:
+                          </Form.Label>
+                          <Form.Control
+                            as='select'
+                            model={summer.selectedFaculty}
+                            name='summer'
+                            onChange={this.handleFacultySelection}
+                          >
+                            {courseMap ? Object.keys(courseMap).map(faculty => (
+                              <option key={faculty} value={faculty}>
+                                {faculty}
+                              </option>
+                            )) : null}
+                          </Form.Control>
+                        </Row>
+                        <Row>
+                        {
+                        showListFlag ?
+                          (
+                          <span>
+                            <Form.Label>
+                              Class:
+                            </Form.Label>
+                            <Form.Control 
+                              as='select'
+                              model={summer.selectedCourses}
+                              name='summer'
+                              onChange={this.handleCourseSelection}
+                            >
+                                { courseMap && summer.selectedFaculty && courseMap[summer.selectedFaculty] ? Object.keys(courseMap[summer.selectedFaculty]).map(index => (
+                                  <option key={courseMap[summer.selectedFaculty][index]} value={courseMap[summer.selectedFaculty][index]}>
+                                    {courseMap[summer.selectedFaculty][index]}
+                                  </option>
+                                )) : null
+                            }
+                            </Form.Control>
+                          </span>) : null
+                        }
+                        </Row>
+                      </div>
                     </div>
 
                   </Col>
