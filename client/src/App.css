@@ -16,6 +16,11 @@
     text-align: center;
 }
 
+.title-for-loggedIn{
+  position: absolute;
+  font-size: 51px;
+  margin-left: 43%;
+}
 
 .home-bottom{
   background-color: white;
@@ -82,6 +87,7 @@
 }
 
 
+
 .header-logo{
   font-family: 'Londrina Solid', cursive;
   color: #A98638;
@@ -90,7 +96,11 @@
   bottom: 75px;
   text-shadow: 2px 2px 800px bisque;
 }
-
+.title-for-loggedIn{
+  position: absolute;
+  font-size: 51px;
+  margin-left: 43%;
+}
 .semester-form-component{
   text-align: left;
 }

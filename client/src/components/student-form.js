@@ -3,11 +3,12 @@
 /* eslint-disable prefer-destructuring */
 import React, { Component } from 'react';
 import axios from 'axios';
-
+import { Redirect } from 'react-router-dom';
 import {
   Form, Row, Col, Button,
 } from 'react-bootstrap';
 import { stringify } from 'querystring';
+import Schedule from './schedule';
 
 class StudentForm extends Component {
   constructor() {
@@ -44,6 +45,7 @@ class StudentForm extends Component {
       fallChecked: false,
       winterChecked: false,
       summerChecked: false,
+      showSchedule: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -51,6 +53,7 @@ class StudentForm extends Component {
     this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
     this.getCourseCatalog = this.getCourseCatalog.bind(this);
     this.parseCourseCatalog = this.parseCourseCatalog.bind(this);
+    this.handleGenerateSchedule = this.handleGenerateSchedule.bind(this);
   }
 
   componentDidMount() {
@@ -107,6 +110,12 @@ class StudentForm extends Component {
     });
   }
 
+  handleGenerateSchedule(event) {
+    this.setState({
+        showSchedule: true
+    })
+  }
+
 
   toggleSemesterSection(season, toggle) {
     switch (season) {
@@ -131,14 +140,18 @@ class StudentForm extends Component {
 
   render() {
     const {
-      fallChecked, summerChecked, winterChecked, jsonObject, courseMap
+      fallChecked, summerChecked, winterChecked, jsonObject, courseMap, showSchedule
     } = this.state;
 
     return (
+        <div> 
+            {showSchedule
+                ? <Schedule />
+                : (
 
                 <div className='student-form'>
-                    <h3 className='header-logo'>Coursebin</h3>
-                    <Form onSubmit={this.handleSubmit}>
+                    <div className='header-logo'> <h3 className="title-for-loggedIn"> CourseBin</h3></div>
+                    <Form onSubmit={this.handleGenerateSchedule}>
                         <h3 id='form-header'>First, we will just need some basic information... </h3>
                         <div id='student-form-content'>
                             <div style={{ display: fallChecked ? 'initial' : 'none' }}>
@@ -324,6 +337,10 @@ class StudentForm extends Component {
                         <Button type='submit'>Generate My Schedule!</Button>
                     </Form>
                 </div>
+                )
+              }
+
+            </div>
     );
   }
 }
