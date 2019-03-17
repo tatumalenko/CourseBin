@@ -149,7 +149,7 @@
 
 .student-form .number-courses label{
   max-width: 90%;
-    margin-left: 15px;
+  margin-left: 15px;
 }
 
 .student-form .number-courses select{
@@ -172,4 +172,37 @@
 
 .student-form .btn{
   margin-bottom: 75px;
+}
+
+.student-form .evening-checkbox{
+  margin-left: 15px;
+}
+
+.student-form .course-preferences{
+  margin-left: 15px;
+}
+
+.student-form .course-selection-box .row{
+  display: table-cell;
+  padding: 10px;
+  
+}
+
+.student-form .course-selection-box .add-course-button i{ 
+  font-size: 18px;
+  margin-top: 3px;
+}
+
+.student-form .course-selection-box{
+  background: 5px aliceblue;
+  padding: 15px;
+  border-radius: 15px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.student-form .course-selection-box .selected-courses-container .row{
+  display: block;
+}
+.student-form .selected-courses-container .selected-courses{
+  padding: 10px;
 }

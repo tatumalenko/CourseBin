@@ -61,15 +61,12 @@ class LoginForm extends Component {
 
   render() {
     const {
-      redirectTo, username, password, err, invalid,
+      redirectTo, username, password, err,
     } = this.state;
     if (redirectTo) {
       return <Redirect to={{ pathname: redirectTo }} />;
     }
-    let invalidPassword = '';
-    if (invalid) {
-      invalidPassword = 'Username and Password must be different. Password must be at least 4 characters long.';
-    }
+
     return (
 
 
