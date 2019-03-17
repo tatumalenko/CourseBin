@@ -150,7 +150,7 @@ class StudentForm extends Component {
                 : (
 
                 <div className='student-form'>
-                    <div className='header-logo'> <h3 className="title-for-loggedIn"> Coursebin</h3></div>
+                    <div className='header-logo'> <h3 className="title-for-loggedIn"> CourseBin</h3></div>
                     <Form onSubmit={this.handleGenerateSchedule}>
                         <h3 id='form-header'>First, we will just need some basic information... </h3>
                         <div id='student-form-content'>
