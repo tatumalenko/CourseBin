@@ -7,10 +7,10 @@ import { Redirect } from 'react-router-dom';
 import {
   Form, Row, Col, Button,
 } from 'react-bootstrap';
+import Schedule from './schedule';
 
 
 const _ = require('lodash');
-import Schedule from './schedule';
 
 class StudentForm extends Component {
   constructor() {
@@ -70,7 +70,7 @@ class StudentForm extends Component {
         selectedCourses: [],
       },
 
-      showSchedule: false
+      showSchedule: false,
     };
 
 
@@ -119,7 +119,7 @@ class StudentForm extends Component {
           const faculty = code.slice(0, 4);
           const title = clss.title;
           const displayName = `${number} – ${_.startCase(_.toLower(title))}`;
-        
+
           if (!map[faculty] && displayName !== '') {
             map[faculty] = [ displayName ];
           } else {
@@ -224,7 +224,7 @@ class StudentForm extends Component {
           });
           break;
         case 'summer':
-          this.requestedCourses.summers.push(`${this.faculty}${courseName.split(' – ')[0]}`);
+          this.requestedCourses.summer.push(`${this.faculty}${courseName.split(' – ')[0]}`);
           this.setState({
             summer: {
               showListFlag: true,
@@ -237,10 +237,11 @@ class StudentForm extends Component {
       }
       console.log(this.requestedCourses);
     }
+  }
 
   handleGenerateSchedule(event) {
     this.setState({
-        showSchedule: true,
+      showSchedule: true,
     });
   }
 
@@ -268,124 +269,126 @@ class StudentForm extends Component {
 
   render() {
     const {
-      fallChecked, summerChecked, winterChecked, jsonObject, courseMap, fall, winter, summer,
+      showSchedule, fallChecked, summerChecked, winterChecked, jsonObject, courseMap, fall, winter, summer,
     } = this.state;
 
-    return (
-      <div className='student-form'>
-        <h3 className='header-logo'>Coursebin</h3>
-        <Form onSubmit={this.handleSubmit}>
-          <h3 id='form-header'>First, we will just need some basic information... </h3>
-          <div id='student-form-content'>
-            <div style={{ display: fallChecked ? 'initial' : 'none' }}>
-              <Form.Group as={Row} className='semester-form-component'>
-                <Col xs={3} />
-                <Col xs={6} className='form-section-content'>
-                  <Form.Label
-                    className='season'
-                    onClick={
-                      () => this.toggleSemesterSection('fall', fallChecked)
-                    }
-                  >
-                    Fall
+    return showSchedule
+      ? <Schedule />
+      : (
+        <div className='student-form'>
+          <h3 className='header-logo'>Coursebin</h3>
+          <Form onSubmit={this.handleSubmit}>
+            <h3 id='form-header'>First, we will just need some basic information... </h3>
+            <div id='student-form-content'>
+              <div style={{ display: fallChecked ? 'initial' : 'none' }}>
+                <Form.Group as={Row} className='semester-form-component'>
+                  <Col xs={3} />
+                  <Col xs={6} className='form-section-content'>
+                    <Form.Label
+                      className='season'
+                      onClick={
+                        () => this.toggleSemesterSection('fall', fallChecked)
+                      }
+                    >
+                      Fall
                         <i className='material-icons'>
-                      minimize
+                        minimize
                         </i>
 
-                  </Form.Label>
-
-                  <Form.Label className='evening-checkbox'>
-                    Do you prefer evening classes?
-                      <Form.Check
-                      type='checkbox'
-                      name='jsonObject.fall.eveningTimePreference'
-                      onChange={this.handleCheckboxChange}
-                      inline
-                    />
-                  </Form.Label>
-
-                  <div className='number-courses'>
-                    <Form.Label>
-                      How many courses do you prefer to take per semester?
                     </Form.Label>
 
-                    <Form.Control
-                      model={jsonObject.fall.numberOfCourses}
-                      name='jsonObject.fall.numberOfCourses'
-                      onChange={this.handleChange}
-                      as='select'
-                    >
-                      <option value={1}>1</option>
-                      <option value={2}>2</option>
-                      <option value={3}>3</option>
-                      <option value={4}>4</option>
-                      <option value={5}>5</option>
-                    </Form.Control>
-                  </div>
+                    <Form.Label className='evening-checkbox'>
+                      Do you prefer evening classes?
+                      <Form.Check
+                        type='checkbox'
+                        name='jsonObject.fall.eveningTimePreference'
+                        onChange={this.handleCheckboxChange}
+                        inline
+                      />
+                    </Form.Label>
 
-                  <div className='course-preferences'>
-                    <div className='course-selection-box'>
-                      <Form.Label className='add-course-button'>
-                        Add a Course
-                        <i className='material-icons'>
-                          add
-                        </i>
+                    <div className='number-courses'>
+                      <Form.Label>
+                        How many courses do you prefer to take per semester?
                       </Form.Label>
-                      <br />
-                      <Row>
-                        <Form.Label>
-                        Department:
+
+                      <Form.Control
+                        model={jsonObject.fall.numberOfCourses}
+                        name='jsonObject.fall.numberOfCourses'
+                        onChange={this.handleChange}
+                        as='select'
+                      >
+                        <option value={1}>1</option>
+                        <option value={2}>2</option>
+                        <option value={3}>3</option>
+                        <option value={4}>4</option>
+                        <option value={5}>5</option>
+                      </Form.Control>
+                    </div>
+
+                    <div className='course-preferences'>
+                      <div className='course-selection-box'>
+                        <Form.Label className='add-course-button'>
+                          Add a Course
+                        <i className='material-icons'>
+                            add
+                        </i>
                         </Form.Label>
-                        <Form.Control
-                          as='select'
-                          model={fall.selectedFaculty}
-                          name='fall'
-                          onChange={this.handleFacultySelection}
-                        >
-                          {courseMap ? Object.keys(courseMap).map(faculty => (
-                            <option key={faculty} value={faculty}>
-                              {faculty}
-                            </option>
-                          )) : null}
-                        </Form.Control>
-                      </Row>
-                      <Row>
-                      {
-                      fall.showListFlag ?
-                        (
-                        <span>
+                        <br />
+                        <Row>
                           <Form.Label>
-                            Class:
+                            Department:
                           </Form.Label>
-                          <Form.Control 
+                          <Form.Control
                             as='select'
-                            model={fall.selectedCourses}
+                            model={fall.selectedFaculty}
                             name='fall'
-                            onChange={this.handleCourseSelection}
+                            onChange={this.handleFacultySelection}
                           >
-                              { courseMap && fall.selectedFaculty && courseMap[fall.selectedFaculty] ? Object.keys(courseMap[fall.selectedFaculty]).map(index => (
-                                <option key={courseMap[fall.selectedFaculty][index]} value={courseMap[fall.selectedFaculty][index]}>
-                                  {courseMap[fall.selectedFaculty][index]}
-                                </option>
-                              )) : null
-                          }
+                            {courseMap ? Object.keys(courseMap).map(faculty => (
+                              <option key={faculty} value={faculty}>
+                                {faculty}
+                              </option>
+                            )) : null}
                           </Form.Control>
-                        </span>) : null
-                      }
-                      </Row>
-                      <Row className='selected-courses-container'>
-                        {fall.selectedCourses ? Object.keys(fall.selectedCourses).map(index => (
+                        </Row>
+                        <Row>
+                          {
+                            fall.showListFlag
+                              ? (
+                                <span>
+                                  <Form.Label>
+                                    Class:
+                                  </Form.Label>
+                                  <Form.Control
+                                    as='select'
+                                    model={fall.selectedCourses}
+                                    name='fall'
+                                    onChange={this.handleCourseSelection}
+                                  >
+                                    {courseMap && fall.selectedFaculty && courseMap[fall.selectedFaculty] ? Object.keys(courseMap[fall.selectedFaculty]).map(index => (
+                                      <option key={courseMap[fall.selectedFaculty][index]} value={courseMap[fall.selectedFaculty][index]}>
+                                        {courseMap[fall.selectedFaculty][index]}
+                                      </option>
+                                    )) : null
+                                    }
+                                  </Form.Control>
+                                </span>) : null
+                          }
+                        </Row>
+                        <Row className='selected-courses-container'>
+                          {fall.selectedCourses ? Object.keys(fall.selectedCourses).map(index => (
                             <div className='selected-courses'>
                               {fall.selectedCourses[index]}
                             </div>
-                        )) : null}
-                      </Row>
+                          )) : null}
+                        </Row>
+                      </div>
                     </div>
-                  </div>
-                </Col>
+                  </Col>
                   <Col xs={3} />
-              </Form.Group>
-            </div>
+                </Form.Group>
+              </div>
               <div style={{ display: fallChecked ? 'none' : 'initial' }}>
                 <Form.Group as={Row} className='semester-form-component'>
                   <Col xs={3} />
@@ -409,7 +412,7 @@ class StudentForm extends Component {
                       Winter
                         <i className='material-icons'>
                         minimize
-  
+
                         </i>
 
                     </Form.Label>
@@ -421,13 +424,13 @@ class StudentForm extends Component {
                         name='jsonObject.winter.eveningTimePreference'
                         onChange={this.handleCheckboxChange}
                         inline
-                      />
+                            />
                     </Form.Label>
 
                     <div className='number-courses'>
-                    <Form.Label>
+                      <Form.Label>
                         How many courses do you prefer to take per semester?
-                    </Form.Label>
+                      </Form.Label>
                       <Form.Control model={jsonObject.winter.numberOfCourses} name='jsonObject.winter.numberOfCourses' onChange={this.handleChange} as='select'>
                         <option value={1}>1</option>
                         <option value={2}>2</option>
@@ -448,7 +451,7 @@ class StudentForm extends Component {
                         <br />
                         <Row>
                           <Form.Label>
-                          Department:
+                            Department:
                           </Form.Label>
                           <Form.Control
                             as='select'
@@ -464,28 +467,28 @@ class StudentForm extends Component {
                           </Form.Control>
                         </Row>
                         <Row>
-                        {
-                        winter.showListFlag ?
-                          (
-                          <span>
-                            <Form.Label>
-                              Class:
-                            </Form.Label>
-                            <Form.Control 
-                              as='select'
-                              model={winter.selectedCourses}
-                              name='winter'
-                              onChange={this.handleCourseSelection}
-                            >
-                                { courseMap && winter.selectedFaculty && courseMap[winter.selectedFaculty] ? Object.keys(courseMap[winter.selectedFaculty]).map(index => (
-                                  <option key={courseMap[winter.selectedFaculty][index]} value={courseMap[winter.selectedFaculty][index]}>
-                                    {courseMap[winter.selectedFaculty][index]}
-                                  </option>
-                                )) : null
-                            }
-                            </Form.Control>
-                          </span>) : null
-                        }
+                          {
+                            winter.showListFlag
+                              ? (
+                                <span>
+                                  <Form.Label>
+                                    Class:
+                                  </Form.Label>
+                                  <Form.Control
+                                    as='select'
+                                    model={winter.selectedCourses}
+                                    name='winter'
+                                    onChange={this.handleCourseSelection}
+                                  >
+                                    {courseMap && winter.selectedFaculty && courseMap[winter.selectedFaculty] ? Object.keys(courseMap[winter.selectedFaculty]).map(index => (
+                                      <option key={courseMap[winter.selectedFaculty][index]} value={courseMap[winter.selectedFaculty][index]}>
+                                        {courseMap[winter.selectedFaculty][index]}
+                                      </option>
+                                    )) : null
+                                    }
+                                  </Form.Control>
+                                </span>) : null
+                          }
                         </Row>
                       </div>
                     </div>
@@ -519,7 +522,7 @@ class StudentForm extends Component {
                       Summer
                           <i className='material-icons'>
                         minimize
-  
+
                           </i>
 
                     </Form.Label>
@@ -531,13 +534,13 @@ class StudentForm extends Component {
                         name='jsonObject.summer.eveningTimePreference'
                         onChange={this.handleCheckboxChange}
                         inline
-                      />
+                          />
                     </Form.Label>
 
                     <div className='number-courses'>
                       <Form.Label>
                         How many courses do you prefer to take per semester?
-                    </Form.Label>
+                      </Form.Label>
                       <Form.Control
                         model={jsonObject.summer.numberOfCourses}
                         name='jsonObject.summer.numberOfCourses'
@@ -563,7 +566,7 @@ class StudentForm extends Component {
                         <br />
                         <Row>
                           <Form.Label>
-                          Department:
+                            Department:
                           </Form.Label>
                           <Form.Control
                             as='select'
@@ -579,28 +582,28 @@ class StudentForm extends Component {
                           </Form.Control>
                         </Row>
                         <Row>
-                        {
-                        summer.showListFlag ?
-                          (
-                          <span>
-                            <Form.Label>
-                              Class:
-                            </Form.Label>
-                            <Form.Control 
-                              as='select'
-                              model={summer.selectedCourses}
-                              name='summer'
-                              onChange={this.handleCourseSelection}
-                            >
-                                { courseMap && summer.selectedFaculty && courseMap[summer.selectedFaculty] ? Object.keys(courseMap[summer.selectedFaculty]).map(index => (
-                                  <option key={courseMap[summer.selectedFaculty][index]} value={courseMap[summer.selectedFaculty][index]}>
-                                    {courseMap[summer.selectedFaculty][index]}
-                                  </option>
-                                )) : null
-                            }
-                            </Form.Control>
-                          </span>) : null
-                        }
+                          {
+                            summer.showListFlag
+                              ? (
+                                <span>
+                                  <Form.Label>
+                                    Class:
+                                  </Form.Label>
+                                  <Form.Control
+                                    as='select'
+                                    model={summer.selectedCourses}
+                                    name='summer'
+                                    onChange={this.handleCourseSelection}
+                                  >
+                                    {courseMap && summer.selectedFaculty && courseMap[summer.selectedFaculty] ? Object.keys(courseMap[summer.selectedFaculty]).map(index => (
+                                      <option key={courseMap[summer.selectedFaculty][index]} value={courseMap[summer.selectedFaculty][index]}>
+                                        {courseMap[summer.selectedFaculty][index]}
+                                      </option>
+                                    )) : null
+                                    }
+                                  </Form.Control>
+                                </span>) : null
+                          }
                         </Row>
                       </div>
                     </div>
@@ -630,210 +633,9 @@ class StudentForm extends Component {
             </div>
 
             <Button type='submit'>Generate My Schedule!</Button>
-        </Form>
-      </div>
-      fallChecked, summerChecked, winterChecked, jsonObject, courseMap, showSchedule
-    } = this.state;
-
-    return (
-        <div> 
-            {showSchedule
-                ? <Schedule />
-                : (
-
-                <div className='student-form'>
-                    <div className='header-logo'> <h3 className="title-for-loggedIn"> CourseBin</h3></div>
-                    <Form onSubmit={this.handleGenerateSchedule}>
-                        <h3 id='form-header'>First, we will just need some basic information... </h3>
-                        <div id='student-form-content'>
-                            <div style={{ display: fallChecked ? 'initial' : 'none' }}>
-                                <Form.Group as={Row} className='semester-form-component'>
-                                    <Col xs={3} />
-                                    <Col xs={6} className='form-section-content'>
-                                        <Form.Label column xs='12' className='season' onClick={() => this.toggleSemesterSection('fall', fallChecked)}>
-                                            Fall
-                                    <i className='material-icons'>
-                                                minimize
-                                    </i>
-
-                                        </Form.Label>
-
-                                        <Form.Label column xs='12'>
-                                            Do you prefer evening classes?
-                                    <Form.Check
-                                                type='checkbox'
-                                                name='jsonObject.fall.eveningTimePreference'
-                                                onChange={this.handleCheckboxChange}
-                                                inline
-                                            />
-                                        </Form.Label>
-
-                                        <div className='number-courses'>
-                                            <Form.Label>
-                                                How many courses do you prefer to take per semester?
-                                        </Form.Label>
-
-                                            <Form.Control column xs={3} model={jsonObject.fall.numberOfCourses} name='jsonObject.fall.numberOfCourses' onChange={this.handleChange} as='select'>
-                                                <option value={1}>1</option>
-                                                <option value={2}>2</option>
-                                                <option value={3}>3</option>
-                                                <option value={4}>4</option>
-                                                <option value={5}>5</option>
-                                            </Form.Control>
-                                        </div>
-
-                                        <div className='course-preferences'>
-                                            <Form.Label>
-                                                Any course in particular you are interested in taking?
-                                        </Form.Label>
-
-                                            <Form.Control column xs={3} model={jsonObject.fall.requestedCourses} name='jsonObject.fall.requestecCourses' onChange={this.handleChange} as='select'>
-                                                <option value={1}>1</option>
-                                                <option value={2}>2</option>
-                                                <option value={3}>3</option>
-                                                <option value={4}>4</option>
-                                                <option value={5}>5</option>
-                                            </Form.Control>
-                                        </div>
-
-                                    </Col>
-                                    <Col xs={3} />
-                                </Form.Group>
-                            </div>
-                            <div style={{ display: fallChecked ? 'none' : 'initial' }}>
-                                <Form.Group as={Row} className='semester-form-component'>
-                                    <Col xs={3} />
-                                    <Col xs={6}>
-                                        <Form.Label className='season' onClick={() => this.toggleSemesterSection('fall', fallChecked)}>
-                                            Fall
-                                    <i className='material-icons'>
-                                                add
-                                    </i>
-                                        </Form.Label>
-                                    </Col>
-                                </Form.Group>
-                            </div>
-
-
-                            <div style={{ display: winterChecked ? 'initial' : 'none' }}>
-                                <Form.Group as={Row} className='semester-form-component'>
-                                    <Col xs={3} />
-                                    <Col xs={6} className='form-section-content'>
-                                        <Form.Label column xs='12' className='season' onClick={() => this.toggleSemesterSection('winter', winterChecked)}>
-                                            Winter
-                                    <i className='material-icons'>
-                                                minimize
-    
-                                    </i>
-
-                                        </Form.Label>
-
-                                        <Form.Label column xs='12'>
-                                            Do you prefer evening classes?
-                                        <Form.Check
-                                                type='checkbox'
-                                                name='jsonObject.winter.eveningTimePreference'
-                                                onChange={this.handleCheckboxChange}
-                                                inline
-                                            />
-                                        </Form.Label>
-
-                                        <div className='number-courses'>
-                                            <Form.Label>
-                                                How many courses do you prefer to take per semester?
-                                        </Form.Label>
-
-                                            <Form.Control column xs={3} model={jsonObject.winter.numberOfCourses} name='jsonObject.winter.numberOfCourses' onChange={this.handleChange} as='select'>
-                                                <option value={1}>1</option>
-                                                <option value={2}>2</option>
-                                                <option value={3}>3</option>
-                                                <option value={4}>4</option>
-                                                <option value={5}>5</option>
-                                            </Form.Control>
-                                        </div>
-
-                                    </Col>
-                                    <Col xs={3} />
-                                </Form.Group>
-                            </div>
-                            <div style={{ display: winterChecked ? 'none' : 'initial' }}>
-                                <Form.Group as={Row} className='semester-form-component'>
-                                    <Col xs={3} />
-                                    <Col xs={6}>
-                                        <Form.Label className='season' onClick={() => this.toggleSemesterSection('winter', winterChecked)}>
-                                            Winter
-                                    <i className='material-icons'>
-                                                add
-                                    </i>
-                                        </Form.Label>
-                                    </Col>
-                                </Form.Group>
-                            </div>
-
-                            <div style={{ display: summerChecked ? 'initial' : 'none' }}>
-                                <Form.Group as={Row} className='semester-form-component'>
-                                    <Col xs={3} />
-                                    <Col xs={6} className='form-section-content'>
-                                        <Form.Label column xs='12' className='season' onClick={() => this.toggleSemesterSection('summer', summerChecked)}>
-                                            Summer
-                                    <i className='material-icons'>
-                                                minimize
-    
-                                    </i>
-
-                                        </Form.Label>
-
-                                        <Form.Label column xs='12'>
-                                            Do you prefer evening classes?
-                                        <Form.Check
-                                                type='checkbox'
-                                                name='jsonObject.summer.eveningTimePreference'
-                                                onChange={this.handleCheckboxChange}
-                                                inline
-                                            />
-                                        </Form.Label>
-
-                                        <div className='number-courses'>
-                                            <Form.Label>
-                                                How many courses do you prefer to take per semester?
-                                        </Form.Label>
-
-                                            <Form.Control column xs={3} model={jsonObject.summer.numberOfCourses} name='jsonObject.summer.numberOfCourses' onChange={this.handleChange} as='select'>
-                                                <option value={1}>1</option>
-                                                <option value={2}>2</option>
-                                                <option value={3}>3</option>
-                                                <option value={4}>4</option>
-                                                <option value={5}>5</option>
-                                            </Form.Control>
-                                        </div>
-
-                                    </Col>
-                                    <Col xs={3} />
-                                </Form.Group>
-                            </div>
-                            <div style={{ display: summerChecked ? 'none' : 'initial' }}>
-                                <Form.Group as={Row} className='semester-form-component'>
-                                    <Col xs={3} />
-                                    <Col xs={6}>
-                                        <Form.Label className='season' onClick={() => this.toggleSemesterSection('summer', summerChecked)}>
-                                            Summer
-                                    <i className='material-icons'>
-                                                add
-                                    </i>
-                                        </Form.Label>
-                                    </Col>
-                                </Form.Group>
-                            </div>
-                        </div>
-
-                        <Button type='submit'>Generate My Schedule!</Button>
-                    </Form>
-                </div>
-                )
-              }
-
-            </div>
-    );
+          </Form>
+        </div>
+      );
   }
 }
 export default StudentForm;
