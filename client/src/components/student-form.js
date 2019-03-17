@@ -99,6 +99,7 @@ class StudentForm extends Component {
     Object.keys(catalog).forEach((course) => {
       const clss = catalog[course];
       let number;
+      const regex = /([ ][I][i][i]*[ ])+/g;
 
       if (clss) {
         const code = clss.code;
@@ -107,11 +108,12 @@ class StudentForm extends Component {
         if (code !== '' && code.length < 8 && number < 500) {
           const faculty = code.slice(0, 4);
           const title = clss.title;
-
-          if (!map[faculty] && title !== '') {
-            map[faculty] = [`${faculty}${number}-${_.startCase(_.toLower(title))}`];
+          const displayName = `${number} – ${_.startCase(_.toLower(title))}`;
+        
+          if (!map[faculty] && displayName !== '') {
+            map[faculty] = [ displayName ];
           } else {
-            map[faculty].push(`${faculty}${number}-${_.startCase(_.toLower(title))}`);
+            map[faculty].push(displayName);
           }
         }
       }
@@ -253,49 +255,56 @@ class StudentForm extends Component {
                   </div>
 
                   <div className='course-preferences'>
-                    <Form.Label>
-                      Add a Course
-                      <i className='material-icons'>
-                        add
-                      </i>
-                    </Form.Label>
-
-                    <Form.Control
-                      as='select'
-                      model={fall.selectedFaculty}
-                      name='fall.selectedFaculty'
-                      onChange={this.handleFacultySelection}
-                    >
-                      {courseMap ? Object.keys(courseMap).map(faculty => (
-                        <option key={faculty} value={faculty}>
-                          {faculty}
-                        </option>
-                      )) : null}
-                    </Form.Control>
-
-                    {
-                          showListFlag
-                            ?(
+                    <div className='course-selection-box'>
+                      <Form.Label>
+                        Add a Course
+                        <i className='material-icons'>
+                          add
+                        </i>
+                      </Form.Label>
+                      <br />
+                      <Row>
+                        <Form.Label>
+                        Department:
+                        </Form.Label>
                         <Form.Control
                           as='select'
-                          model={ fall.selectedCourses }
-                          name='fall.selectedCourses'
-                          onChange={ this.handleCourseSelection }
-                            >
-                            { courseMap && fall.selectedFaculty && courseMap[fall.selectedFaculty]
-                            ? Object.keys(courseMap[fall.selectedFaculty]).map(index => (
-                              <option key={courseMap[fall.selectedFaculty][index]} value={courseMap[fall.selectedFaculty][index]}>
-                                {courseMap[fall.selectedFaculty][index]}
-                              </option>
-                            ))
-                            : null
-                        }
+                          model={fall.selectedFaculty}
+                          name='fall.selectedFaculty'
+                          onChange={this.handleFacultySelection}
+                        >
+                          {courseMap ? Object.keys(courseMap).map(faculty => (
+                            <option key={faculty} value={faculty}>
+                              {faculty}
+                            </option>
+                          )) : null}
                         </Form.Control>
-                    )
-                    : null
-                  }
-
-
+                      </Row>
+                      <Row>
+                      {
+                      showListFlag ?
+                        (
+                        <span>
+                          <Form.Label>
+                            Class:
+                          </Form.Label>
+                          <Form.Control 
+                            as='select'
+                            model={fall.selectedCourses}
+                            name='fall.selectedCourses'
+                            onChange={this.handleCourseSelection}
+                          >
+                              { courseMap && fall.selectedFaculty && courseMap[fall.selectedFaculty] ? Object.keys(courseMap[fall.selectedFaculty]).map(index => (
+                                <option key={courseMap[fall.selectedFaculty][index]} value={courseMap[fall.selectedFaculty][index]}>
+                                  {courseMap[fall.selectedFaculty][index]}
+                                </option>
+                              )) : null
+                          }
+                          </Form.Control>
+                        </span>) : null
+                      }
+                      </Row>
+                    </div>
                   </div>
                 </Col>
                   <Col xs={3} />
@@ -340,10 +349,9 @@ class StudentForm extends Component {
                     </Form.Label>
 
                     <div className='number-courses'>
-                      <Form.Label>
+                    <Form.Label>
                         How many courses do you prefer to take per semester?
                     </Form.Label>
-
                       <Form.Control model={jsonObject.winter.numberOfCourses} name='jsonObject.winter.numberOfCourses' onChange={this.handleChange} as='select'>
                         <option value={1}>1</option>
                         <option value={2}>2</option>
@@ -442,8 +450,7 @@ class StudentForm extends Component {
             <Button type='submit'>Generate My Schedule!</Button>
         </Form>
       </div>
-        );
-      }
-    }
-    
-    export default StudentForm;
+    );
+  }
+}
+export default StudentForm;

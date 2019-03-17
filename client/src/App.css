@@ -175,3 +175,8 @@
 .student-form .course-preferences{
   margin-left: 15px;
 }
+
+.student-form .course-selection-box .row{
+  display: table-cell;
+  padding: 10px;
+}
