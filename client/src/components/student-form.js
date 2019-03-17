@@ -240,6 +240,7 @@ class StudentForm extends Component {
   }
 
   handleGenerateSchedule(event) {
+    event.preventDefault();
     this.setState({
       showSchedule: true,
     });
