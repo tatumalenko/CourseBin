@@ -130,6 +130,7 @@ router.post('/', async (req, res) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           message: `Sorry, a user already exists with the username: ${username}`,
           user: null,
         });
@@ -178,6 +179,9 @@ router.post('/', async (req, res) => {
 <<<<<<< HEAD
 =======
           message: 'Sorry, a user already exists with the username: ${username}',
+=======
+          `Sorry, a user already exists with the username: ${user.username}`
+>>>>>>> 0d14ded... Update server/routes/user.js
 =======
           `Sorry, a user already exists with the username: ${user.username}`
 >>>>>>> 0d14ded... Update server/routes/user.js
