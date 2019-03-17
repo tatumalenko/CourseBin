@@ -58,6 +58,7 @@ router.post('/', async (req, res) => {
     .is().max(20) // maximum length of 20
     .has().not().spaces() // no spaces allowed
 <<<<<<< HEAD
+<<<<<<< HEAD
     .has().lowercase() // must have lowercase letters
     .is().not().oneOf([username, 'password', 'abcdef', '123456']); // list of invalid passwords
     
@@ -115,6 +116,10 @@ router.post('/', async (req, res) => {
 >>>>>>> 37d606fc13b8e09ecfa456de7d62e6b3d4faeb45
 =======
     .is().not().oneOf([username, 'password']); // list of invalid passwords
+=======
+    .has().lowercase() // must have lowercase letters
+    .is().not().oneOf([username, 'password', 'abcdef', '123456']); // list of invalid passwords
+>>>>>>> 851dc19... added check for lowercase letters
     
 >>>>>>> e125ee2... changed password validation to be more robust
 
