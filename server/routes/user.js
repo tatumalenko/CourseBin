@@ -8,6 +8,7 @@ const router = express.Router();
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 const { User } = require('../database/models/User');
 const passport = require('../passport/index');
 =======
@@ -21,6 +22,8 @@ const passwordValidator = require('password-validator');
 <<<<<<< HEAD
 =======
 >>>>>>> 270af31... [#74] Added password validator
+=======
+>>>>>>> a8abf0c... [#41] Abstract signup validation logic into separate class and add tests
 const { SignupValidator } = require('../passport/SignupValidator');
 const { User } = require('../database/models/User');
 const passport = require('../passport');
@@ -39,6 +42,7 @@ const passport = require('../passport');
 =======
 const PasswordValidator = require('password-validator');
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 const { SignupValidator } = require('../passport/SignupValidator');
 >>>>>>> f072e1d... [#41] Abstract signup validation logic into separate class and add tests
@@ -52,6 +56,11 @@ const passport = require('../passport');
 >>>>>>> 37d606fc13b8e09ecfa456de7d62e6b3d4faeb45
 =======
 const passwordValidator = require('password-validator');
+=======
+=======
+const { SignupValidator } = require('../passport/SignupValidator');
+>>>>>>> f072e1d... [#41] Abstract signup validation logic into separate class and add tests
+>>>>>>> a8abf0c... [#41] Abstract signup validation logic into separate class and add tests
 const { User } = require('../database/models/User');
 const passport = require('../passport');
 
@@ -95,6 +104,7 @@ router.post('/', async (req, res) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e125ee2... changed password validation to be more robust
     var passwordRules = new passwordValidator();
@@ -115,6 +125,8 @@ router.post('/', async (req, res) => {
 <<<<<<< HEAD
 =======
 >>>>>>> b5b09b6... [#41] Merged master into branch, fixed conflicts
+=======
+>>>>>>> a8abf0c... [#41] Abstract signup validation logic into separate class and add tests
     const credentialValidation = SignupValidator.validate({ username, password });
 =======
     const passwordRules = new passwordValidator();
@@ -216,6 +228,7 @@ router.post('/', async (req, res) => {
 =======
     const credentialValidation = SignupValidator.validate({ username, password });
 >>>>>>> f072e1d... [#41] Abstract signup validation logic into separate class and add tests
+<<<<<<< HEAD
 =======
 =======
     const passwordRules = new PasswordValidator();
@@ -262,6 +275,8 @@ router.post('/', async (req, res) => {
     };
 >>>>>>> 9616f34... [#41] Fix username validation and simplify control flow
 >>>>>>> 270af31... [#74] Added password validator
+=======
+>>>>>>> a8abf0c... [#41] Abstract signup validation logic into separate class and add tests
 
     if (user) { // user already exists
       res
@@ -283,6 +298,9 @@ router.post('/', async (req, res) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a8abf0c... [#41] Abstract signup validation logic into separate class and add tests
     } else if (!credentialValidation.valid) {
       res
         .status(400)
@@ -385,11 +403,18 @@ router.post('/', async (req, res) => {
         });
     } else if (!passwordRules.validate(password)) {
       const reasons = passwordRules.validate(password, { list: true });
+=======
+    } else if (!credentialValidation.valid) {
+>>>>>>> f072e1d... [#41] Abstract signup validation logic into separate class and add tests
       res
         .status(400)
         .json({
+<<<<<<< HEAD
           message: passwordValidatorMessageMap[reasons[0]],
 >>>>>>> 270af31... [#74] Added password validator
+=======
+          message: credentialValidation.message,
+>>>>>>> a8abf0c... [#41] Abstract signup validation logic into separate class and add tests
           user: null,
         });
     } else {
