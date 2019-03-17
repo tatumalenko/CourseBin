@@ -16,6 +16,11 @@ class StudentForm extends Component {
 
     this.catalog = {};
     this.faculty = '';
+    this.requestedCourses = {
+      fall: [],
+      winter: [],
+      summer: [],
+    };
 
     const jsonObject = {
       fall: {
@@ -192,24 +197,30 @@ class StudentForm extends Component {
 
       switch (season) {
         case 'fall':
+          this.requestedCourses.fall.push(`${this.faculty}${courseName.split(' – ')[0]}`);
           this.setState({
             fall: {
+              showListFlag: true,
               selectedFaculty: this.faculty,
               selectedCourses: courseName,
             },
           });
           break;
         case 'winter':
+          this.requestedCourses.winter.push(`${this.faculty}${courseName.split(' – ')[0]}`);
           this.setState({
             winter: {
+              showListFlag: true,
               selectedFaculty: this.faculty,
               selectedCourses: courseName,
             },
           });
           break;
         case 'summer':
+          this.requestedCourses.summers.push(`${this.faculty}${courseName.split(' – ')[0]}`);
           this.setState({
             summer: {
+              showListFlag: true,
               selectedFaculty: this.faculty,
               selectedCourses: courseName,
             },
@@ -217,6 +228,7 @@ class StudentForm extends Component {
           break;
         default:
       }
+      console.log(this.requestedCourses);
     }
   }
 
@@ -301,7 +313,7 @@ class StudentForm extends Component {
 
                   <div className='course-preferences'>
                     <div className='course-selection-box'>
-                      <Form.Label>
+                      <Form.Label className='add-course-button'>
                         Add a Course
                         <i className='material-icons'>
                           add
@@ -408,7 +420,7 @@ class StudentForm extends Component {
 
                     <div className='course-preferences'>
                       <div className='course-selection-box'>
-                        <Form.Label>
+                        <Form.Label className='add-course-button'>
                           Add a Course
                           <i className='material-icons'>
                             add
@@ -523,7 +535,7 @@ class StudentForm extends Component {
 
                     <div className='course-preferences'>
                       <div className='course-selection-box'>
-                        <Form.Label>
+                        <Form.Label className='add-course-button'>
                           Add a Course
                           <i className='material-icons'>
                             add

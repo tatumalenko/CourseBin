@@ -179,4 +179,18 @@
 .student-form .course-selection-box .row{
   display: table-cell;
   padding: 10px;
+  
+}
+
+.student-form .course-selection-box .add-course-button i{ 
+  font-size: 18px;
+  margin-top: 3px;
+}
+
+.student-form .course-selection-box{
+  background: 5px aliceblue;
+  padding: 15px;
+  border-radius: 15px;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
