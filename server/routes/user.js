@@ -7,6 +7,7 @@ const router = express.Router();
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 const { User } = require('../database/models/User');
 const passport = require('../passport/index');
 =======
@@ -18,6 +19,8 @@ const passwordValidator = require('password-validator');
 =======
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+>>>>>>> 270af31... [#74] Added password validator
 const { SignupValidator } = require('../passport/SignupValidator');
 const { User } = require('../database/models/User');
 const passport = require('../passport');
@@ -35,6 +38,7 @@ const passport = require('../passport');
 
 =======
 const PasswordValidator = require('password-validator');
+<<<<<<< HEAD
 =======
 const { SignupValidator } = require('../passport/SignupValidator');
 >>>>>>> f072e1d... [#41] Abstract signup validation logic into separate class and add tests
@@ -71,6 +75,11 @@ const passport = require('../passport');
 
 >>>>>>> 2434598... [#41] Merged master into branch, fixed conflicts
 
+=======
+const { User } = require('../database/models/User');
+const passport = require('../passport');
+
+>>>>>>> 270af31... [#74] Added password validator
 >>>>>>> 9616f34... [#41] Fix username validation and simplify control flow
 router.post('/', async (req, res) => {
   try {
@@ -79,6 +88,7 @@ router.post('/', async (req, res) => {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -154,6 +164,8 @@ router.post('/', async (req, res) => {
     };
 >>>>>>> 9616f34... [#41] Fix username validation and simplify control flow
 =======
+=======
+>>>>>>> 270af31... [#74] Added password validator
     const credentialValidation = SignupValidator.validate({ username, password });
 >>>>>>> f072e1d... [#41] Abstract signup validation logic into separate class and add tests
 >>>>>>> 37d606fc13b8e09ecfa456de7d62e6b3d4faeb45
@@ -169,6 +181,7 @@ router.post('/', async (req, res) => {
     const passwordRules = new passwordValidator();
     console.log(passwordRules);
 =======
+<<<<<<< HEAD
 >>>>>>> 9616f34... [#41] Fix username validation and simplify control flow
 
     // Password rules
@@ -204,22 +217,51 @@ router.post('/', async (req, res) => {
     const credentialValidation = SignupValidator.validate({ username, password });
 >>>>>>> f072e1d... [#41] Abstract signup validation logic into separate class and add tests
 =======
+=======
+    const passwordRules = new PasswordValidator();
+    const usernameRules = new PasswordValidator();
 
-    // password rules
+    // Username rules
+    usernameRules
+      .is().min(8) // Minimum length 8
+      .is().max(100) // Maximum length 100
+      .has().not().spaces(); // Should not have spaces
+>>>>>>> 9616f34... [#41] Fix username validation and simplify control flow
+>>>>>>> 270af31... [#74] Added password validator
+
+    // Password rules
     passwordRules
-      .is().min(6) // minimum length of 6
-      .is().max(20) // maximum length of 20
-      .has()
-      .not()
-      .spaces() // no spaces allowed
-      .has()
-      .lowercase() // must have lowercase letters
-      .is()
-      .not()
-      .oneOf([ username, 'password', 'abcdef', '123456' ]); // list of invalid passwords
+      .is().min(8) // Minimum length 8
+      .is().max(100) // Maximum length 100
+      .has().not().spaces() // Should not have spaces
+      .has().uppercase() // Must have uppercase letters
+      .has().lowercase() // Must have lowercase letters
+      .has().digits() // Must have digits
+      .is().not().oneOf([ 'Passw0rd', 'Password123' ]); // Blacklist these values
 
+<<<<<<< HEAD
 >>>>>>> 2434598... [#41] Merged master into branch, fixed conflicts
+<<<<<<< HEAD
 >>>>>>> b5b09b6... [#41] Merged master into branch, fixed conflicts
+=======
+=======
+    const usernameValidatorMessageMap = {
+      min: 'Username must be 6 characters or more.',
+      max: 'Username must be 100 characters or less.',
+      spaces: 'Username cannot contain spaces.',
+    };
+
+    const passwordValidatorMessageMap = {
+      min: 'Password must be 6 characters or more.',
+      max: 'Password must be 100 characters or less.',
+      spaces: 'Password cannot contain spaces.',
+      uppercase: 'Password must contain uppercase letters.',
+      lowercase: 'Password must contain lowercase letters.',
+      digits: 'Password must contain at least 1 digit.',
+      oneOf: 'Password is too simple.',
+    };
+>>>>>>> 9616f34... [#41] Fix username validation and simplify control flow
+>>>>>>> 270af31... [#74] Added password validator
 
     if (user) { // user already exists
       res
@@ -233,6 +275,7 @@ router.post('/', async (req, res) => {
           message: `Sorry, a user already exists with the username: ${username}`,
           user: null,
         });
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -275,6 +318,8 @@ router.post('/', async (req, res) => {
 =======
 =======
 >>>>>>> b5b09b6... [#41] Merged master into branch, fixed conflicts
+=======
+>>>>>>> 270af31... [#74] Added password validator
     } else if (!credentialValidation.valid) {
 >>>>>>> f072e1d... [#41] Abstract signup validation logic into separate class and add tests
       res
@@ -314,6 +359,7 @@ router.post('/', async (req, res) => {
     } else if (passwordRules.validate(password)) { // valid password
 >>>>>>> 2434598... [#41] Merged master into branch, fixed conflicts
 =======
+<<<<<<< HEAD
 =======
     } else if (!credentialValidation.valid) {
 >>>>>>> f072e1d... [#41] Abstract signup validation logic into separate class and add tests
@@ -321,15 +367,41 @@ router.post('/', async (req, res) => {
         .status(400)
         .json({
           message: credentialValidation.message,
+=======
+    } else if (username === password) {
+      res
+        .status(400)
+        .json({
+          message: 'Username and password cannot be the same.',
+          user: null,
+        });
+    } else if (!usernameRules.validate(username)) {
+      const reasons = usernameRules.validate(username, { list: true });
+      res
+        .status(400)
+        .json({
+          message: usernameValidatorMessageMap[reasons[0]],
+          user: null,
+        });
+    } else if (!passwordRules.validate(password)) {
+      const reasons = passwordRules.validate(password, { list: true });
+      res
+        .status(400)
+        .json({
+          message: passwordValidatorMessageMap[reasons[0]],
+>>>>>>> 270af31... [#74] Added password validator
           user: null,
         });
     } else {
 >>>>>>> 9616f34... [#41] Fix username validation and simplify control flow
+<<<<<<< HEAD
 =======
 =======
     } else if (passwordRules.validate(password)) { // valid password
 >>>>>>> 2434598... [#41] Merged master into branch, fixed conflicts
 >>>>>>> b5b09b6... [#41] Merged master into branch, fixed conflicts
+=======
+>>>>>>> 270af31... [#74] Added password validator
       const newUser = new User({
         username,
         password,
@@ -346,8 +418,11 @@ router.post('/', async (req, res) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> b5b09b6... [#41] Merged master into branch, fixed conflicts
+=======
+>>>>>>> 270af31... [#74] Added password validator
 =======
     } else { // password does not respect the rules
       if (username === password) {
@@ -386,6 +461,7 @@ router.post('/', async (req, res) => {
           });
       }
 >>>>>>> 2434598... [#41] Merged master into branch, fixed conflicts
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 >>>>>>> 9616f34... [#41] Fix username validation and simplify control flow
@@ -456,6 +532,10 @@ router.post('/', async (req, res) => {
 >>>>>>> 9616f34... [#41] Fix username validation and simplify control flow
 =======
 >>>>>>> b5b09b6... [#41] Merged master into branch, fixed conflicts
+=======
+=======
+>>>>>>> 9616f34... [#41] Fix username validation and simplify control flow
+>>>>>>> 270af31... [#74] Added password validator
     }
   } catch (err) {
     res
