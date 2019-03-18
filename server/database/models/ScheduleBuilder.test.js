@@ -18,6 +18,8 @@ const student = {
     gpa: 3.5,
     standing: 'ACCEPTABLE',
     completedCourses: [
+      { code: 'ENCS272', grade: 'A' },
+      { code: 'PHYS205', grade: 'A' },
       { code: 'MATH203', grade: 'A' },
       { code: 'MATH204', grade: 'A' },
       { code: 'MATH205', grade: 'A' },
@@ -60,42 +62,123 @@ const student = {
 //   console.log(soen331);
 // });
 
-test('Categorizing', async (t) => {
-  const candidateCourses = await ScheduleBuilder.findCandidateSectionQueueMap(
-    {
-      completedCourses: student.record.completedCourses.map(e => e.code),
-      requiredCourses: SoftwareEngineeringDegree.requirements.mandatory,
-      term: 'FALL',
+const hashQueueMap = new Map(Object.entries(
+  {
+    COMP348: [ {
+      courseCode: 'COMP348',
+      code: 'E',
+      kind: 'LEC',
     },
-  );
+    {
+      courseCode: 'COMP348',
+      code: 'E EI',
+      kind: 'TUT',
+    },
+    {
+      courseCode: 'COMP348',
+      code: 'E EJ',
+      kind: 'TUT',
+    },
+    {
+      courseCode: 'COMP348',
+      code: 'E EK',
+      kind: 'TUT',
+    },
+    ],
+  },
+));
 
+test('Categorizing COMP348', (t) => {
+  t.deepEqual(ScheduleBuilder.categorizeSectionQueueIntoKind(
+    hashQueueMap.get('COMP348'),
+  ), {
+    LAB: [],
+    LEC: [
+      {
+        code: 'E',
+        courseCode: 'COMP348',
+        kind: 'LEC',
+      },
+    ],
+    TUT: [
+      {
+        code: 'E EI',
+        courseCode: 'COMP348',
+        kind: 'TUT',
+      },
+      {
+        code: 'E EJ',
+        courseCode: 'COMP348',
+        kind: 'TUT',
+      },
+      {
+        code: 'E EK',
+        courseCode: 'COMP348',
+        kind: 'TUT',
+      },
+    ],
+  });
+});
+
+test('Combinations COMP348', (t) => {
   const categorized = {};
-  const allCombos = {};
-
-  t.log(candidateCourses.get('COMP348'));
-
-  // categorized.soen331 = ScheduleBuilder.categorizeSectionQueueIntoKind(
-  // candidateCourses.get('SOEN331'));
-  // t.log(categorized.soen331);
-
-  // categorized.soen331 = Util.allCombinations([
-  // categorized.soen331.LEC, categorized.soen331.TUT, categorized.soen331.LAB ]);
-  // t.log(categorized.soen331);
-
   categorized.comp348 = ScheduleBuilder.categorizeSectionQueueIntoKind(
-    candidateCourses.get('COMP348'),
+    hashQueueMap.get('COMP348'),
   );
-  t.log(categorized.comp348);
 
-  allCombos.soen348 = Util.allCombinations([
+  t.deepEqual(Util.allCombinations([
     categorized.comp348.LEC,
     categorized.comp348.TUT,
-    categorized.comp348.LAB ]);
+    categorized.comp348.LAB ]), [ [
+    {
+      code: 'E',
+      courseCode: 'COMP348',
+      kind: 'LEC',
+    },
+    {
+      code: 'E EI',
+      courseCode: 'COMP348',
+      kind: 'TUT',
+    },
+  ],
+  [
+    {
+      code: 'E',
+      courseCode: 'COMP348',
+      kind: 'LEC',
+    },
+    {
+      code: 'E EJ',
+      courseCode: 'COMP348',
+      kind: 'TUT',
+    },
+  ],
+  [
+    {
+      code: 'E',
+      courseCode: 'COMP348',
+      kind: 'LEC',
+    },
+    {
+      code: 'E EK',
+      courseCode: 'COMP348',
+      kind: 'TUT',
+    },
+  ] ]);
+});
 
-  const prettyPrintCombos = {};
-  prettyPrintCombos.soen348 = allCombos.soen348.map((e) => {
-    const combo = e.map(ee => ({ code: ee.code, courseCode: ee.courseCode, kind: ee.kind }));
-    return combo;
+test('Sequence generation', async (t) => {
+  const termCourses = await ScheduleBuilder.findCandidateSequences({
+    completedCourses: student.record.completedCourses.map(e => e.code),
+    requiredCourses: SoftwareEngineeringDegree.requirements.suggested.wsaOption,
   });
-  prettyPrintCombos.soen348.forEach(e => t.log(e));
+
+  t.deepEqual(termCourses, [
+    [ 'SOEN331', 'COMP335', 'COMP346', 'COMP348', 'ENCS282' ],
+    [ 'SOEN321', 'SOEN341', 'ENGR201', 'ENGR202', 'ENGR213' ],
+    [ 'SOEN342', 'SOEN384', 'ELEC275', 'ENGR233', 'ENGR301' ],
+    [ 'SOEN343', 'SOEN357', 'SOEN385', 'ENGR371', 'ENGR391' ],
+    [ 'SOEN344', 'ENGR392', 'PHYS284', 'ENGR251', 'COMP353' ],
+    [ 'SOEN390', 'SOEN387', 'COMP445' ],
+    [ 'SOEN490', 'SOEN487' ] ]);
 });
