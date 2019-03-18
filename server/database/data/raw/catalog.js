@@ -1,8 +1,10 @@
 const axios = require('axios');
 
+const { SoftwareEngineeringDegree } = require('../../models/SoftwareEngineeringDegree');
 const configs = require('../../../../configs/configs');
 
 const getCatalogCourses = async () => {
+  const allDegreeCatalogCodes = SoftwareEngineeringDegree.requirements.all;
   const options = {
     method: 'get',
     baseURL: 'https://opendata.concordia.ca',
@@ -58,10 +60,12 @@ const getCatalogCourses = async () => {
 
     const out = [];
     Object.keys(res).forEach((key) => {
-      out.push(...res[key].data);
+      out.push(
+        ...res[key].data.filter(o => allDegreeCatalogCodes.includes(`${o.subject}${o.catalog}`)),
+      );
     });
 
-    return out; // [ ...res.comp.data, ...res.soen.data ];
+    return out;
   } catch (err) {
     console.error(err);
     throw err;
