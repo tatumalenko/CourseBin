@@ -1,3 +1,4 @@
+/* eslint max-len: 0 */
 const _ = require('lodash');
 
 const { Catalog } = require('./Catalog');
@@ -95,6 +96,24 @@ class ScheduleBuilder {
 
   static async findCandidateSchedules({ completedCourses, requiredCourses, term }) {
     return this.findCandidateSectionQueueMap({ completedCourses, requiredCourses, term });
+  }
+
+  static async findCandidateSequences({ completedCourses, requiredCourses }) {
+    let completed = completedCourses;
+    const required = requiredCourses;
+    const termCourses = [];
+
+    // Get all candidate courses given currently completed courses
+    let candidateCourses = await this.findCandidateCourses({ completedCourses: completed, requiredCourses: required });
+    while (_.difference(required, completed).length > 0) {
+      // Of the candidate courses, pick at most 5, and add those to the lot of completedCOurses
+      termCourses.push(candidateCourses.slice(0, 5));
+      completed = _.uniq([ ...completed, ..._.flatten(termCourses) ]);
+      // eslint-disable-next-line
+      candidateCourses = await this.findCandidateCourses({ completedCourses: completed, requiredCourses: required });
+    }
+
+    return termCourses;
   }
 }
 
