@@ -85,6 +85,19 @@ class StudentForm extends Component {
     this.getCourseCatalog();
   }
 
+  setErrMsg(season, msg) {
+    switch (season) {
+      case 'fallSelectedCourses': this.setState({ fallErrMsg: msg });
+        break;
+      case 'winterSelectedCourses': this.setState({ winterErrMsg: msg });
+        break;
+      case 'summerSelectedCourses': this.setState({ summerErrMsg: msg });
+        break;
+      default:
+    }
+  }
+
+
   getCourseCatalog() {
     axios.get('/catalog').then((response) => {
       if (response.data) {
@@ -106,29 +119,56 @@ class StudentForm extends Component {
     Object.keys(catalog).forEach((course) => {
       const clss = catalog[course];
       let number;
-      const regex = /([ ][I][i][i]*[ ])+/g;
 
       if (clss) {
         const code = clss.code;
         number = parseInt(code.slice(4), 10);
+        let departmentName = '';
 
         if (code !== '' && code.length < 8 && number < 500) {
           const faculty = code.slice(0, 4);
+          switch (faculty) {
+            case 'SOEN': departmentName = 'Software Engineering';
+              break;
+            case 'COMP': departmentName = 'Computer Science';
+              break;
+            case 'ENCS': departmentName = 'Engineering & Computer Science';
+              break;
+            case 'ENGR': departmentName = 'Engineering';
+              break;
+            case 'CIVI': departmentName = 'Civil Engineering';
+              break;
+            case 'COEN': departmentName = 'Computer Engineering';
+              break;
+            case 'MECH': departmentName = 'Mechanical Engineering';
+              break;
+            case 'ELEC': departmentName = 'Electrical Engineering';
+              break;
+            case 'CHEM': departmentName = 'Chemistry';
+              break;
+            case 'PHYS': departmentName = 'Physics';
+              break;
+            case 'BIOL': departmentName = 'Biology';
+              break;
+            case 'MATH': departmentName = 'Mathematics';
+              break;
+            default: departmentName = faculty;
+          }
           const title = clss.title;
-          const displayName = `${number} – ${_.startCase(_.toLower(title))}`;
+          const displayName = `${code} – ${_.startCase(_.toLower(title))}`;
 
-          if (!map[faculty] && displayName !== '') {
-            map[faculty] = [displayName];
+          if (!map[departmentName] && displayName !== '') {
+            map[departmentName] = [ displayName ];
           } else {
-            map[faculty].push(displayName);
+            map[departmentName].push(displayName);
           }
         }
       }
     });
 
-    Object.keys(map).forEach((faculty) => {
-      if (map[faculty] && map[faculty].length > 0) {
-        map[faculty] = _.uniq(map[faculty]).sort();
+    Object.keys(map).forEach((departmentName) => {
+      if (map[departmentName] && map[departmentName].length > 0) {
+        map[departmentName] = _.uniq(map[departmentName]).sort();
       }
     });
 
@@ -157,6 +197,18 @@ class StudentForm extends Component {
     console.log(`${target.name}  ${target.value}`);
   }
 
+  handleFacultySelection(event) {
+    event.preventDefault();
+    const target = event.target;
+    const property = target.name;
+    const departmentName = target.value;
+
+    this.setState({
+      [property]: departmentName,
+    });
+    console.log(`${property}  ${departmentName}`);
+  }
+
   handleCourseSelection(event) {
     event.preventDefault();
     if (event && event.target && event.target.value) {
@@ -164,47 +216,24 @@ class StudentForm extends Component {
       const target = event.target;
       const property = target.name;
       const course = target.value;
-      let courseCode;
-
-      switch (property) {
-        case 'fallSelectedCourses': courseCode = `${state.fallSelectedFaculty}${course.split(' – ')[0]}`;
-          break;
-        case 'winterSelectedCourses': courseCode = `${state.winterSelectedFaculty}${course.split(' – ')[0]}`;
-          break;
-        case 'summerSelectedCourses': courseCode = `${state.summerSelectedFaculty}${course.split(' – ')[0]}`;
-          break;
-        default:
-          return;
-      }
+      const courseCode = course.split(' – ')[0];
 
       if (!state[property]) {
+        this.setErrMsg(property, '');
         this.setState({
-          [property]: [courseCode],
+          [property]: [ courseCode ],
         });
       } else if (state[property].length >= this.MAX_NUM_COURSES) {
         this.setErrMsg(property, 'You have added the maximum number of courses per semester');
       } else if (_.includes(state[property], courseCode)) {
-        this.setErrMsg(property, 'Sorry, you have already added this course!');
-      } else {
+        this.setErrMsg(property, `You have already added the course ${courseCode}`);
+      } else if (state[property]) {
         this.setErrMsg(property, '');
         const newState = Object.assign({}, state);
-        console.log(newState[property]);
         newState[property].push(courseCode);
         console.log(newState[property]);
         this.setState(newState);
       }
-    }
-  }
-
-  setErrMsg(season, msg) {
-    switch (season) {
-      case 'fallSelectedCourses': this.setState({ fallErrMsg: msg });
-        break;
-      case 'winterSelectedCourses': this.setState({ winterErrMsg: msg });
-        break;
-      case 'summerSelectedCourses': this.setState({ summerErrMsg: msg });
-        break;
-      default:
     }
   }
 
@@ -346,9 +375,9 @@ class StudentForm extends Component {
                             )) : null
                             }
                           </Form.Control>
-                          {fallErrMsg ? (
-                            <div className='course-err-msg'>{fallErrMsg}</div>
-                          ) : null}
+
+                          <div className='course-err-msg'>{fallErrMsg}</div>
+
                         </Row>
                         <Row className='selected-courses-container'>
                           {fallSelectedCourses ? Object.keys(fallSelectedCourses).map(index => (
@@ -398,7 +427,7 @@ class StudentForm extends Component {
                         name='winterTimePreference'
                         onChange={this.handleCheckboxChange}
                         inline
-                      />
+                            />
                     </Form.Label>
 
                     <div className='number-courses'>
@@ -502,7 +531,7 @@ class StudentForm extends Component {
                         name='summerTimePreference'
                         onChange={this.handleCheckboxChange}
                         inline
-                      />
+                        />
                     </Form.Label>
 
                     <div className='number-courses'>
