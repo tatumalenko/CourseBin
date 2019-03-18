@@ -50,6 +50,7 @@
     "start": "yarn prodstart",
     "herokustart": "yarn run server",
     "prodstart": "yarn build && yarn run server",
+    "heroku-prebuild": "yarn build",
     "build": "cd client && yarn build",
     "server": "node server.js",
     "client": "node start-client.js",
