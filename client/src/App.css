@@ -199,9 +199,23 @@
   margin-top: 15px;
   margin-bottom: 15px;
 }
-.student-form .course-selection-box .selected-courses-container .row{
-  display: block;
+.student-form .course-selection-box .selected-courses-container{
+  display: inline-flex;
+  margin-left: 0;
 }
 .student-form .selected-courses-container .selected-courses{
   padding: 10px;
+  background: antiquewhite;
+  margin-right: 12px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  max-width: 48%;
+  min-width: 48%;
+}
+
+.student-form .course-err-msg{
+  color: red;
+  margin-top: 5px;
+  margin-left: -90px;
+  font-size: 16px;
 }
