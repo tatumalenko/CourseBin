@@ -277,8 +277,8 @@ class StudentForm extends Component {
       ? <Schedule />
       : (
         <div className='student-form'>
-          <h3 className='header-logo'>Coursebin</h3>
-          <Form onSubmit={this.handleSubmit}>
+          <div className='header-logo'><h3 className='title-for-loggedIn'>CourseBin</h3></div>
+          <Form onSubmit={this.handleGenerateSchedule}>
             <h3 id='form-header'>First, we will just need some basic information... </h3>
             <div id='student-form-content'>
               <div style={{ display: fallChecked ? 'initial' : 'none' }}>
