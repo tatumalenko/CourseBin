@@ -98,22 +98,42 @@ class ScheduleBuilder {
     return this.findCandidateSectionQueueMap({ completedCourses, requiredCourses, term });
   }
 
-  static async findCandidateSequences({ completedCourses, requiredCourses }) {
+  static async findCandidateSequences({ completedCourses, requiredCourses, termPreferences }) {
     let completed = completedCourses;
     const required = requiredCourses;
     const termCourses = [];
+    const terms = [ 'fall', 'winter', 'summer' ];
+    const numberOfTerms = terms.length;
 
+    let termTracker = 0;
     // Get all candidate courses given currently completed courses
     let candidateCourses = await this.findCandidateCourses({ completedCourses: completed, requiredCourses: required });
     while (_.difference(required, completed).length > 0) {
-      // Of the candidate courses, pick at most 5, and add those to the lot of completedCOurses
-      termCourses.push(candidateCourses.slice(0, 5));
-      completed = _.uniq([ ...completed, ..._.flatten(termCourses) ]);
-      // eslint-disable-next-line
-      candidateCourses = await this.findCandidateCourses({ completedCourses: completed, requiredCourses: required });
+      if (!termPreferences[terms[termTracker % numberOfTerms]].numberOfCourses) {
+        // Of the candidate courses, pick at most 5, and add those to the lot of completedCOurses
+        const thisTerm = {
+          term: terms[termTracker % numberOfTerms],
+          courses: candidateCourses.slice(0, termPreferences[terms[termTracker % numberOfTerms]].numberOfCourses),
+        };
+        termCourses.push(thisTerm);
+        completed = _.uniq([ ...completed, ..._.flatten(thisTerm.courses) ]);
+        // eslint-disable-next-line
+        candidateCourses = await this.findCandidateCourses({ completedCourses: completed, requiredCourses: required });
+      }
+      termTracker += 1;
     }
 
     return termCourses;
+  }
+
+  static async getCandidateSchedulesAndSequences({
+    completedCourses,
+    requiredCourses,
+    termPreferences,
+  }) {
+    const candidatesSchedules = this.findCandidateSchedules({ completedCourses, requiredCourses });
+    // The completedCourses would need to be updated with those included in schedules
+    const candidateSequences = this.findCandidateSequences({ completedCourses, requiredCourses });
   }
 }
 
