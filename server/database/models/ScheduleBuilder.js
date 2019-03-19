@@ -99,11 +99,7 @@ class ScheduleBuilder {
     return this.findCandidateSectionQueueMap({ completedCourses, requiredCourses, term });
   }
 
-<<<<<<< HEAD
-  static async findCandidateSequences({ completedCourses, requiredCourses }) { //refactor to take termCoursesNumber
-=======
   static async findCandidateSequences({ completedCourses, requiredCourses, termPreferences }) {
->>>>>>> 600ef1eb340923b4448fabb46a8f31e02ead8b4a
     let completed = completedCourses;
     const required = requiredCourses;
     const termCourses = [];
