@@ -19,29 +19,6 @@ class StudentForm extends Component {
     this.faculty = '';
     this.MAX_NUM_COURSES = 6;
 
-    this.jsonObject = {
-      fall: {
-        requestedCourses: [],
-        term: 'FALL',
-        eveningTimePreference: false,
-        numberOfCourses: 1,
-      },
-
-      winter: {
-        requestedCourses: [],
-        term: 'WINTER',
-        eveningTimePreference: false,
-        numberOfCourses: 1,
-      },
-
-      summer: {
-        requestedCourses: [],
-        term: 'SUMMER',
-        eveningTimePreference: false,
-        numberOfCourses: 1,
-      },
-    };
-
     this.state = {
       courseMap: null,
 
@@ -50,21 +27,21 @@ class StudentForm extends Component {
       fallNumOfCourses: 4,
       fallSelectedFaculty: null,
       fallSelectedCourses: [],
-      fallErrMsg: '',
+      fallErrMsg: null,
 
       winterExpanded: false,
       winterTimePreference: false,
       winterNumOfCourses: 4,
       winterSelectedFaculty: null,
       winterSelectedCourses: [],
-      winterErrMsg: '',
+      winterErrMsg: null,
 
       summerExpanded: false,
       summerTimePreference: false,
       summerNumOfCourses: 4,
       summerSelectedFaculty: null,
       summerSelectedCourses: [],
-      summerErrMsg: '',
+      summerErrMsg: null,
 
       showSchedule: false,
     };
@@ -76,7 +53,7 @@ class StudentForm extends Component {
     this.getCourseCatalog = this.getCourseCatalog.bind(this);
     this.parseCourseCatalog = this.parseCourseCatalog.bind(this);
     this.handleCourseSelection = this.handleCourseSelection.bind(this);
-    this.handleGenerateSchedule = this.handleGenerateSchedule.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
     this.setErrMsg = this.setErrMsg.bind(this);
   }
 
@@ -155,7 +132,12 @@ class StudentForm extends Component {
             default: departmentName = faculty;
           }
           const title = clss.title;
-          const displayName = `${code} – ${_.startCase(_.toLower(title))}`;
+          let displayName;
+          if (_.includes(title.toUpperCase(), 'II') || _.includes(title.toUpperCase(), 'III')) {
+            displayName = `${code} – ${title}`;
+          } else {
+            displayName = `${code} – ${_.startCase(_.toLower(title))}`;
+          }
 
           if (!map[departmentName] && displayName !== '') {
             map[departmentName] = [ displayName ];
@@ -184,7 +166,6 @@ class StudentForm extends Component {
     this.setState({
       [name]: checked,
     });
-    console.log(`${name} ${checked}`);
   }
 
 
@@ -206,7 +187,6 @@ class StudentForm extends Component {
     this.setState({
       [property]: departmentName,
     });
-    console.log(`${property}  ${departmentName}`);
   }
 
   handleCourseSelection(event) {
@@ -219,27 +199,56 @@ class StudentForm extends Component {
       const courseCode = course.split(' – ')[0];
 
       if (!state[property]) {
-        this.setErrMsg(property, '');
         this.setState({
           [property]: [ courseCode ],
         });
+        this.setErrMsg(property, null);
       } else if (state[property].length >= this.MAX_NUM_COURSES) {
         this.setErrMsg(property, 'You have added the maximum number of courses per semester');
       } else if (_.includes(state[property], courseCode)) {
         this.setErrMsg(property, `You have already added the course ${courseCode}`);
       } else if (state[property]) {
-        this.setErrMsg(property, '');
         const newState = Object.assign({}, state);
         newState[property].push(courseCode);
         this.setState(newState);
+        this.setErrMsg(property, null);
       }
     }
-
-    console.log(`course selection: ${this.state}`);
   }
 
-  handleGenerateSchedule(event) {
+  handleSubmit(event) {
     event.preventDefault();
+    const state = this.state;
+
+    const jsonObject = {
+      fall: {
+        requestedCourses: state.fallSelectedCourses,
+        eveningTimePreference: state.fallTimePreference,
+        numberOfCourses: state.fallNumOfCourses,
+      },
+
+      winter: {
+        requestedCourses: state.winterSelectedCourses,
+        eveningTimePreference: state.winterTimePreference,
+        numberOfCourses: state.winterNumOfCourses,
+      },
+
+      summer: {
+        requestedCourses: state.summerSelectedCourses,
+        eveningTimePreference: state.summerTimePreference,
+        numberOfCourses: state.summerNumOfCourses,
+      },
+    };
+
+    axios.post('/user/schedule', jsonObject)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    // go to schedule page
     this.setState({
       showSchedule: true,
     });
@@ -283,7 +292,7 @@ class StudentForm extends Component {
       : (
         <div className='student-form'>
           <div className='header-logo'><h3 className='title-for-loggedIn'>CourseBin</h3></div>
-          <Form onSubmit={this.handleGenerateSchedule}>
+          <Form onSubmit={this.handleSubmit}>
             <h3 id='form-header'>First, we will just need some basic information... </h3>
             <div id='student-form-content'>
               <div style={{ display: fallExpanded ? 'initial' : 'none' }}>
@@ -372,14 +381,14 @@ class StudentForm extends Component {
                                 <option key={courseMap[fallSelectedFaculty][index]} value={courseMap[fallSelectedFaculty][index]}>
                                   {courseMap[fallSelectedFaculty][index]}
                                 </option>
-                              )) : <div />
+                              )) : null
                               }
                             </Form.Control>
                           </div>
                         </Row>
                         <Row className='selected-courses-container'>
                           <div className='course-err-msg'>{fallErrMsg}</div>
-                          <Form.Label style={{ display: fallSelectedCourses ? 'none' : 'initial' }}>Course selections:</Form.Label>
+                          <Form.Label className='selected-courses-label' style={{ display: fallSelectedCourses.length === 0 ? 'none' : 'initial' }}>Selected Courses:</Form.Label>
                           {fallSelectedCourses ? Object.keys(fallSelectedCourses).map(index => (
                             <div className='selected-courses'>
                               {fallSelectedCourses[index]}
@@ -483,14 +492,14 @@ class StudentForm extends Component {
                                 <option key={courseMap[winterSelectedFaculty][index]} value={courseMap[winterSelectedFaculty][index]}>
                                   {courseMap[winterSelectedFaculty][index]}
                                 </option>
-                              )) : <div />
+                              )) : null
                               }
                             </Form.Control>
                           </div>
                         </Row>
                         <Row className='selected-courses-container'>
                           <div className='course-err-msg'>{winterErrMsg}</div>
-                          <Form.Label style={{ display: winterSelectedCourses.length > 0 ? 'none' : 'initial' }}>Course selections:</Form.Label>
+                          <Form.Label className='selected-courses-label' style={{ display: winterSelectedCourses.length === 0 ? 'none' : 'initial' }}>Selected Courses:</Form.Label>
                           {winterSelectedCourses ? Object.keys(winterSelectedCourses).map(index => (
                             <div className='selected-courses'>
                               {winterSelectedCourses[index]}
@@ -553,7 +562,6 @@ class StudentForm extends Component {
                         name='summerNumOfCourses'
                         onChange={this.handleChange}
                         as='select'
-                        multiple
                       >
                         <option value={1}>1</option>
                         <option value={2}>2</option>
@@ -584,7 +592,7 @@ class StudentForm extends Component {
                               <option key={faculty} value={faculty}>
                                 {faculty}
                               </option>
-                            )) : <div />}
+                            )) : null}
                           </Form.Control>
                         </Row>
                         <Row>
@@ -603,14 +611,14 @@ class StudentForm extends Component {
                                 <option key={courseMap[summerSelectedFaculty][index]} value={courseMap[summerSelectedFaculty][index]}>
                                   {courseMap[summerSelectedFaculty][index]}
                                 </option>
-                              )) : <div />
+                              )) : null
                               }
                             </Form.Control>
                           </div>
                         </Row>
                         <Row className='selected-courses-container'>
                           <div className='course-err-msg'>{summerErrMsg}</div>
-                          <Form.Label style={{ display: summerSelectedCourses.length ? 'none' : 'initial' }}>Course selections:</Form.Label>
+                          <Form.Label className='selected-courses-label' style={{ display: summerSelectedCourses === 0 ? 'none' : 'initial' }}>CSelected Courses:</Form.Label>
                           {summerSelectedCourses ? Object.keys(summerSelectedCourses).map(index => (
                             <div className='selected-courses'>
                               {summerSelectedCourses[index]}
