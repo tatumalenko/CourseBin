@@ -177,6 +177,10 @@
   margin-left: 15px;
 }
 
+.student-form .evening-checkbox:hover{
+  cursor: pointer;
+}
+
 .student-form .course-preferences{
   margin-left: 15px;
 }
@@ -204,18 +208,19 @@
   margin-left: 0;
 }
 .student-form .selected-courses-container .selected-courses{
-  padding: 10px;
+  padding: 8px;
   background: antiquewhite;
   margin-right: 12px;
-  border-radius: 10px;
+  border-radius: 5px;
+  font-size: 10px;
   margin-bottom: 15px;
-  max-width: 48%;
-  min-width: 48%;
+  min-width: 150px;
 }
 
 .student-form .course-err-msg{
   color: red;
-  margin-top: 5px;
-  margin-left: -90px;
+  margin-left: 0;
+  width: 100%;
+  margin-bottom: 15px;
   font-size: 16px;
 }
