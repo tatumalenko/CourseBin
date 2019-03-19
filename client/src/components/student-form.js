@@ -48,11 +48,13 @@ class StudentForm extends Component {
 
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleNumCourseChange = this.handleNumCourseChange.bind(this);
     this.toggleSemesterSection = this.toggleSemesterSection.bind(this);
     this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
     this.getCourseCatalog = this.getCourseCatalog.bind(this);
     this.parseCourseCatalog = this.parseCourseCatalog.bind(this);
     this.handleCourseSelection = this.handleCourseSelection.bind(this);
+    this.removeCourseSelection = this.removeCourseSelection.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.setErrMsg = this.setErrMsg.bind(this);
   }
@@ -72,7 +74,6 @@ class StudentForm extends Component {
       default:
     }
   }
-
 
   getCourseCatalog() {
     axios.get('/catalog').then((response) => {
@@ -175,7 +176,32 @@ class StudentForm extends Component {
     this.setState({
       [target.name]: target.value,
     });
-    console.log(`${target.name}  ${target.value}`);
+  }
+
+  handleNumCourseChange(event) {
+    event.preventDefault();
+    const target = event.target;
+    const season = target.name;
+
+    if (_.includes(season, 'fall')) {
+      this.setState({
+        fallSelectedCourses: [],
+        fallErrMsg: '',
+        [season]: target.value,
+      });
+    } else if (_.includes(season, 'winter')) {
+      this.setState({
+        winterSelectedCourses: [],
+        winterErrMsg: '',
+        [season]: target.value,
+      });
+    } else if (_.includes(season, 'summer')) {
+      this.setState({
+        summerSelectedCourses: [],
+        summerErrMsg: '',
+        [season]: target.value,
+      });
+    }
   }
 
   handleFacultySelection(event) {
@@ -198,12 +224,26 @@ class StudentForm extends Component {
       const course = target.value;
       const courseCode = course.split(' – ')[0];
 
+      let numCourses;
+      switch (property) {
+        case 'fallSelectedCourses': numCourses = 'fallNumOfCourses';
+          break;
+        case 'winterSelectedCourses': numCourses = 'winterNumOfCourses';
+          break;
+        case 'summerSelectedCourses': numCourses = 'summerNumOfCourses';
+          break;
+        default:
+      }
+
+
       if (!state[property]) {
         this.setState({
           [property]: [ courseCode ],
         });
         this.setErrMsg(property, null);
-      } else if (state[property].length >= this.MAX_NUM_COURSES) {
+      } else if (state[property].length === state[numCourses]) {
+        this.setErrMsg(property, 'Cannot add more courses than you have requested per semester');
+      } else if (state[property].length === this.MAX_NUM_COURSES) {
         this.setErrMsg(property, 'You have added the maximum number of courses per semester');
       } else if (_.includes(state[property], courseCode)) {
         this.setErrMsg(property, `You have already added the course ${courseCode}`);
@@ -214,6 +254,13 @@ class StudentForm extends Component {
         this.setErrMsg(property, null);
       }
     }
+  }
+
+  removeCourseSelection(property, index) {
+    const state = this.state;
+    const newState = Object.assign({}, state);
+    newState[property].splice(index, 1);
+    this.setState(newState);
   }
 
   handleSubmit(event) {
@@ -290,370 +337,412 @@ class StudentForm extends Component {
     return showSchedule
       ? <Schedule />
       : (
-        <div className='student-form'>
-          <div className='header-logo'><h3 className='title-for-loggedIn'>CourseBin</h3></div>
-          <Form onSubmit={this.handleSubmit}>
-            <h3 id='form-header'>First, we will just need some basic information... </h3>
-            <div id='student-form-content'>
-              <div style={{ display: fallExpanded ? 'initial' : 'none' }}>
-                <Form.Group as={Row} className='semester-form-component'>
-                  <Col xs={3} />
-                  <Col xs={6} className='form-section-content'>
-                    <Form.Label
-                      className='season'
-                      onClick={
-                        () => this.toggleSemesterSection('fallExpanded', fallExpanded)
-                      }
-                    >
-                      Fall
-                        <i className='material-icons'>
-                        minimize
-                        </i>
-
-                    </Form.Label>
-
-                    <Form.Label className='evening-checkbox'>
-                      Do you prefer evening classes?
-                      <Form.Check
-                        type='checkbox'
-                        name='fallTimePreference'
-                        onChange={this.handleCheckboxChange}
-                        inline
-                      />
-                    </Form.Label>
-
-                    <div className='number-courses'>
-                      <Form.Label>
-                        How many courses do you prefer to take per semester?
-                      </Form.Label>
-
-                      <Form.Control
-                        model={fallNumOfCourses}
-                        name='fallNumOfCourses'
-                        onChange={this.handleChange}
-                        as='select'
+        <div>
+          <div className='header-logo'>
+            <h3>CourseBin</h3>
+          </div>
+          <div className='student-form'>
+            <Form onSubmit={this.handleSubmit}>
+              <h3 id='form-header'>First, we will just need some basic information... </h3>
+              <div id='student-form-content'>
+                <div style={{ display: fallExpanded ? 'initial' : 'none' }}>
+                  <Form.Group as={Row} className='semester-form-component'>
+                    <Col xs={3} />
+                    <Col xs={6} className='form-section-content'>
+                      <Form.Label
+                        className='season'
+                        onClick={
+                          () => this.toggleSemesterSection('fallExpanded', fallExpanded)
+                        }
                       >
-                        <option value={1}>1</option>
-                        <option value={2}>2</option>
-                        <option value={3}>3</option>
-                        <option value={4}>4</option>
-                        <option value={5}>5</option>
-                      </Form.Control>
-                    </div>
-
-                    <div className='course-preferences'>
-                      <div className='course-selection-box'>
-                        <Form.Label className='add-course-button'>
-                          Any courses you want to take in particular?
-                        </Form.Label>
-                        <br />
-                        <Row>
-                          <Form.Label>
-                            Select a department:
-                          </Form.Label>
-                          <Form.Control
-                            as='select'
-                            model={fallSelectedFaculty}
-                            name='fallSelectedFaculty'
-                            onChange={this.handleChange}
-                            multiple
-                          >
-                            {courseMap ? Object.keys(courseMap).map(faculty => (
-                              <option key={faculty} value={faculty}>
-                                {faculty}
-                              </option>
-                            )) : null}
-                          </Form.Control>
-                        </Row>
-                        <Row>
-                          <div style={{ display: !fallSelectedFaculty ? 'none' : 'initial' }}>
-                            <Form.Label>
-                              Select a class:
-                            </Form.Label>
-                            <Form.Control
-                              as='select'
-                              model={fallSelectedCourses}
-                              name='fallSelectedCourses'
-                              onChange={this.handleCourseSelection}
-                              multiple
-                            >
-                              {courseMap && fallSelectedFaculty && courseMap[fallSelectedFaculty] ? Object.keys(courseMap[fallSelectedFaculty]).map(index => (
-                                <option key={courseMap[fallSelectedFaculty][index]} value={courseMap[fallSelectedFaculty][index]}>
-                                  {courseMap[fallSelectedFaculty][index]}
-                                </option>
-                              )) : null
-                              }
-                            </Form.Control>
-                          </div>
-                        </Row>
-                        <Row className='selected-courses-container'>
-                          <div className='course-err-msg'>{fallErrMsg}</div>
-                          <Form.Label className='selected-courses-label' style={{ display: fallSelectedCourses.length === 0 ? 'none' : 'initial' }}>Selected Courses:</Form.Label>
-                          {fallSelectedCourses ? Object.keys(fallSelectedCourses).map(index => (
-                            <div className='selected-courses'>
-                              {fallSelectedCourses[index]}
-                            </div>
-                          )) : <div />}
-                        </Row>
-                      </div>
-                    </div>
-                  </Col>
-                  <Col xs={3} />
-                </Form.Group>
-              </div>
-              <div style={{ display: fallExpanded ? 'none' : 'initial' }}>
-                <Form.Group as={Row} className='semester-form-component'>
-                  <Col xs={3} />
-                  <Col xs={6}>
-                    <Form.Label className='season' onClick={() => this.toggleSemesterSection('fallExpanded', fallExpanded)}>
-                      Fall
+                        Fall
                         <i className='material-icons'>
-                        add
-                        </i>
-                    </Form.Label>
-                  </Col>
-                </Form.Group>
-              </div>
-
-
-              <div style={{ display: winterExpanded ? 'initial' : 'none' }}>
-                <Form.Group as={Row} className='semester-form-component'>
-                  <Col xs={3} />
-                  <Col xs={6} className='form-section-content'>
-                    <Form.Label className='season' onClick={() => this.toggleSemesterSection('winterExpanded', winterExpanded)}>
-                      Winter
-                        <i className='material-icons'>
-                        minimize
-
+                          minimize
                         </i>
 
-                    </Form.Label>
-
-                    <Form.Label className='evening-checkbox'>
-                      Do you prefer evening classes?
-                            <Form.Check
-                        type='checkbox'
-                        name='winterTimePreference'
-                        onChange={this.handleCheckboxChange}
-                        inline
-                            />
-                    </Form.Label>
-
-                    <div className='number-courses'>
-                      <Form.Label>
-                        How many courses do you prefer to take per semester?
                       </Form.Label>
-                      <Form.Control model={winterNumOfCourses} name='winterNumOfCourses' onChange={this.handleChange} as='select'>
-                        <option value={1}>1</option>
-                        <option value={2}>2</option>
-                        <option value={3}>3</option>
-                        <option value={4}>4</option>
-                        <option value={5}>5</option>
-                      </Form.Control>
-                    </div>
 
-                    <div className='course-preferences'>
-                      <div className='course-selection-box'>
-                        <Form.Label className='add-course-button'>
-                          Any courses you want to take in particular?
+                      <Form.Label className='evening-checkbox'>
+                        Do you prefer evening classes?
+                      <Form.Check
+                          type='checkbox'
+                          name='fallTimePreference'
+                          onChange={this.handleCheckboxChange}
+                          inline
+                      />
+                      </Form.Label>
+
+                      <div className='number-courses'>
+                        <Form.Label>
+                          How many courses do you prefer to take per semester?
                         </Form.Label>
-                        <br />
-                        <Row>
-                          <Form.Label>
-                            Select a department:
+
+                        <Form.Control
+                          model={fallNumOfCourses}
+                          name='fallNumOfCourses'
+                          onChange={this.handleNumCourseChange}
+                          as='select'
+                          defaultValue={4}
+                        >
+                          <option value={1}>1</option>
+                          <option value={2}>2</option>
+                          <option value={3}>3</option>
+                          <option value={4}>4</option>
+                          <option value={5}>5</option>
+                          <option value={6}>6</option>
+                        </Form.Control>
+                      </div>
+
+                      <div className='course-preferences'>
+                        <div className='course-selection-box'>
+                          <Form.Label className='add-course-button'>
+                            Any courses you want to take in particular?
                           </Form.Label>
-                          <Form.Control
-                            as='select'
-                            model={winterSelectedFaculty}
-                            name='winterSelectedFaculty'
-                            onChange={this.handleChange}
-                            multiple
-                          >
-                            {courseMap ? Object.keys(courseMap).map(faculty => (
-                              <option key={faculty} value={faculty}>
-                                {faculty}
-                              </option>
-                            )) : null}
-                          </Form.Control>
-                        </Row>
-                        <Row>
-                          <div style={{ display: !winterSelectedFaculty ? 'none' : 'initial' }}>
+                          <br />
+                          <Row>
                             <Form.Label>
-                              Select a class:
+                              Select a department:
                             </Form.Label>
                             <Form.Control
                               as='select'
-                              model={winterSelectedCourses}
-                              name='winterSelectedCourses'
-                              onChange={this.handleCourseSelection}
+                              model={fallSelectedFaculty}
+                              name='fallSelectedFaculty'
+                              onChange={this.handleChange}
                               multiple
                             >
-                              {courseMap && winterSelectedFaculty && courseMap[winterSelectedFaculty] ? Object.keys(courseMap[winterSelectedFaculty]).map(index => (
-                                <option key={courseMap[winterSelectedFaculty][index]} value={courseMap[winterSelectedFaculty][index]}>
-                                  {courseMap[winterSelectedFaculty][index]}
+                              {courseMap ? Object.keys(courseMap).map(faculty => (
+                                <option key={faculty} value={faculty}>
+                                  {faculty}
                                 </option>
-                              )) : null
-                              }
+                              )) : null}
                             </Form.Control>
-                          </div>
-                        </Row>
-                        <Row className='selected-courses-container'>
-                          <div className='course-err-msg'>{winterErrMsg}</div>
-                          <Form.Label className='selected-courses-label' style={{ display: winterSelectedCourses.length === 0 ? 'none' : 'initial' }}>Selected Courses:</Form.Label>
-                          {winterSelectedCourses ? Object.keys(winterSelectedCourses).map(index => (
-                            <div className='selected-courses'>
-                              {winterSelectedCourses[index]}
+                          </Row>
+                          <Row>
+                            <div style={{ display: !fallSelectedFaculty ? 'none' : 'initial' }}>
+                              <Form.Label>
+                                Select a class:
+                              </Form.Label>
+                              <Form.Control
+                                as='select'
+                                model={fallSelectedCourses}
+                                name='fallSelectedCourses'
+                                onChange={this.handleCourseSelection}
+                                multiple
+                              >
+                                {courseMap && fallSelectedFaculty && courseMap[fallSelectedFaculty] ? Object.keys(courseMap[fallSelectedFaculty]).map(index => (
+                                  <option key={courseMap[fallSelectedFaculty][index]} value={courseMap[fallSelectedFaculty][index]}>
+                                    {courseMap[fallSelectedFaculty][index]}
+                                  </option>
+                                )) : null
+                                }
+                              </Form.Control>
                             </div>
-                          )) : <div />}
-                        </Row>
+                          </Row>
+                          <Row className='selected-courses-container'>
+                            <div className='course-err-msg'>{fallErrMsg}</div>
+                            <Form.Label className='selected-courses-label' style={{ display: fallSelectedCourses.length === 0 ? 'none' : 'initial' }}>Selected Courses:</Form.Label>
+                            {fallSelectedCourses ? Object.keys(fallSelectedCourses).map(index => (
+                              <div className='selected-courses'>
+                                <Form.Label
+                                  className='rm-course'
+                                  onClick={() => this.removeCourseSelection('fallSelectedCourses', index)}
+                                  title='remove course'
+                                >
+                                  <i className='material-icons'>
+                                    delete_forever
+                                  </i>
+                                </Form.Label>
+                                {fallSelectedCourses[index]}
+                              </div>
+                            )) : <div />}
+                          </Row>
+                        </div>
                       </div>
-                    </div>
-
-                  </Col>
-                  <Col xs={3} />
-                </Form.Group>
-              </div>
-              <div style={{ display: winterExpanded ? 'none' : 'initial' }}>
-                <Form.Group as={Row} className='semester-form-component'>
-                  <Col xs={3} />
-                  <Col xs={6}>
-                    <Form.Label className='season' onClick={() => this.toggleSemesterSection('winterExpanded', winterExpanded)}>
-                      Winter
+                    </Col>
+                    <Col xs={3} />
+                  </Form.Group>
+                </div>
+                <div style={{ display: fallExpanded ? 'none' : 'initial' }}>
+                  <Form.Group as={Row} className='semester-form-component'>
+                    <Col xs={3} />
+                    <Col xs={6}>
+                      <Form.Label className='season' onClick={() => this.toggleSemesterSection('fallExpanded', fallExpanded)}>
+                        Fall
                         <i className='material-icons'>
-                        add
+                          add
                         </i>
-                    </Form.Label>
-                  </Col>
-                </Form.Group>
-              </div>
+                      </Form.Label>
+                    </Col>
+                  </Form.Group>
+                </div>
 
-              <div style={{ display: summerExpanded ? 'initial' : 'none' }}>
-                <Form.Group as={Row} className='semester-form-component'>
-                  <Col xs={3} />
-                  <Col xs={6} className='form-section-content'>
-                    <Form.Label
-                      className='season'
-                      onClick={() => this.toggleSemesterSection('summerExpanded', summerExpanded)}
-                    >
-                      Summer
+
+                <div style={{ display: winterExpanded ? 'initial' : 'none' }}>
+                  <Form.Group as={Row} className='semester-form-component'>
+                    <Col xs={3} />
+                    <Col xs={6} className='form-section-content'>
+                      <Form.Label className='season' onClick={() => this.toggleSemesterSection('winterExpanded', winterExpanded)}>
+                        Winter
+                        <i className='material-icons'>
+                          minimize
+
+                        </i>
+
+                      </Form.Label>
+
+                      <Form.Label className='evening-checkbox'>
+                        Do you prefer evening classes?
+                            <Form.Check
+                          type='checkbox'
+                          name='winterTimePreference'
+                          onChange={this.handleCheckboxChange}
+                          inline
+                            />
+                      </Form.Label>
+
+                      <div className='number-courses'>
+                        <Form.Label>
+                          How many courses do you prefer to take per semester?
+                        </Form.Label>
+                        <Form.Control
+                          defaultValue={4}
+                          model={winterNumOfCourses}
+                          name='winterNumOfCourses'
+                          onChange={this.handleNumCourseChange}
+                          as='select'
+                        >
+                          <option value={1}>1</option>
+                          <option value={2}>2</option>
+                          <option value={3}>3</option>
+                          <option value={4}>4</option>
+                          <option value={5}>5</option>
+                          <option value={6}>6</option>
+                        </Form.Control>
+                      </div>
+
+                      <div className='course-preferences'>
+                        <div className='course-selection-box'>
+                          <Form.Label className='add-course-button'>
+                            Any courses you want to take in particular?
+                          </Form.Label>
+                          <br />
+                          <Row>
+                            <Form.Label>
+                              Select a department:
+                            </Form.Label>
+                            <Form.Control
+                              as='select'
+                              model={winterSelectedFaculty}
+                              name='winterSelectedFaculty'
+                              onChange={this.handleChange}
+                              multiple
+                            >
+                              {courseMap ? Object.keys(courseMap).map(faculty => (
+                                <option key={faculty} value={faculty}>
+                                  {faculty}
+                                </option>
+                              )) : null}
+                            </Form.Control>
+                          </Row>
+                          <Row>
+                            <div style={{ display: !winterSelectedFaculty ? 'none' : 'initial' }}>
+                              <Form.Label>
+                                Select a class:
+                              </Form.Label>
+                              <Form.Control
+                                as='select'
+                                model={winterSelectedCourses}
+                                name='winterSelectedCourses'
+                                onChange={this.handleCourseSelection}
+                                multiple
+                              >
+                                {courseMap && winterSelectedFaculty && courseMap[winterSelectedFaculty] ? Object.keys(courseMap[winterSelectedFaculty]).map(index => (
+                                  <option key={courseMap[winterSelectedFaculty][index]} value={courseMap[winterSelectedFaculty][index]}>
+                                    {courseMap[winterSelectedFaculty][index]}
+                                  </option>
+                                )) : null
+                                }
+                              </Form.Control>
+                            </div>
+                          </Row>
+                          <Row className='selected-courses-container'>
+                            <div className='course-err-msg'>{winterErrMsg}</div>
+                            <Form.Label className='selected-courses-label' style={{ display: winterSelectedCourses.length === 0 ? 'none' : 'initial' }}>Selected Courses:</Form.Label>
+                            {winterSelectedCourses ? Object.keys(winterSelectedCourses).map(index => (
+                              <div className='selected-courses'>
+                                <Form.Label
+                                  className='rm-course'
+                                  onClick={() => this.removeCourseSelection('winterSelectedCourses', index)}
+                                  title='remove course'
+                                >
+                                  <i className='material-icons'>
+                                    delete_forever
+                                  </i>
+                                </Form.Label>
+                                {winterSelectedCourses[index]}
+                              </div>
+                            )) : <div />}
+                          </Row>
+                        </div>
+                      </div>
+
+                    </Col>
+                    <Col xs={3} />
+                  </Form.Group>
+                </div>
+                <div style={{ display: winterExpanded ? 'none' : 'initial' }}>
+                  <Form.Group as={Row} className='semester-form-component'>
+                    <Col xs={3} />
+                    <Col xs={6}>
+                      <Form.Label className='season' onClick={() => this.toggleSemesterSection('winterExpanded', winterExpanded)}>
+                        Winter
+                        <i className='material-icons'>
+                          add
+                        </i>
+                      </Form.Label>
+                    </Col>
+                  </Form.Group>
+                </div>
+
+                <div style={{ display: summerExpanded ? 'initial' : 'none' }}>
+                  <Form.Group as={Row} className='semester-form-component'>
+                    <Col xs={3} />
+                    <Col xs={6} className='form-section-content'>
+                      <Form.Label
+                        className='season'
+                        onClick={() => this.toggleSemesterSection('summerExpanded', summerExpanded)}
+                      >
+                        Summer
                           <i className='material-icons'>
-                        minimize
+                          minimize
 
                           </i>
 
-                    </Form.Label>
-
-                    <Form.Label className='evening-checkbox'>
-                      Do you prefer evening classes?
-                        <Form.Check
-                        type='checkbox'
-                        name='summerTimePreference'
-                        onChange={this.handleCheckboxChange}
-                        inline
-                        />
-                    </Form.Label>
-
-                    <div className='number-courses'>
-                      <Form.Label>
-                        How many courses do you prefer to take per semester?
                       </Form.Label>
-                      <Form.Control
-                        model={summerNumOfCourses}
-                        name='summerNumOfCourses'
-                        onChange={this.handleChange}
-                        as='select'
-                      >
-                        <option value={1}>1</option>
-                        <option value={2}>2</option>
-                        <option value={3}>3</option>
-                        <option value={4}>4</option>
-                        <option value={5}>5</option>
-                      </Form.Control>
-                    </div>
 
-                    <div className='course-preferences'>
-                      <div className='course-selection-box'>
-                        <Form.Label className='add-course-button'>
-                          Any courses you want to take in particular?
+                      <Form.Label className='evening-checkbox'>
+                        Do you prefer evening classes?
+                        <Form.Check
+                          type='checkbox'
+                          name='summerTimePreference'
+                          onChange={this.handleCheckboxChange}
+                          inline
+                        />
+                      </Form.Label>
+
+                      <div className='number-courses'>
+                        <Form.Label>
+                          How many courses do you prefer to take per semester?
                         </Form.Label>
-                        <br />
-                        <Row>
-                          <Form.Label>
-                            Select a department:
+                        <Form.Control
+                          model={summerNumOfCourses}
+                          name='summerNumOfCourses'
+                          onChange={this.handleNumCourseChange}
+                          as='select'
+                          defaultValue={4}
+                        >
+                          <option value={1}>1</option>
+                          <option value={2}>2</option>
+                          <option value={3}>3</option>
+                          <option value={4}>4</option>
+                          <option value={5}>5</option>
+                          <option value={6}>6</option>
+                        </Form.Control>
+                      </div>
+
+                      <div className='course-preferences'>
+                        <div className='course-selection-box'>
+                          <Form.Label className='add-course-button'>
+                            Any courses you want to take in particular?
                           </Form.Label>
-                          <Form.Control
-                            as='select'
-                            model={summerSelectedFaculty}
-                            name='summerSelectedFaculty'
-                            onChange={this.handleChange}
-                            multiple
-                          >
-                            {courseMap ? Object.keys(courseMap).map(faculty => (
-                              <option key={faculty} value={faculty}>
-                                {faculty}
-                              </option>
-                            )) : null}
-                          </Form.Control>
-                        </Row>
-                        <Row>
-                          <div style={{ display: !summerSelectedFaculty ? 'none' : 'initial' }}>
+                          <br />
+                          <Row>
                             <Form.Label>
-                              Select a class:
+                              Select a department:
                             </Form.Label>
                             <Form.Control
                               as='select'
-                              model={summerSelectedCourses}
-                              name='summerSelectedCourses'
-                              onChange={this.handleCourseSelection}
+                              model={summerSelectedFaculty}
+                              name='summerSelectedFaculty'
+                              onChange={this.handleChange}
                               multiple
                             >
-                              {courseMap && summerSelectedFaculty && courseMap[summerSelectedFaculty] ? Object.keys(courseMap[summerSelectedFaculty]).map(index => (
-                                <option key={courseMap[summerSelectedFaculty][index]} value={courseMap[summerSelectedFaculty][index]}>
-                                  {courseMap[summerSelectedFaculty][index]}
+                              {courseMap ? Object.keys(courseMap).map(faculty => (
+                                <option key={faculty} value={faculty}>
+                                  {faculty}
                                 </option>
-                              )) : null
-                              }
+                              )) : null}
                             </Form.Control>
-                          </div>
-                        </Row>
-                        <Row className='selected-courses-container'>
-                          <div className='course-err-msg'>{summerErrMsg}</div>
-                          <Form.Label className='selected-courses-label' style={{ display: summerSelectedCourses === 0 ? 'none' : 'initial' }}>CSelected Courses:</Form.Label>
-                          {summerSelectedCourses ? Object.keys(summerSelectedCourses).map(index => (
-                            <div className='selected-courses'>
-                              {summerSelectedCourses[index]}
+                          </Row>
+                          <Row>
+                            <div style={{ display: !summerSelectedFaculty ? 'none' : 'initial' }}>
+                              <Form.Label>
+                                Select a class:
+                              </Form.Label>
+                              <Form.Control
+                                as='select'
+                                model={summerSelectedCourses}
+                                name='summerSelectedCourses'
+                                onChange={this.handleCourseSelection}
+                                multiple
+                              >
+                                {courseMap && summerSelectedFaculty && courseMap[summerSelectedFaculty] ? Object.keys(courseMap[summerSelectedFaculty]).map(index => (
+                                  <option key={courseMap[summerSelectedFaculty][index]} value={courseMap[summerSelectedFaculty][index]}>
+                                    {courseMap[summerSelectedFaculty][index]}
+                                  </option>
+                                )) : null
+                                }
+                              </Form.Control>
                             </div>
-                          )) : <div />}
-                        </Row>
+                          </Row>
+                          <Row className='selected-courses-container'>
+                            <div className='course-err-msg'>{summerErrMsg}</div>
+                            <Form.Label className='selected-courses-label' style={{ display: summerSelectedCourses === 0 ? 'none' : 'initial' }}>Selected Courses:</Form.Label>
+                            {summerSelectedCourses ? Object.keys(summerSelectedCourses).map(index => (
+                              <div className='selected-courses'>
+                                <Form.Label
+                                  className='rm-course'
+                                  onClick={() => this.removeCourseSelection('summerSelectedCourses', index)}
+                                  title='remove course'
+                                >
+                                  <i className='material-icons'>
+                                    delete_forever
+                                  </i>
+                                </Form.Label>
+                                {summerSelectedCourses[index]}
+                              </div>
+                            )) : <div />}
+                          </Row>
+                        </div>
                       </div>
-                    </div>
 
-                  </Col>
-                  <Col xs={3} />
-                </Form.Group>
-              </div>
-              <div style={{ display: summerExpanded ? 'none' : 'initial' }}>
-                <Form.Group as={Row} className='semester-form-component'>
-                  <Col xs={3} />
-                  <Col xs={6}>
-                    <Form.Label
-                      className='season'
-                      onClick={
-                        () => this.toggleSemesterSection('summerExpanded', summerExpanded)
-                      }
-                    >
-                      Summer
+                    </Col>
+                    <Col xs={3} />
+                  </Form.Group>
+                </div>
+                <div style={{ display: summerExpanded ? 'none' : 'initial' }}>
+                  <Form.Group as={Row} className='semester-form-component'>
+                    <Col xs={3} />
+                    <Col xs={6}>
+                      <Form.Label
+                        className='season'
+                        onClick={
+                          () => this.toggleSemesterSection('summerExpanded', summerExpanded)
+                        }
+                      >
+                        Summer
                         <i className='material-icons'>
-                        add
+                          add
                         </i>
-                    </Form.Label>
-                  </Col>
-                </Form.Group>
+                      </Form.Label>
+                    </Col>
+                  </Form.Group>
+                </div>
               </div>
-            </div>
 
-            <Button type='submit'>Generate My Schedule!</Button>
-          </Form>
+              <Button type='submit'>Generate My Schedule!</Button>
+            </Form>
+          </div>
         </div>
       );
   }
