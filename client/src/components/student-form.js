@@ -141,7 +141,7 @@ class StudentForm extends Component {
           }
 
           if (!map[departmentName] && displayName !== '') {
-            map[departmentName] = [ displayName ];
+            map[departmentName] = [displayName];
           } else {
             map[departmentName].push(displayName);
           }
@@ -179,29 +179,28 @@ class StudentForm extends Component {
   }
 
   handleNumCourseChange(event) {
-    event.preventDefault();
     const target = event.target;
     const season = target.name;
+    const state = this.state;
+    const numCourses = parseInt(target.value, 10);
+    const newState = Object.assign({}, state);
+
 
     if (_.includes(season, 'fall')) {
-      this.setState({
-        fallSelectedCourses: [],
-        fallErrMsg: '',
-        [season]: target.value,
-      });
+      newState.fallSelectedCourses = [];
+      newState.fallErrMsg = '';
+      newState[season] = numCourses;
     } else if (_.includes(season, 'winter')) {
-      this.setState({
-        winterSelectedCourses: [],
-        winterErrMsg: '',
-        [season]: target.value,
-      });
+      newState.winterSelectedCourses = [];
+      newState.winterNumOfCourses = numCourses;
+      newState.winterErrMsg = '';
     } else if (_.includes(season, 'summer')) {
-      this.setState({
-        summerSelectedCourses: [],
-        summerErrMsg: '',
-        [season]: target.value,
-      });
+      newState.summerSelectedCourses = [];
+      newState.summerNumOfCourses = numCourses;
+      newState.summerErrMsg = '';
     }
+
+    this.setState(newState);
   }
 
   handleFacultySelection(event) {
@@ -238,7 +237,7 @@ class StudentForm extends Component {
 
       if (!state[property]) {
         this.setState({
-          [property]: [ courseCode ],
+          [property]: [courseCode],
         });
         this.setErrMsg(property, null);
       } else if (state[property].length === state[numCourses]) {
@@ -369,7 +368,7 @@ class StudentForm extends Component {
                           name='fallTimePreference'
                           onChange={this.handleCheckboxChange}
                           inline
-                      />
+                        />
                       </Form.Label>
 
                       <div className='number-courses'>
@@ -445,8 +444,8 @@ class StudentForm extends Component {
                               <div className='selected-courses'>
                                 <Form.Label
                                   className='rm-course'
+                                  title='reomve course?'
                                   onClick={() => this.removeCourseSelection('fallSelectedCourses', index)}
-                                  title='remove course'
                                 >
                                   <i className='material-icons'>
                                     delete_forever
@@ -497,7 +496,7 @@ class StudentForm extends Component {
                           name='winterTimePreference'
                           onChange={this.handleCheckboxChange}
                           inline
-                            />
+                        />
                       </Form.Label>
 
                       <div className='number-courses'>
@@ -572,8 +571,8 @@ class StudentForm extends Component {
                               <div className='selected-courses'>
                                 <Form.Label
                                   className='rm-course'
+                                  title='reomve course?'
                                   onClick={() => this.removeCourseSelection('winterSelectedCourses', index)}
-                                  title='remove course'
                                 >
                                   <i className='material-icons'>
                                     delete_forever
@@ -702,8 +701,8 @@ class StudentForm extends Component {
                               <div className='selected-courses'>
                                 <Form.Label
                                   className='rm-course'
+                                  title='reomve course?'
                                   onClick={() => this.removeCourseSelection('summerSelectedCourses', index)}
-                                  title='remove course'
                                 >
                                   <i className='material-icons'>
                                     delete_forever
