@@ -111,13 +111,15 @@ class Signup extends Component {
               <Button
                 onClick={this.handleSubmit}
                 type='submit'
+                variant='outline-info'
+                size='lg'
               >
                 Sign up
 
               </Button>
             </Col>
             <Col xs={12}>
-              <Form.Label>
+              <Form.Label className='label-info'>
                 <Link to='/'>
                   Already a user? Login here!
                 </Link>

@@ -4,7 +4,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import {
-  Form, Row, Col, Button,
+  Form, Row, Col, Button, ToggleButtonGroup, ToggleButton,
 } from 'react-bootstrap';
 import Schedule from './schedule';
 
@@ -141,7 +141,7 @@ class StudentForm extends Component {
           }
 
           if (!map[departmentName] && displayName !== '') {
-            map[departmentName] = [displayName];
+            map[departmentName] = [ displayName ];
           } else {
             map[departmentName].push(displayName);
           }
@@ -160,13 +160,13 @@ class StudentForm extends Component {
     });
   }
 
-  handleCheckboxChange(event) {
-    const target = event.target;
-    const checked = target.checked;
-    const name = target.name;
-    this.setState({
-      [name]: checked,
-    });
+  handleCheckboxChange(toggle, event) {
+    const property = event.target.name;
+    const state = this.state;
+    const newState = Object.assign({}, state);
+    newState[property] = toggle;
+    this.setState(newState);
+    console.log(this.state);
   }
 
 
@@ -178,29 +178,28 @@ class StudentForm extends Component {
     });
   }
 
-  handleNumCourseChange(event) {
-    const target = event.target;
-    const season = target.name;
+  handleNumCourseChange(numCourses, event) {
+    const season = event.target.name;
     const state = this.state;
-    const numCourses = parseInt(target.value, 10);
     const newState = Object.assign({}, state);
 
 
-    if (_.includes(season, 'fall')) {
+    if (season === 'fall') {
       newState.fallSelectedCourses = [];
+      newState.fallNumOfCourses = numCourses;
       newState.fallErrMsg = '';
-      newState[season] = numCourses;
-    } else if (_.includes(season, 'winter')) {
+    } else if (season === 'winter') {
       newState.winterSelectedCourses = [];
       newState.winterNumOfCourses = numCourses;
       newState.winterErrMsg = '';
-    } else if (_.includes(season, 'summer')) {
+    } else if (season === 'summer') {
       newState.summerSelectedCourses = [];
       newState.summerNumOfCourses = numCourses;
       newState.summerErrMsg = '';
     }
 
     this.setState(newState);
+    console.log(this.state);
   }
 
   handleFacultySelection(event) {
@@ -237,7 +236,7 @@ class StudentForm extends Component {
 
       if (!state[property]) {
         this.setState({
-          [property]: [courseCode],
+          [property]: [ courseCode ],
         });
         this.setErrMsg(property, null);
       } else if (state[property].length === state[numCourses]) {
@@ -313,19 +312,16 @@ class StudentForm extends Component {
       courseMap,
 
       fallExpanded,
-      fallNumOfCourses,
       fallSelectedFaculty,
       fallSelectedCourses,
       fallErrMsg,
 
       winterExpanded,
-      winterNumOfCourses,
       winterSelectedFaculty,
       winterSelectedCourses,
       winterErrMsg,
 
       summerExpanded,
-      summerNumOfCourses,
       summerSelectedFaculty,
       summerSelectedCourses,
       summerErrMsg,
@@ -361,35 +357,43 @@ class StudentForm extends Component {
 
                       </Form.Label>
 
-                      <Form.Label className='evening-checkbox'>
-                        Do you prefer evening classes?
-                      <Form.Check
-                          type='checkbox'
+                      <div className='evening-checkbox'>
+                        <Form.Label>
+                          Time preference?
+                        </Form.Label>
+
+                        <ToggleButtonGroup
+                          type='radio'
+                          defaultValue={false}
                           name='fallTimePreference'
                           onChange={this.handleCheckboxChange}
-                          inline
-                        />
-                      </Form.Label>
+                        >
+                          <ToggleButton variant='outline-info' value={false}>Day</ToggleButton>
+                          <ToggleButton variant='outline-info' value>Evening</ToggleButton>
+
+                        </ToggleButtonGroup>
+                      </div>
+
 
                       <div className='number-courses'>
                         <Form.Label>
                           How many courses do you prefer to take per semester?
                         </Form.Label>
 
-                        <Form.Control
-                          model={fallNumOfCourses}
-                          name='fallNumOfCourses'
-                          onChange={this.handleNumCourseChange}
-                          as='select'
+                        <ToggleButtonGroup
+                          className='num-courses-button'
+                          type='radio'
                           defaultValue={4}
+                          name='fall'
+                          onChange={this.handleNumCourseChange}
                         >
-                          <option value={1}>1</option>
-                          <option value={2}>2</option>
-                          <option value={3}>3</option>
-                          <option value={4}>4</option>
-                          <option value={5}>5</option>
-                          <option value={6}>6</option>
-                        </Form.Control>
+                          <ToggleButton variant='outline-info' value={1}>1</ToggleButton>
+                          <ToggleButton variant='outline-info' value={2}>2</ToggleButton>
+                          <ToggleButton variant='outline-info' value={3}>3</ToggleButton>
+                          <ToggleButton variant='outline-info' value={4}>4 </ToggleButton>
+                          <ToggleButton variant='outline-info' value={5}>5</ToggleButton>
+                          <ToggleButton variant='outline-info' value={6}>6</ToggleButton>
+                        </ToggleButtonGroup>
                       </div>
 
                       <div className='course-preferences' style={{ display: courseMap ? 'initial' : 'none' }}>
@@ -399,7 +403,7 @@ class StudentForm extends Component {
                           </Form.Label>
                           <br />
                           <Row>
-                            <Form.Label>
+                            <Form.Label className='course-selection-label'>
                               Select a department:
                             </Form.Label>
                             <Form.Control
@@ -418,7 +422,7 @@ class StudentForm extends Component {
                           </Row>
                           <Row>
                             <div style={{ display: !fallSelectedFaculty ? 'none' : 'initial' }}>
-                              <Form.Label>
+                              <Form.Label className='course-selection-label'>
                                 Select a class:
                               </Form.Label>
                               <Form.Control
@@ -489,34 +493,41 @@ class StudentForm extends Component {
 
                       </Form.Label>
 
-                      <Form.Label className='evening-checkbox'>
-                        Do you prefer evening classes?
-                            <Form.Check
-                          type='checkbox'
+                      <div className='evening-checkbox'>
+                        <Form.Label>
+                          Time preference?
+                        </Form.Label>
+
+                        <ToggleButtonGroup
+                          type='radio'
+                          defaultValue={false}
                           name='winterTimePreference'
                           onChange={this.handleCheckboxChange}
-                          inline
-                        />
-                      </Form.Label>
+                        >
+                          <ToggleButton variant='outline-info' value={false}>Day</ToggleButton>
+                          <ToggleButton variant='outline-info' value>Evening</ToggleButton>
+
+                        </ToggleButtonGroup>
+                      </div>
 
                       <div className='number-courses'>
                         <Form.Label>
                           How many courses do you prefer to take per semester?
                         </Form.Label>
-                        <Form.Control
+                        <ToggleButtonGroup
+                          className='num-courses-button'
+                          type='radio'
                           defaultValue={4}
-                          model={winterNumOfCourses}
-                          name='winterNumOfCourses'
+                          name='winter'
                           onChange={this.handleNumCourseChange}
-                          as='select'
                         >
-                          <option value={1}>1</option>
-                          <option value={2}>2</option>
-                          <option value={3}>3</option>
-                          <option value={4}>4</option>
-                          <option value={5}>5</option>
-                          <option value={6}>6</option>
-                        </Form.Control>
+                          <ToggleButton variant='outline-info' value={1}>1</ToggleButton>
+                          <ToggleButton variant='outline-info' value={2}>2</ToggleButton>
+                          <ToggleButton variant='outline-info' value={3}>3</ToggleButton>
+                          <ToggleButton variant='outline-info' value={4}>4 </ToggleButton>
+                          <ToggleButton variant='outline-info' value={5}>5</ToggleButton>
+                          <ToggleButton variant='outline-info' value={6}>6</ToggleButton>
+                        </ToggleButtonGroup>
                       </div>
 
                       <div className='course-preferences' style={{ display: courseMap ? 'initial' : 'none' }}>
@@ -526,7 +537,7 @@ class StudentForm extends Component {
                           </Form.Label>
                           <br />
                           <Row>
-                            <Form.Label>
+                            <Form.Label className='course-selection-label'>
                               Select a department:
                             </Form.Label>
                             <Form.Control
@@ -545,7 +556,7 @@ class StudentForm extends Component {
                           </Row>
                           <Row>
                             <div style={{ display: !winterSelectedFaculty ? 'none' : 'initial' }}>
-                              <Form.Label>
+                              <Form.Label className='course-selection-label'>
                                 Select a class:
                               </Form.Label>
                               <Form.Control
@@ -619,34 +630,41 @@ class StudentForm extends Component {
 
                       </Form.Label>
 
-                      <Form.Label className='evening-checkbox'>
-                        Do you prefer evening classes?
-                        <Form.Check
-                          type='checkbox'
+                      <div className='evening-checkbox'>
+                        <Form.Label>
+                          Time preference?
+                        </Form.Label>
+
+                        <ToggleButtonGroup
+                          type='radio'
+                          defaultValue={false}
                           name='summerTimePreference'
                           onChange={this.handleCheckboxChange}
-                          inline
-                        />
-                      </Form.Label>
+                        >
+                          <ToggleButton variant='outline-info' value={false}>Day</ToggleButton>
+                          <ToggleButton variant='outline-info' value>Evening</ToggleButton>
+
+                        </ToggleButtonGroup>
+                      </div>
 
                       <div className='number-courses'>
                         <Form.Label>
                           How many courses do you prefer to take per semester?
                         </Form.Label>
-                        <Form.Control
-                          model={summerNumOfCourses}
-                          name='summerNumOfCourses'
-                          onChange={this.handleNumCourseChange}
-                          as='select'
+                        <ToggleButtonGroup
+                          className='num-courses-button'
+                          type='radio'
                           defaultValue={4}
+                          name='summer'
+                          onChange={this.handleNumCourseChange}
                         >
-                          <option value={1}>1</option>
-                          <option value={2}>2</option>
-                          <option value={3}>3</option>
-                          <option value={4}>4</option>
-                          <option value={5}>5</option>
-                          <option value={6}>6</option>
-                        </Form.Control>
+                          <ToggleButton variant='outline-info' value={1}>1</ToggleButton>
+                          <ToggleButton variant='outline-info' value={2}>2</ToggleButton>
+                          <ToggleButton variant='outline-info' value={3}>3</ToggleButton>
+                          <ToggleButton variant='outline-info' value={4}>4 </ToggleButton>
+                          <ToggleButton variant='outline-info' value={5}>5</ToggleButton>
+                          <ToggleButton variant='outline-info' value={6}>6</ToggleButton>
+                        </ToggleButtonGroup>
                       </div>
 
                       <div className='course-preferences' style={{ display: courseMap ? 'initial' : 'none' }}>
@@ -656,7 +674,7 @@ class StudentForm extends Component {
                           </Form.Label>
                           <br />
                           <Row>
-                            <Form.Label>
+                            <Form.Label className='course-selection-label'>
                               Select a department:
                             </Form.Label>
                             <Form.Control
@@ -675,7 +693,7 @@ class StudentForm extends Component {
                           </Row>
                           <Row>
                             <div style={{ display: !summerSelectedFaculty ? 'none' : 'initial' }}>
-                              <Form.Label>
+                              <Form.Label className='course-selection-label'>
                                 Select a class:
                               </Form.Label>
                               <Form.Control
@@ -739,7 +757,7 @@ class StudentForm extends Component {
                 </div>
               </div>
 
-              <Button type='submit'>Generate My Schedule!</Button>
+              <Button type='submit' size='lg' variant='outline-info'>Generate My Schedule!</Button>
             </Form>
           </div>
         </div>

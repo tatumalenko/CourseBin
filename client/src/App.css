@@ -80,6 +80,16 @@
 }
 
 
+.label-info.form-label a{
+  color: rgb(23, 162, 184);
+  margin-top: 10px;
+}
+
+.label-info.form-label a:hover{
+  text-decoration: none;
+}
+
+
 
 .header-logo{
   font-family: 'Londrina Solid', cursive;
@@ -176,8 +186,9 @@
   margin-left: 15px;
 }
 
-.student-form .evening-checkbox:hover{
-  cursor: pointer;
+.student-form .evening-checkbox .btn-group{
+  float: right;
+  margin-bottom: 30px;
 }
 
 .student-form .course-preferences{
@@ -190,13 +201,12 @@
   
 }
 
-.student-form .course-selection-box .add-course-button i{ 
-  font-size: 18px;
-  margin-top: 3px;
+.student-form .course-selection-box .add-course-button{ 
+  margin-left: 10px;
 }
 
 .student-form .course-selection-box{
-  background: 5px aliceblue;
+  background: 5px rgb(23, 162, 184, 0.4);
   padding: 15px;
   border-radius: 15px;
   margin-top: 15px;
@@ -209,12 +219,22 @@
 .student-form .selected-courses-container .selected-courses{
   padding: 8px;
   padding-bottom: 0;
-  background: antiquewhite;
+  background: rgb(87, 29, 46, 0.7);
+  border: 2px solid rgb(255, 201, 81, 1);
+  color: rgb(255, 201, 81, 1);
   margin-right: 12px;
   border-radius: 5px;
-  font-size: 10px;
+  font-size: 12px;
   margin-bottom: 15px;
   min-width: 150px;
+}
+
+.student-form .course-selection-label.form-label{
+  font-size: 16px;
+}
+
+.student-form select.form-control[multiple]{
+  border-radius: 10px;
 }
 
 .student-form .course-err-msg{
@@ -245,4 +265,11 @@
 .student-form .rm-course:hover i{
   cursor: pointer;
   color: red;
+}
+
+.student-form .num-courses-button{
+  position: relative;
+  bottom: 5px;
+  left: 200px;
+
 }

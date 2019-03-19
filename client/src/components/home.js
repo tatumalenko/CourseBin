@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import { Button } from 'react-bootstrap';
+import { Button, ButtonToolbar } from 'react-bootstrap';
 import StudentForm from './student-form';
 
 class Home extends Component {
@@ -37,7 +37,7 @@ class Home extends Component {
               <div className='title-wrapper'>
                 <h1>Coursebin</h1>
               </div>
-              <Button type='primary' onClick={this.handleClick}>Let's Get Started</Button>
+              <Button size='lg' variant='outline-info' onClick={this.handleClick}>Let's Get Started</Button>
             </div>
           )
         }
