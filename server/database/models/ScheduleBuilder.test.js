@@ -88,6 +88,7 @@ const hashQueueMap = new Map(Object.entries(
   },
 ));
 
+//Invoke test with name of test with arrow function and 
 test('Categorizing COMP348', (t) => {
   t.deepEqual(ScheduleBuilder.categorizeSectionQueueIntoKind(
     hashQueueMap.get('COMP348'),
