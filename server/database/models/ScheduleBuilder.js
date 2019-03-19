@@ -41,6 +41,7 @@ class ScheduleBuilder {
     };
   }
 
+  //Checks for unmet dependencies 
   static async findCandidateCourses({ completedCourses, requiredCourses }) {
     const uncompletedCourses = this.findUncompletedCourses({
       requiredCourses,
@@ -98,7 +99,7 @@ class ScheduleBuilder {
     return this.findCandidateSectionQueueMap({ completedCourses, requiredCourses, term });
   }
 
-  static async findCandidateSequences({ completedCourses, requiredCourses }) {
+  static async findCandidateSequences({ completedCourses, requiredCourses }) { //refactor to take termCoursesNumber
     let completed = completedCourses;
     const required = requiredCourses;
     const termCourses = [];
