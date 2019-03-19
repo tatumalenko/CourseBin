@@ -58,9 +58,26 @@ const student = {
 // ).then((candidateCourses) => {
 //   console.log(candidateCourses);
 //   const soen331 = ScheduleBuilder.categorizeSectionQueueIntoKind(
-// candidateCourses.get('SOEN331'));
+//     candidateCourses.get('SOEN331'),
+//   );
 //   console.log(soen331);
 // });
+
+test('Find candidate section queue map', async (t) => {
+  const candidateSectionQueueMap = await ScheduleBuilder.findCandidateSectionQueueMap(
+    {
+      completedCourses: student.record.completedCourses.map(e => e.code),
+      requiredCourses: SoftwareEngineeringDegree.requirements.mandatory,
+      term: 'FALL',
+    },
+  );
+
+  t.log(candidateSectionQueueMap);
+  const soen331 = ScheduleBuilder.categorizeSectionQueueIntoKind(
+    candidateSectionQueueMap.get('SOEN331'),
+  );
+  console.log(soen331);
+});
 
 const hashQueueMap = new Map(Object.entries(
   {
