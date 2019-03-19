@@ -393,7 +393,7 @@ class StudentForm extends Component {
                         </Form.Control>
                       </div>
 
-                      <div className='course-preferences'>
+                      <div className='course-preferences' style={{ display: courseMap ? 'initial' : 'none' }}>
                         <div className='course-selection-box'>
                           <Form.Label className='add-course-button'>
                             Any courses you want to take in particular?
@@ -520,7 +520,7 @@ class StudentForm extends Component {
                         </Form.Control>
                       </div>
 
-                      <div className='course-preferences'>
+                      <div className='course-preferences' style={{ display: courseMap ? 'initial' : 'none' }}>
                         <div className='course-selection-box'>
                           <Form.Label className='add-course-button'>
                             Any courses you want to take in particular?
@@ -650,7 +650,7 @@ class StudentForm extends Component {
                         </Form.Control>
                       </div>
 
-                      <div className='course-preferences'>
+                      <div className='course-preferences' style={{ display: courseMap ? 'initial' : 'none' }}>
                         <div className='course-selection-box'>
                           <Form.Label className='add-course-button'>
                             Any courses you want to take in particular?
@@ -697,7 +697,7 @@ class StudentForm extends Component {
                           </Row>
                           <Row className='selected-courses-container'>
                             <div className='course-err-msg'>{summerErrMsg}</div>
-                            <Form.Label className='selected-courses-label' style={{ display: summerSelectedCourses === 0 ? 'none' : 'initial' }}>Selected Courses:</Form.Label>
+                            <Form.Label className='selected-courses-label' style={{ display: summerSelectedCourses.length === 0 ? 'none' : 'initial' }}>Selected Courses:</Form.Label>
                             {summerSelectedCourses ? Object.keys(summerSelectedCourses).map(index => (
                               <div className='selected-courses'>
                                 <Form.Label
