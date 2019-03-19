@@ -103,6 +103,30 @@ router.post('/schedule', (req, res) => {
   // const preferences = req.body;
 
   if (req.user) {
+    // const termPreferences = req.preferences;
+    // termPreferences = {
+    //   fall: {
+    //     numberOfCourses: 4,
+    //     eveningTimePreference: true,
+    //     requestedCourses: [ 'COMP352', 'COMP348' ],
+    //   },
+    //   winter: {
+    //     numberOfCourses: 4,
+    //     eveningTimePreference: true,
+    //     requestedCourses: [ 'COMP***', 'COMP***' ],
+    //   },
+    //   summer: {
+    //     numberOfCourses: 4,
+    //     eveningTimePreference: true,
+    //     requestedCourses: [ 'COMP***', 'COMP***' ],
+    //   },
+    // };
+    // const student = Student.find({id: req.user.id });
+    // const { schedules, sequences } = ScheduleBuilder.getCandidateSchedulesAndSequences({
+    //   completedCourses: student.completedCourses,
+    //   requiredCourses: student.requiredCourses,
+    //   termPreferences
+    // })
     res
       .status(200)
       .json({ message: 'Not implemented yet' });
