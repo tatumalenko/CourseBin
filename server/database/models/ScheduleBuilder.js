@@ -41,7 +41,7 @@ class ScheduleBuilder {
     };
   }
 
-  //Checks for unmet dependencies 
+  // Checks for unmet dependencies
   static async findCandidateCourses({ completedCourses, requiredCourses }) {
     const uncompletedCourses = this.findUncompletedCourses({
       requiredCourses,
@@ -110,7 +110,7 @@ class ScheduleBuilder {
     // Get all candidate courses given currently completed courses
     let candidateCourses = await this.findCandidateCourses({ completedCourses: completed, requiredCourses: required });
     while (_.difference(required, completed).length > 0) {
-      if (!termPreferences[terms[termTracker % numberOfTerms]].numberOfCourses) {
+      if (termPreferences[terms[termTracker % numberOfTerms]].numberOfCourses !== 0) {
         // Of the candidate courses, pick at most 5, and add those to the lot of completedCOurses
         const thisTerm = {
           term: terms[termTracker % numberOfTerms],
