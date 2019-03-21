@@ -31,6 +31,17 @@ const student = {
       { code: 'SOEN287', grade: 'A' },
     ],
   },
+  termPreferences: {
+    fall: {
+      numberOfCourses: 5,
+    },
+    winter: {
+      numberOfCourses: 5,
+    },
+    summer: {
+      numberOfCourses: 5,
+    },
+  },
 };
 
 // console.log(
@@ -105,7 +116,7 @@ const hashQueueMap = new Map(Object.entries(
   },
 ));
 
-//Invoke test with name of test with arrow function and 
+// Invoke test with name of test with arrow function and
 test('Categorizing COMP348', (t) => {
   t.deepEqual(ScheduleBuilder.categorizeSectionQueueIntoKind(
     hashQueueMap.get('COMP348'),
@@ -185,18 +196,53 @@ test('Combinations COMP348', (t) => {
   ] ]);
 });
 
-test('Sequence generation', async (t) => {
+test('Sequence generation 5 courses per term', async (t) => {
   const termCourses = await ScheduleBuilder.findCandidateSequences({
     completedCourses: student.record.completedCourses.map(e => e.code),
     requiredCourses: SoftwareEngineeringDegree.requirements.suggested.wsaOption,
+    termPreferences: student.termPreferences,
   });
 
-  t.deepEqual(termCourses, [
-    [ 'SOEN331', 'COMP335', 'COMP346', 'COMP348', 'ENCS282' ],
-    [ 'SOEN321', 'SOEN341', 'ENGR201', 'ENGR202', 'ENGR213' ],
-    [ 'SOEN342', 'SOEN384', 'ELEC275', 'ENGR233', 'ENGR301' ],
-    [ 'SOEN343', 'SOEN357', 'SOEN385', 'ENGR371', 'ENGR391' ],
-    [ 'SOEN344', 'ENGR392', 'PHYS284', 'ENGR251', 'COMP353' ],
-    [ 'SOEN390', 'SOEN387', 'COMP445' ],
-    [ 'SOEN490', 'SOEN487' ] ]);
+  t.deepEqual(termCourses, [ {
+    term: 'fall',
+    courses: [ 'SOEN331', 'COMP335', 'COMP346', 'COMP348', 'ENCS282' ],
+  }, {
+    term: 'winter',
+    courses: [ 'SOEN321', 'SOEN341', 'ENGR201', 'ENGR202', 'ENGR213' ],
+  }, {
+    term: 'summer',
+    courses: [ 'SOEN342', 'SOEN384', 'ELEC275', 'ENGR233', 'ENGR301' ],
+  }, {
+    term: 'fall',
+    courses: [ 'SOEN343', 'SOEN357', 'SOEN385', 'ENGR371', 'ENGR391' ],
+  }, {
+    term: 'winter',
+    courses: [ 'SOEN344', 'ENGR392', 'PHYS284', 'ENGR251', 'COMP353' ],
+  }, {
+    term: 'summer',
+    courses: [ 'SOEN390', 'SOEN387', 'COMP445' ],
+  }, {
+    term: 'fall',
+    courses: [ 'SOEN490', 'SOEN487' ],
+  } ]);
+});
+
+test('Sequence generation 2 courses per term', async (t) => {
+  const termCourses = await ScheduleBuilder.findCandidateSequences({
+    completedCourses: student.record.completedCourses.map(e => e.code),
+    requiredCourses: SoftwareEngineeringDegree.requirements.suggested.wsaOption,
+    termPreferences: {
+      fall: {
+        numberOfCourses: 2,
+      },
+      winter: {
+        numberOfCourses: 2,
+      },
+      summer: {
+        numberOfCourses: 2,
+      },
+    },
+  });
+
+  termCourses.forEach(e => t.true(e.courses.length <= 2));
 });
