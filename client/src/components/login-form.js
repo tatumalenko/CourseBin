@@ -120,6 +120,8 @@ class LoginForm extends Component {
               <Button
                 onClick={this.handleSubmit}
                 type='submit'
+                variant='outline-info'
+                size='lg'
               >
                 Login
 
@@ -127,7 +129,7 @@ class LoginForm extends Component {
             </Col>
             <Col xs={12}>
 
-              <Form.Label>
+              <Form.Label className='label-info'>
                 <Link to='/signup'>Not a user? Signup here!</Link>
               </Form.Label>
 

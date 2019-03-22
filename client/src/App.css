@@ -16,12 +16,6 @@
     text-align: center;
 }
 
-.title-for-loggedIn{
-  position: absolute;
-  font-size: 51px;
-  margin-left: 43%;
-}
-
 .home-bottom{
   background-color: white;
 }
@@ -86,14 +80,25 @@
 }
 
 
+.label-info.form-label a{
+  color: rgb(23, 162, 184);
+  margin-top: 10px;
+}
+
+.label-info.form-label a:hover{
+  text-decoration: none;
+}
+
+
 
 .header-logo{
   font-family: 'Londrina Solid', cursive;
   color: #A98638;
-  font-size: 60px;
   position: relative;
-  bottom: 75px;
+  bottom: 48px;
   text-shadow: 2px 2px 800px bisque;
+  margin-left: 400px;
+  margin-right: 400px;
 }
 .title-for-loggedIn{
   position: absolute;
@@ -102,6 +107,10 @@
 }
 .semester-form-component{
   text-align: left;
+}
+
+.student-form .form-header{
+  margin-top: 75px;
 }
 
 .student-form .semester-form-component .season:hover{
@@ -177,6 +186,11 @@
   margin-left: 15px;
 }
 
+.student-form .evening-checkbox .btn-group{
+  float: right;
+  margin-bottom: 30px;
+}
+
 .student-form .course-preferences{
   margin-left: 15px;
 }
@@ -187,21 +201,75 @@
   
 }
 
-.student-form .course-selection-box .add-course-button i{ 
-  font-size: 18px;
-  margin-top: 3px;
+.student-form .course-selection-box .add-course-button{ 
+  margin-left: 10px;
 }
 
 .student-form .course-selection-box{
-  background: 5px aliceblue;
+  background: 5px rgb(23, 162, 184, 0.4);
   padding: 15px;
   border-radius: 15px;
   margin-top: 15px;
   margin-bottom: 15px;
 }
-.student-form .course-selection-box .selected-courses-container .row{
-  display: block;
+.student-form .course-selection-box .selected-courses-container{
+  display: inline-flex;
+  margin-left: 0;
 }
 .student-form .selected-courses-container .selected-courses{
-  padding: 10px;
+  padding: 8px;
+  padding-bottom: 0;
+  background: rgb(87, 29, 46, 0.7);
+  border: 2px solid rgb(255, 201, 81, 1);
+  color: rgb(255, 201, 81, 1);
+  margin-right: 12px;
+  border-radius: 5px;
+  font-size: 12px;
+  margin-bottom: 15px;
+  min-width: 150px;
+}
+
+.student-form .course-selection-label.form-label{
+  font-size: 16px;
+}
+
+.student-form select.form-control[multiple]{
+  border-radius: 10px;
+}
+
+.student-form .course-err-msg{
+  color: red;
+  margin-left: 0;
+  width: 100%;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+.student-form .selected-courses-label{
+  min-width: 100%;
+  font-size: 16px;
+}
+
+.student-form .rm-course{
+  float: right;
+  margin-top: -15px;
+  margin-right: -5px;
+}
+
+.student-form .rm-course i{
+  margin-top: 9.5px;
+  margin-left: 8px;
+  float: right;
+}
+
+.student-form .rm-course:hover i{
+  cursor: pointer;
+  color: red;
+}
+
+.student-form .num-courses-button{
+  position: relative;
+  bottom: 5px;
+  left: 200px;
+
 }
