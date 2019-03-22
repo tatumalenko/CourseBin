@@ -74,21 +74,21 @@ const student = {
 //   console.log(soen331);
 // });
 
-test('Find candidate section queue map', async (t) => {
-  const candidateSectionQueueMap = await ProgramBuilder.findCandidateSectionQueueMap(
-    {
-      completedCourses: student.record.completedCourses.map(e => e.code),
-      requiredCourses: SoftwareEngineeringDegree.requirements.mandatory,
-      term: 'FALL',
-    },
-  );
+// test('Find candidate section queue map', async (t) => {
+//   const candidateSectionQueueMap = await ProgramBuilder.findCandidateSectionQueueMap(
+//     {
+//       completedCourses: student.record.completedCourses.map(e => e.code),
+//       requiredCourses: SoftwareEngineeringDegree.requirements.mandatory,
+//       term: 'FALL',
+//     },
+//   );
 
-  t.log(candidateSectionQueueMap);
-  const soen331 = ProgramBuilder.categorizeSectionQueueIntoKind(
-    candidateSectionQueueMap.get('SOEN331'),
-  );
-  console.log(soen331);
-});
+//   t.log(candidateSectionQueueMap);
+//   const soen331 = ProgramBuilder.categorizeSectionQueueIntoKind(
+//     candidateSectionQueueMap.get('SOEN331'),
+//   );
+//   console.log(soen331);
+// });
 
 const hashQueueMap = new Map(Object.entries(
   {

@@ -2,7 +2,7 @@ const _ = require('lodash');
 
 const rawCatalog = require('../raw/catalog');
 
-//Filters courses from concordiaAPI
+// Filters courses from concordiaAPI
 const getCatalogCourses = async () => {
   const rawCourses = await rawCatalog.getCatalogCourses();
   const courses = [];

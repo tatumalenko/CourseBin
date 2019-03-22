@@ -37,6 +37,7 @@ class Util {
     const combos = [];
     let combo = [];
 
+    // eslint-disable-next-line
     while (true) {
       combo = [];
 
