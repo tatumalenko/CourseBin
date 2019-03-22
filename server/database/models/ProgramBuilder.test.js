@@ -1,7 +1,7 @@
 const test = require('ava');
 const mongoose = require('mongoose');
 
-const { ScheduleBuilder } = require('./ScheduleBuilder');
+const { ProgramBuilder } = require('./ProgramBuilder');
 const { SoftwareEngineeringDegree } = require('./SoftwareEngineeringDegree');
 const { Util } = require('../../util/Util');
 const configs = require('../../../configs/configs');
@@ -45,7 +45,7 @@ const student = {
 };
 
 // console.log(
-//   ScheduleBuilder.findUncompletedCourses(
+//   ProgramBuilder.findUncompletedCourses(
 //     {
 //       completedCourses: student.record.completedCourses.map(e => e.code),
 //       requiredCourses: SoftwareEngineeringDegree.requirements.mandatory,
@@ -53,14 +53,14 @@ const student = {
 //   ),
 // );
 
-// ScheduleBuilder.findCandidateCourses(
+// ProgramBuilder.findCandidateCourses(
 //   {
 //     completedCourses: student.record.completedCourses.map(e => e.code),
 //     requiredCourses: SoftwareEngineeringDegree.requirements.mandatory,
 //   },
 // ).then(candidateCourses => console.log(candidateCourses));
 
-// ScheduleBuilder.findCandidateSectionQueueMap(
+// ProgramBuilder.findCandidateSectionQueueMap(
 //   {
 //     completedCourses: student.record.completedCourses.map(e => e.code),
 //     requiredCourses: SoftwareEngineeringDegree.requirements.mandatory,
@@ -68,14 +68,14 @@ const student = {
 //   },
 // ).then((candidateCourses) => {
 //   console.log(candidateCourses);
-//   const soen331 = ScheduleBuilder.categorizeSectionQueueIntoKind(
+//   const soen331 = ProgramBuilder.categorizeSectionQueueIntoKind(
 //     candidateCourses.get('SOEN331'),
 //   );
 //   console.log(soen331);
 // });
 
 test('Find candidate section queue map', async (t) => {
-  const candidateSectionQueueMap = await ScheduleBuilder.findCandidateSectionQueueMap(
+  const candidateSectionQueueMap = await ProgramBuilder.findCandidateSectionQueueMap(
     {
       completedCourses: student.record.completedCourses.map(e => e.code),
       requiredCourses: SoftwareEngineeringDegree.requirements.mandatory,
@@ -84,7 +84,7 @@ test('Find candidate section queue map', async (t) => {
   );
 
   t.log(candidateSectionQueueMap);
-  const soen331 = ScheduleBuilder.categorizeSectionQueueIntoKind(
+  const soen331 = ProgramBuilder.categorizeSectionQueueIntoKind(
     candidateSectionQueueMap.get('SOEN331'),
   );
   console.log(soen331);
@@ -118,7 +118,7 @@ const hashQueueMap = new Map(Object.entries(
 
 // Invoke test with name of test with arrow function and
 test('Categorizing COMP348', (t) => {
-  t.deepEqual(ScheduleBuilder.categorizeSectionQueueIntoKind(
+  t.deepEqual(ProgramBuilder.categorizeSectionQueueIntoKind(
     hashQueueMap.get('COMP348'),
   ), {
     LAB: [],
@@ -151,7 +151,7 @@ test('Categorizing COMP348', (t) => {
 
 test('Combinations COMP348', (t) => {
   const categorized = {};
-  categorized.comp348 = ScheduleBuilder.categorizeSectionQueueIntoKind(
+  categorized.comp348 = ProgramBuilder.categorizeSectionQueueIntoKind(
     hashQueueMap.get('COMP348'),
   );
 
@@ -197,7 +197,7 @@ test('Combinations COMP348', (t) => {
 });
 
 test('Sequence generation 5 courses per term', async (t) => {
-  const termCourses = await ScheduleBuilder.findCandidateSequences({
+  const termCourses = await ProgramBuilder.findCandidateSequences({
     completedCourses: student.record.completedCourses.map(e => e.code),
     requiredCourses: SoftwareEngineeringDegree.requirements.suggested.wsaOption,
     termPreferences: student.termPreferences,
@@ -228,7 +228,7 @@ test('Sequence generation 5 courses per term', async (t) => {
 });
 
 test('Sequence generation 2 courses per term', async (t) => {
-  const termCourses = await ScheduleBuilder.findCandidateSequences({
+  const termCourses = await ProgramBuilder.findCandidateSequences({
     completedCourses: student.record.completedCourses.map(e => e.code),
     requiredCourses: SoftwareEngineeringDegree.requirements.suggested.wsaOption,
     termPreferences: {

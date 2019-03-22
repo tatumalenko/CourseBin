@@ -122,7 +122,7 @@ router.post('/schedule', (req, res) => {
     //   },
     // };
     // const student = Student.find({id: req.user.id });
-    // const { schedules, sequences } = ScheduleBuilder.getCandidateSchedulesAndSequences({
+    // const { schedules, sequences } = ProgramBuilder.getCandidateSchedulesAndSequences({
     //   completedCourses: student.completedCourses,
     //   requiredCourses: student.requiredCourses,
     //   termPreferences

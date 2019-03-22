@@ -5,7 +5,7 @@ const { Catalog } = require('./Catalog');
 const { Timetable } = require('./Timetable');
 // const { Util } = require('./../../util/Util');
 
-class ScheduleBuilder {
+class ProgramBuilder {
   static findUncompletedCourses({ requiredCourses, completedCourses }) {
     return _.difference(requiredCourses, completedCourses);
   }
@@ -138,7 +138,7 @@ class ScheduleBuilder {
   }
 }
 
-module.exports = { ScheduleBuilder };
+module.exports = { ProgramBuilder };
 
 // const hashQueueMap = {
 //   SOEN331: [ {
@@ -551,4 +551,4 @@ module.exports = { ScheduleBuilder };
 //   ],
 // };
 
-// console.log(ScheduleBuilder.categorizeSectionQueueIntoKind(hashQueueMap.SOEN331));
+// console.log(ProgramBuilder.categorizeSectionQueueIntoKind(hashQueueMap.SOEN331));
