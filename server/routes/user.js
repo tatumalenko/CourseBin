@@ -71,7 +71,7 @@ router.get('/', (req, res) => { // this is hijacking all routes in yarn dev
   } else {
     console.log('no user logged in');
     res
-      .status(200)
+      .status(404)
       .json({
         message: 'No user logged in',
         user: null,
