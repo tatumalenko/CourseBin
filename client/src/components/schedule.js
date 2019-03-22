@@ -79,7 +79,7 @@ class Schedule extends Component {
     return (
       <div>
         <div className='header-logo'>
-            <h3>CourseBin</h3>
+          <h3 className='title-for-loggedIn'> CourseBin</h3>
           </div>
 
         <MuiThemeProvider theme={theme}>
