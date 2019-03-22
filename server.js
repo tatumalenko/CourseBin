@@ -50,11 +50,17 @@ if (configs.nodeEnv === 'production') {
   app.use(express.static('client/build'));
 
   // ============== ALWAYS KEEP THIS AS THE LAST ROUTE ==============
-  app.get('*', (req, res) => {
+  app.all('*', (req, res) => {
     console.log("404 page error");
     res.status(404).sendFile(path.resolve(__dirname, 'client', 'build', 'error_page.html')); // temporary error page until front end stylizes it
   });
 }
+
+// ============== ALWAYS KEEP THIS AS THE LAST ROUTE ==============
+app.get('/*', (req, res) => {
+  console.log("404 page error");
+  res.status(404).sendFile(path.resolve(__dirname, 'client', 'build', 'error_page.html')); // temporary error page until front end stylizes it
+});
 
 // Start server
 app.listen(PORT, () => {
