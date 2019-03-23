@@ -1,6 +1,12 @@
 const _ = require('lodash');
 
 class Util {
+  static objectFromMap(map) {
+    return Array.from(map).reduce((obj, [ key, value ]) => (
+      Object.assign(obj, { [key]: value }) // Be careful! Maps can have non-String keys; object literals can't.
+    ), {});
+  }
+
   static setDifference({
     superSet,
     subSet,
@@ -22,6 +28,32 @@ class Util {
         subSet: new Set(subArray),
       },
     ));
+  }
+
+  static subCombinations(arrayOfObjects, k) {
+    const n = arrayOfObjects.length;
+
+    const combos = [];
+
+    const combinations = (arr, data, start, end, index, r) => {
+      if (index === r) {
+        const combo = [];
+        for (let j = 0; j < r; j += 1) {
+          combo.push(data[j]);
+        }
+        combos.push(combo);
+        return;
+      }
+
+      for (let i = start; i <= end && end - i + 1 >= r - index; i += 1) {
+        data[index] = arr[i];
+        combinations(arr, data, i + 1, end, index + 1, r);
+      }
+    };
+
+    combinations(arrayOfObjects, [], 0, n - 1, 0, k);
+
+    return combos;
   }
 
   static allCombinations(jaggedArrayOfObjects) {
