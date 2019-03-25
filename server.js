@@ -46,14 +46,21 @@ app.use('/timetable', timetable);
 app.use('/degree', degree);
 
 if (configs.nodeEnv === 'production') {
-  // Exprees will serve up production assets
+  // Express will serve up production assets
   app.use(express.static('client/build'));
 
-  // Express serve up index.html file if it doesn't recognize route
+  // ============== ALWAYS KEEP THIS AS THE LAST ROUTE ==============
   app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+    console.log("404 page error");
+    res.status(404).sendFile(path.resolve(__dirname, 'client', 'build', 'error_page.html')); // temporary error page until front end stylizes it
   });
 }
+
+// ============== ALWAYS KEEP THIS AS THE LAST ROUTE ==============
+app.get('*', (req, res) => {
+  console.log("404 page error");
+  res.status(404).sendFile(path.resolve(__dirname, 'client', 'build', 'error_page.html')); // temporary error page until front end stylizes it
+});
 
 // Start server
 app.listen(PORT, () => {

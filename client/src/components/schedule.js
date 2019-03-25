@@ -80,7 +80,7 @@ class Schedule extends Component {
       <div>
         <div className='header-logo'>
           <h3 className='title-for-loggedIn'> CourseBin</h3>
-        </div>
+          </div>
 
         <MuiThemeProvider theme={theme}>
           <Paper>
