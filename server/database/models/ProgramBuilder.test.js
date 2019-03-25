@@ -5,6 +5,7 @@ const { ProgramBuilder } = require('./ProgramBuilder');
 const { SoftwareEngineeringDegree } = require('./SoftwareEngineeringDegree');
 const { Util } = require('../../util/Util');
 const configs = require('../../../configs/configs');
+const { Sequence } = require('./Sequence');
 
 mongoose.connect(configs.dbMongo.dbPath, { useNewUrlParser: true, useCreateIndex: true });
 
@@ -200,38 +201,38 @@ test('Sequence generation 5 courses per term', async (t) => {
   const termCourses = await ProgramBuilder.findCandidateSequences({
     completedCourses: student.record.completedCourses.map(e => e.code),
     requiredCourses: SoftwareEngineeringDegree.requirements.suggested.wsaOption,
-    termPreferences: student.termPreferences,
+    Preferences: student.termPreferences,
   });
-
-  t.deepEqual(termCourses, [ {
+  const coursesTest = [ new Sequence({
     term: 'fall',
     courses: [ 'SOEN331', 'COMP335', 'COMP346', 'COMP348', 'ENCS282' ],
-  }, {
+  }), new Sequence({
     term: 'winter',
     courses: [ 'SOEN321', 'SOEN341', 'ENGR201', 'ENGR202', 'ENGR213' ],
-  }, {
+  }), new Sequence({
     term: 'summer',
     courses: [ 'SOEN342', 'SOEN384', 'ELEC275', 'ENGR233', 'ENGR301' ],
-  }, {
+  }), new Sequence({
     term: 'fall',
     courses: [ 'SOEN343', 'SOEN357', 'SOEN385', 'ENGR371', 'ENGR391' ],
-  }, {
+  }), new Sequence({
     term: 'winter',
     courses: [ 'SOEN344', 'ENGR392', 'PHYS284', 'ENGR251', 'COMP353' ],
-  }, {
+  }), new Sequence({
     term: 'summer',
     courses: [ 'SOEN390', 'SOEN387', 'COMP445' ],
-  }, {
+  }), new Sequence({
     term: 'fall',
     courses: [ 'SOEN490', 'SOEN487' ],
-  } ]);
+  }) ];
+  t.deepEqual(termCourses, coursesTest);
 });
 
 test('Sequence generation 2 courses per term', async (t) => {
   const termCourses = await ProgramBuilder.findCandidateSequences({
     completedCourses: student.record.completedCourses.map(e => e.code),
     requiredCourses: SoftwareEngineeringDegree.requirements.suggested.wsaOption,
-    termPreferences: {
+    Preferences: {
       fall: {
         numberOfCourses: 2,
       },
@@ -244,5 +245,5 @@ test('Sequence generation 2 courses per term', async (t) => {
     },
   });
 
-  termCourses.forEach(e => t.true(e.courses.length <= 2));
+  termCourses.forEach(e => t.true(e.sections.length <= 2));
 });
