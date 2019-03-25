@@ -223,7 +223,7 @@ class ProgramBuilder {
           courses: candidateCourses.slice(0, Preferences[terms[termTracker % numberOfTerms]].numberOfCourses),
         });
         termCourses.push(sequence);
-        completed = _.uniq([ ...completed, ..._.flatten(sequence.courses) ]);
+        completed = _.uniq([ ...completed, ..._.flatten(sequence.sections) ]);
         // eslint-disable-next-line
         candidateCourses = await this.findCandidateCourses({ completedCourses: completed, requiredCourses: required });
       }
