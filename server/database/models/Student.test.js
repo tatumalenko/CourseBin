@@ -7,6 +7,7 @@ const configs = require('../../../configs/configs');
 
 mongoose.connect(configs.dbMongo.dbPath, { useNewUrlParser: true, useCreateIndex: true });
 
+// Run tests serially instead of concurrently
 test.serial('Create and delete new student', async (t) => {
   const student = {
     id: 40055122,
