@@ -1,33 +1,19 @@
 const _ = require('lodash');
 
 class Util {
+  static timesOverlap(timeBlocks) {
+    // Given an array of TimeBlock objects all for the same weekDay, determine
+    // whether or not there contains any overlapping times. For example,
+    // if one element contains a startTime of 13:00:00 and endTime of 14:30:00,
+    // then if another element contains startTime 14:00:00, this would indeed
+    //  indicate a overlap in time across two different TimeBlock elements.
+    return !!timeBlocks; // Returns boolean
+  }
+
   static objectFromMap(map) {
     return Array.from(map).reduce((obj, [ key, value ]) => (
       Object.assign(obj, { [key]: value }) // Be careful! Maps can have non-String keys; object literals can't.
     ), {});
-  }
-
-  static setDifference({
-    superSet,
-    subSet,
-  }) {
-    const differenceSet = new Set(superSet);
-    subSet.forEach((setElement) => {
-      differenceSet.delete(setElement);
-    });
-    return differenceSet;
-  }
-
-  static arrayDifference({
-    superArray,
-    subArray,
-  }) {
-    return Array.from(this.setDifference(
-      {
-        superSet: new Set(superArray),
-        subSet: new Set(subArray),
-      },
-    ));
   }
 
   static subCombinations(arrayOfObjects, k) {
@@ -46,6 +32,7 @@ class Util {
       }
 
       for (let i = start; i <= end && end - i + 1 >= r - index; i += 1) {
+        // eslint-disable-next-line
         data[index] = arr[i];
         combinations(arr, data, i + 1, end, index + 1, r);
       }
@@ -98,24 +85,3 @@ class Util {
 }
 
 module.exports = { Util };
-
-// assert(_.isEqual(Util.allCombinations([
-//   [ 1, 2, 3 ],
-//   [ 4 ],
-//   [ 5, 6 ],
-// ]), [
-//   [ 1, 4, 5 ],
-//   [ 1, 4, 6 ],
-//   [ 2, 4, 5 ],
-//   [ 2, 4, 6 ],
-//   [ 3, 4, 5 ],
-//   [ 3, 4, 6 ] ]));
-
-// assert(_.isEqual(Util.allCombinations([
-//   [ 1, 2, 3 ],
-//   [ 4 ],
-//   [ ],
-// ]), [
-//   [ 1, 4 ],
-//   [ 2, 4 ],
-//   [ 3, 4 ] ]));
