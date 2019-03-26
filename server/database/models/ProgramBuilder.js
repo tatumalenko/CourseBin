@@ -1,10 +1,12 @@
 /* eslint max-len: 0 */
 const _ = require('lodash');
 
+const { Section } = require('./Section');
 const { Catalog } = require('./Catalog');
 const { Timetable } = require('./Timetable');
 const { Schedule } = require('./Schedule');
 const { Sequence } = require('./Sequence');
+const { Plan } = require('./Plan');
 const { Util } = require('./../../util/Util');
 
 class ProgramBuilder {
@@ -50,10 +52,13 @@ class ProgramBuilder {
       completedCourses,
     });
 
-    const hasNoUnmetDependencies = this.hasNoUnmetDependenciesPartial({ completedCourses });
+    const hasNoUnmetDependencies =
+      this.hasNoUnmetDependenciesPartial({ completedCourses });
 
     const isCandidateCourses = await Promise.all(
-      uncompletedCourses.map(uncompletedCourse => hasNoUnmetDependencies(uncompletedCourse)),
+      uncompletedCourses.map(
+        uncompletedCourse => hasNoUnmetDependencies(uncompletedCourse),
+      ),
     );
 
     return uncompletedCourses.filter((e, i) => isCandidateCourses[i]);
@@ -72,14 +77,15 @@ class ProgramBuilder {
     candidateSections = candidateSections.filter(sections => sections.length > 0);
 
     candidateSections.forEach((sections) => {
-      mapQueue.set(sections[0].courseCode, sections);
+      mapQueue.set(sections[0].courseCode, sections.map(section => new Section(section)));
     });
 
     return mapQueue;
   }
 
   static async findCandidateSectionQueueMap({ completedCourses, requiredCourses, term }) {
-    const candidateCourses = await this.findCandidateCourses({ completedCourses, requiredCourses });
+    const candidateCourses =
+      await this.findCandidateCourses({ completedCourses, requiredCourses });
     return this.getMapQueueSections({ candidateCourses, term });
   }
 
@@ -97,29 +103,49 @@ class ProgramBuilder {
     return categorizedSectionQueue;
   }
 
-  static async findCandidateTermSchedules({ completedCourses, requiredCourses, termPreference }) {
-    // TODO: trying to find all possible combinations of non-specified courses
-    // (i.e. of all candidates courses) might be too many possibilities and might
-    // not only make the options too numerous too display but severely hamper the
-    // speed. To this end, perhaps the best way to proceed is to force the user
-    // to select all courses they wish to register for each term and us not try
-    // to propose a million options.
-    const sectionQueueMap = this.findCandidateSectionQueueMap({
+  static findCoursesFromSections(sections) {
+    const courses = [];
+
+    sections.forEach((section) => {
+      if (!courses.includes(section.courseCode)) {
+        courses.push(section.courseCode);
+      }
+    });
+
+    return courses;
+  }
+
+  static async findCandidateTermSchedules({
+    completedCourses,
+    requiredCourses,
+    termPreference,
+  }) {
+    const sectionQueueMap = await this.findCandidateSectionQueueMap({
       completedCourses,
       requiredCourses,
       term: termPreference.term,
     });
 
     // Convert map to primitive object because I can't deal with remembering what
-    // is an primitive object and what is a Map object
+    // is a primitive object and what is a Map object
     const courseCodeSectionArrayMap = Util.objectFromMap(sectionQueueMap);
+
+    // Only keep the keys of the map that correspond to the courses specicied
+    // in requestedCourses
+    const requestedCouseCodeSectionArrayMap = {};
+    Object.keys(courseCodeSectionArrayMap)
+      .filter(key => termPreference.requestedCourses.includes(key))
+      .forEach((key) => {
+        requestedCouseCodeSectionArrayMap[key] = courseCodeSectionArrayMap[key];
+      });
 
     // For each key in object (course code), categorize the array of sections
     // into subobject of categorized LEC/TUT/LAB components
     const categorizedCourseCodeSectionArrayMap = {};
-    Object.keys(courseCodeSectionArrayMap)
+    Object.keys(requestedCouseCodeSectionArrayMap)
       .forEach((key) => {
-        categorizedCourseCodeSectionArrayMap[key] = this.categorizeSectionQueueIntoKind(courseCodeSectionArrayMap[key]);
+        categorizedCourseCodeSectionArrayMap[key] =
+          this.categorizeSectionQueueIntoKind(requestedCouseCodeSectionArrayMap[key]);
       });
 
     // For each key in object (course code), store the set of all combinations
@@ -140,59 +166,67 @@ class ProgramBuilder {
       Object.keys(courseCodeSectionCombinationArrayMap)
         .map(key => courseCodeSectionCombinationArrayMap[key]);
 
-    // Find the kCn sets first so that we don't try to find all combinations
-    // of like 10 sections
-    const sectionSubCombinations = Util.subCombinations(
-      sectionCombinationJaggedArray,
-      termPreference.numberOfCourses,
-    );
-
     // Find all the combinations of each subSectionCombination of kCn sets
     // This will become a triple nested object (array of combos, where each
     // combo is a jagged array)
-    const sectionCombinations = sectionSubCombinations.map(e => Util.allCombinations(e));
+    const sectionCombinations = Util.allCombinations(sectionCombinationJaggedArray);
 
-    // Flatten the results from sectionCombinations because we only care about
-    // all the kCn sets of combinations, we don't care about which combinations
-    // come from which subset of sets?! This is really confusing...
-    const flatSectionCombinations = _.flatten(sectionCombinations);
+    // Create a schedule object for each combination
+    const schedules = sectionCombinations.map(e => new Schedule({
+      term: termPreference.term,
+      sections: _.flatten(e),
+    }));
 
-    // Find all possible combinations of up to termPreference.numberOfCourses section
-    // groups (LEC+TUT+LAB) of those hopefully including the ones the student
-    // requested (pick out of those)
+    // Filter all schedules by whether they present a conflict. Note here we're
+    // using splice instead of filter because this array can be huge and copying
+    // the contents over again can become costly in terms of memory and time.
+    schedules.forEach((e, i) => {
+      if (e.hasConflict()) {
+        schedules.splice(i, 1); // Remove this element only
+      }
+    });
 
-    // Start by filtering the sectionQueueMap entries by those student requested
-    // const filteredSectionQueueMap =
-    //   Object.keys(sectionQueueMap)
-    //     .filter(
-    //       key => termPreference.requiredCourses.includes(sectionQueueMap[key]),
-    //     )
-    //     .map(key => sectionQueueMap[key]);
-
-    // if (Object.keys(filteredSectionQueueMap).length < termPreference.numberOfCourses) {
-    //   const leftoverSectionQueueMapKeys = _.difference(
-    //     Object.keys(sectionQueueMap),
-    //     Object.keys(filteredSectionQueueMap),
-    //   );
-
-    //   const leftoverSectionQueueMap = leftoverSectionQueueMapKeys.map(key => sectionQueueMap[key]);
-
-    //   const leftoverCoursesToAdd = Object.keys(filteredSectionQueueMap).length - termPreference.numberOfCourses;
-
-    //   // Add the other section queues to the filtered map
-    //   // TODO: Should filter further among these by offDays & timeOfDay preference
-    //   filteredSectionQueueMap.push(...leftoverSectionQueueMap.slice(0, leftoverCoursesToAdd));
-    // }
-
-    const schedule = new Schedule({ term: termPreference.term, sections: flatSectionCombinations });
-
-    return schedule;
+    return schedules;
   }
 
-  static async findCandidateSchedules({ completedCourses, requiredCourses, preferences }) {
-    const fallSchedules = this.findCandidateTermSchedules({ completedCourses, requiredCourses, termPreference: preferences.fall });
-    const winterSchedules = this.findCandidateTermSchedules({ completedCourses, requiredCourses, termPreference: preferences.winter });
-    const summerSchedules = this.findCandidateTermSchedules({ completedCourses, requiredCourses, termPreference: preferences.summer });
+  static async findCandidateSchedules({
+    completedCourses,
+    requiredCourses,
+    preferences,
+  }) {
+    let updatedCompletedCourses = completedCourses;
+
+    const fallSchedules = this.findCandidateTermSchedules({
+      completedCourses: updatedCompletedCourses,
+      requiredCourses,
+      termPreference: preferences.fall,
+    });
+
+    // Extract the courses from the schedules by using the first element
+    const fallCourses = fallSchedules[0] ?
+      this.findCoursesFromSections(fallSchedules[0].sections) : [];
+
+    // Include the courses to be taken in fall
+    updatedCompletedCourses = [ ...updatedCompletedCourses, ...fallCourses ];
+
+    const winterSchedules = this.findCandidateTermSchedules({
+      completedCourses: updatedCompletedCourses,
+      requiredCourses,
+      termPreference: preferences.winter,
+    });
+
+    // Extract the courses from the schedules by using the first element
+    const winterCourses = winterSchedules[0] ?
+      this.findCoursesFromSections(winterSchedules[0].sections) : [];
+
+    // Include the courses to be taken in fall
+    updatedCompletedCourses = [ ...updatedCompletedCourses, ...winterCourses ];
+
+    const summerSchedules = this.findCandidateTermSchedules({
+      completedCourses: updatedCompletedCourses,
+      requiredCourses,
+      termPreference: preferences.summer,
+    });
 
     return {
       fall: fallSchedules,
@@ -214,18 +248,26 @@ class ProgramBuilder {
 
     let termTracker = 0;
     // Get all candidate courses given currently completed courses
-    let candidateCourses = await this.findCandidateCourses({ completedCourses: completed, requiredCourses: required });
+    let candidateCourses = await this.findCandidateCourses({
+      completedCourses: completed,
+      requiredCourses: required,
+    });
     while (_.difference(required, completed).length > 0) {
       if (Preferences[terms[termTracker % numberOfTerms]].numberOfCourses !== 0) {
-        // Of the candidate courses, pick at most the number specified in termPreferences, and add those to the lot of completedCOurses
+        // Of the candidate courses, pick at most the number specified in
+        // termPreferences, and add those to the lot of completedCOurses
         const sequence = new Sequence({
           term: terms[termTracker % numberOfTerms],
-          courses: candidateCourses.slice(0, Preferences[terms[termTracker % numberOfTerms]].numberOfCourses),
+          courses: candidateCourses.slice(0,
+            Preferences[terms[termTracker % numberOfTerms]].numberOfCourses),
         });
         termCourses.push(sequence);
         completed = _.uniq([ ...completed, ..._.flatten(sequence.sections) ]);
         // eslint-disable-next-line
-        candidateCourses = await this.findCandidateCourses({ completedCourses: completed, requiredCourses: required });
+        candidateCourses = await this.findCandidateCourses({ 
+          completedCourses: completed,
+          requiredCourses: required,
+        });
       }
       termTracker += 1;
     }
@@ -238,9 +280,37 @@ class ProgramBuilder {
     requiredCourses,
     preferences,
   }) {
-    const candidatesSchedules = this.findCandidateSchedules({ completedCourses, requiredCourses, preferences });
+    // TODO: Rename this method to getCandidatePlan since it only needs to return
+    // one Plan object containing the various possibilities of schedules for each
+    // term and one array of Sequence objects that are the same regardless of the
+    // end schedule picked for each term.
+    const candidateSchedules = this.findCandidateSchedules({
+      completedCourses,
+      requiredCourses,
+      preferences,
+    });
+
+    const updatedCompletedCourses = [
+      ...completedCourses,
+      ...this.findCoursesFromSections(candidateSchedules.fall[0] ?
+        candidateSchedules.fall[0].sections : []),
+      ...this.findCoursesFromSections(candidateSchedules.winter[0] ?
+        candidateSchedules.winter[0].sections : []),
+      ...this.findCoursesFromSections(candidateSchedules.summer[0] ?
+        candidateSchedules.summer[0].sections : []),
+    ];
+
     // The completedCourses would need to be updated with those included in schedules
-    const candidateSequences = this.findCandidateSequences({ completedCourses, requiredCourses, preferences });
+    const candidateSequences = this.findCandidateSequences({
+      updatedCompletedCourses,
+      requiredCourses,
+      preferences,
+    });
+
+    return new Plan({
+      schedules: candidateSchedules,
+      sequences: candidateSequences,
+    });
   }
 }
 
