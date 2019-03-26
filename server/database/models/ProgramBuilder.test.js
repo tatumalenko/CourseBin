@@ -247,3 +247,31 @@ test('Sequence generation 2 courses per term', async (t) => {
 
   termCourses.forEach(e => t.true(e.sections.length <= 2));
 });
+
+test('Schedule generation 5 courses per term', async (t) => {
+  // TODO: Needs work, need to finish implementing Util.timesOverlap first
+  const termSchedulesActual = await ProgramBuilder.findCandidateTermSchedules({
+    completedCourses: student.record.completedCourses.map(e => e.code),
+    requiredCourses: SoftwareEngineeringDegree.requirements.suggested.wsaOption,
+    termPreference: {
+      term: 'FALL',
+      numberOfCourses: 5,
+      requestedCourses: [ 'SOEN331', 'COMP335', 'COMP346', 'COMP348', 'ENCS282' ],
+    },
+  });
+
+  const termSchedulesExpected = [
+    [
+      {
+        courseCode: 'SOEN331',
+        code: 'H',
+      },
+      {
+        courseCode: 'COMP335',
+        code: 'H',
+      },
+    ],
+  ];
+
+  t.deepEqual(termSchedulesActual, termSchedulesExpected);
+});
