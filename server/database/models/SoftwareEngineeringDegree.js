@@ -7,7 +7,7 @@ class SoftwareEngineeringDegree extends Degree {
     return 120;
   }
 
-  static get requirements() {
+  static requirements(option = null) {
     const requirements = {
       soen: {
         numOfCoursesRequired: 13,
@@ -186,7 +186,7 @@ class SoftwareEngineeringDegree extends Degree {
       ...requirements.cgOption.courses,
       ...requirements.wsaOption.courses,
       ...requirements.reaOption.courses,
-    ]); // [ requirements.mandatory, ...requirements.optional ];
+    ]);
 
     requirements.suggested = {
       generalOption: [
@@ -210,6 +210,25 @@ class SoftwareEngineeringDegree extends Degree {
         ...requirements.reaOption.suggested,
       ],
     };
+
+    if (option) {
+      const optionSuggestedCoursesMap = {
+        GENERAL: 'generalOption',
+        CG: 'cgOption',
+        WSA: 'wsaOption',
+        REA: 'reaOption',
+      };
+
+      const optionRequirements = requirements.suggested[optionSuggestedCoursesMap[option]];
+
+      if (!optionRequirements) {
+        throw new Error(
+          'SoftwareEngineeringDegree.requirements(option): `option` did not correspond to any permitted value.',
+        );
+      }
+
+      return requirements.suggested[optionSuggestedCoursesMap[option]];
+    }
 
     return requirements;
   }
