@@ -15,15 +15,19 @@ const completedCourseSchema = new Schema({
   grade: { type: String, unique: false, required: true },
 });
 
+const degreeSchema = new Schema({
+  minCredits: { type: Number, unique: false, required: true },
+  option: {
+    type: String,
+    enum: [ 'GENERAL', 'CG', 'WSA', 'REA' ],
+    unique: false,
+    required: true,
+  },
+});
+
 const recordSchema = new Schema({
-  // gpa: { type: Number, unique: false, required: false },
-  // standing: {
-  //   type: String,
-  //   enum: [ 'ACCEPTABLE', 'CONDITIONAL', 'FAILED' ],
-  //   unique: true,
-  //   required: false,
-  // },
   completedCourses: { type: [ completedCourseSchema ], unique: false, required: false },
+  degree: { type: degreeSchema, unique: false, required: false },
 });
 
 const termSchema = new Schema({
