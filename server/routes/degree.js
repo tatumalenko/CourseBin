@@ -5,7 +5,7 @@ const { SoftwareEngineeringDegree } = require('../database/models/SoftwareEngine
 
 router.get('/soen', async (request, response) => {
   try {
-    const soenDegreeRequirements = SoftwareEngineeringDegree.requirements;
+    const soenDegreeRequirements = SoftwareEngineeringDegree.requirements();
     if (soenDegreeRequirements) {
       response
         .status(200)

@@ -4,7 +4,7 @@ const { SoftwareEngineeringDegree } = require('../../models/SoftwareEngineeringD
 const configs = require('../../../../configs/configs');
 
 const getCatalogCourses = async () => {
-  const allDegreeCatalogCodes = SoftwareEngineeringDegree.requirements.all;
+  const allDegreeCatalogCodes = SoftwareEngineeringDegree.requirements().all;
   const options = {
     method: 'get',
     baseURL: 'https://opendata.concordia.ca',

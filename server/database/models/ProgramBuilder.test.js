@@ -49,7 +49,7 @@ const student = {
 //   ProgramBuilder.findUncompletedCourses(
 //     {
 //       completedCourses: student.record.completedCourses.map(e => e.code),
-//       requiredCourses: SoftwareEngineeringDegree.requirements.mandatory,
+//       requiredCourses: SoftwareEngineeringDegree.requirements().mandatory,
 //     },
 //   ),
 // );
@@ -57,14 +57,14 @@ const student = {
 // ProgramBuilder.findCandidateCourses(
 //   {
 //     completedCourses: student.record.completedCourses.map(e => e.code),
-//     requiredCourses: SoftwareEngineeringDegree.requirements.mandatory,
+//     requiredCourses: SoftwareEngineeringDegree.requirements().mandatory,
 //   },
 // ).then(candidateCourses => console.log(candidateCourses));
 
 // ProgramBuilder.findCandidateSectionQueueMap(
 //   {
 //     completedCourses: student.record.completedCourses.map(e => e.code),
-//     requiredCourses: SoftwareEngineeringDegree.requirements.mandatory,
+//     requiredCourses: SoftwareEngineeringDegree.requirements().mandatory,
 //     term: 'FALL',
 //   },
 // ).then((candidateCourses) => {
@@ -79,7 +79,7 @@ const student = {
 //   const candidateSectionQueueMap = await ProgramBuilder.findCandidateSectionQueueMap(
 //     {
 //       completedCourses: student.record.completedCourses.map(e => e.code),
-//       requiredCourses: SoftwareEngineeringDegree.requirements.mandatory,
+//       requiredCourses: SoftwareEngineeringDegree.requirements().mandatory,
 //       term: 'FALL',
 //     },
 //   );
@@ -200,7 +200,7 @@ test('Combinations COMP348', (t) => {
 test('Sequence generation 5 courses per term', async (t) => {
   const termCourses = await ProgramBuilder.findCandidateSequences({
     completedCourses: student.record.completedCourses.map(e => e.code),
-    requiredCourses: SoftwareEngineeringDegree.requirements.suggested.wsaOption,
+    requiredCourses: SoftwareEngineeringDegree.requirements().suggested.wsaOption,
     Preferences: student.termPreferences,
   });
   const coursesTest = [ new Sequence({
@@ -231,7 +231,7 @@ test('Sequence generation 5 courses per term', async (t) => {
 test('Sequence generation 2 courses per term', async (t) => {
   const termCourses = await ProgramBuilder.findCandidateSequences({
     completedCourses: student.record.completedCourses.map(e => e.code),
-    requiredCourses: SoftwareEngineeringDegree.requirements.suggested.wsaOption,
+    requiredCourses: SoftwareEngineeringDegree.requirements().suggested.wsaOption,
     Preferences: {
       fall: {
         numberOfCourses: 2,
@@ -252,7 +252,7 @@ test('Schedule generation 5 courses per term', async (t) => {
   // TODO: Needs work, need to finish implementing Util.timesOverlap first
   const termSchedulesActual = await ProgramBuilder.findCandidateTermSchedules({
     completedCourses: student.record.completedCourses.map(e => e.code),
-    requiredCourses: SoftwareEngineeringDegree.requirements.suggested.wsaOption,
+    requiredCourses: SoftwareEngineeringDegree.requirements().suggested.wsaOption,
     termPreference: {
       term: 'FALL',
       numberOfCourses: 5,

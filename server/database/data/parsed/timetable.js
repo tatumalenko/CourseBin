@@ -5,7 +5,7 @@ const getTimetableCourses = async () => {
   const rawCourses = await rawTimetable.getTimetableCourses();
   const offerings = [];
   // Need to extract the non '*' characters in each course code (indices 0 to 6 inclusively)
-  const allRequired = SoftwareEngineeringDegree.requirements.all.map(e => e.slice(0, 7));
+  const allRequired = SoftwareEngineeringDegree.requirements().all.map(e => e.slice(0, 7));
 
   // eslint-disable-next-line no-restricted-syntax
   for (const rawCourse of rawCourses) {
