@@ -1,4 +1,5 @@
 const axios = require('axios');
+const _ = require('lodash');
 
 const configs = require('../../../../configs/configs');
 
@@ -14,8 +15,36 @@ const getTimetableCourses = async () => {
 
   try {
     const res = {
+      biol: await axios.request(
+        '/API/v1/course/schedule/filter/*/BIOL/*',
+        options,
+      ),
+      chem: await axios.request(
+        '/API/v1/course/schedule/filter/*/CHEM/*',
+        options,
+      ),
+      civi: await axios.request(
+        '/API/v1/course/schedule/filter/*/CIVI/*',
+        options,
+      ),
       comp: await axios.request(
         '/API/v1/course/schedule/filter/*/COMP/*',
+        options,
+      ),
+      elec: await axios.request(
+        '/API/v1/course/schedule/filter/*/ELEC/*',
+        options,
+      ),
+      engr: await axios.request(
+        '/API/v1/course/schedule/filter/*/ENGR/*',
+        options,
+      ),
+      encs: await axios.request(
+        '/API/v1/course/schedule/filter/*/ENCS/*',
+        options,
+      ),
+      phys: await axios.request(
+        '/API/v1/course/schedule/filter/*/PHYS/*',
         options,
       ),
       soen: await axios.request(
@@ -24,7 +53,7 @@ const getTimetableCourses = async () => {
       ),
     };
 
-    return [ ...res.comp.data, ...res.soen.data ];
+    return _.flatten(_.toArray(res).map(e => e.data));
   } catch (err) {
     console.error(err);
     throw err;
