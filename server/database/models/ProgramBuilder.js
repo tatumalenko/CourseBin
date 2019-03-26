@@ -174,7 +174,7 @@ class ProgramBuilder {
     // Create a schedule object for each combination
     const schedules = sectionCombinations.map(e => new Schedule({
       term: termPreference.term,
-      sections: _.flatten(e),
+      sections: _.flatten(e), // They were nested by courseCode
     }));
 
     // Filter all schedules by whether they present a conflict. Note here we're
@@ -285,6 +285,15 @@ class ProgramBuilder {
       requiredCourses,
       preferences,
     });
+
+    // Given the TermPreference in preferences for each term, sort the schedules
+    // array such that the Schedule elements with a 'higher priority' appears as
+    // the front of the array in a priority queue like fashion. Note the sorting
+    // here is done in place for the same reason as when we used splice inside
+    // findCandidateTermSchedules(...).
+    Plan.sortSchedules({ schedules: candidateSchedules.fall, termPreference: preferences.fall });
+    Plan.sortSchedules({ schedules: candidateSchedules.winter, termPreference: preferences.winter });
+    Plan.sortSchedules({ schedules: candidateSchedules.summer, termPreference: preferences.summer });
 
     // Add all courses includes in the schedules obtained since they will need to
     // be assumed to be completed when assessing the sequences for subsequent terms
