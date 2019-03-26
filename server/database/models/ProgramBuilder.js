@@ -219,7 +219,7 @@ class ProgramBuilder {
     const winterCourses = winterSchedules[0] ?
       this.findCoursesFromSections(winterSchedules[0].sections) : [];
 
-    // Include the courses to be taken in fall
+    // Include the courses to be taken in winter
     updatedCompletedCourses = [ ...updatedCompletedCourses, ...winterCourses ];
 
     const summerSchedules = this.findCandidateTermSchedules({
@@ -290,6 +290,8 @@ class ProgramBuilder {
       preferences,
     });
 
+    // Add all courses includes in the schedules obtained since they will need to
+    // be assumed to be completed when assessing the sequences for subsequent terms
     const updatedCompletedCourses = [
       ...completedCourses,
       ...this.findCoursesFromSections(candidateSchedules.fall[0] ?
