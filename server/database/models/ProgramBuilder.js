@@ -275,15 +275,11 @@ class ProgramBuilder {
     return termCourses;
   }
 
-  static async getCandidatePlans({
+  static async findCandidatePlan({
     completedCourses,
     requiredCourses,
     preferences,
   }) {
-    // TODO: Rename this method to getCandidatePlan since it only needs to return
-    // one Plan object containing the various possibilities of schedules for each
-    // term and one array of Sequence objects that are the same regardless of the
-    // end schedule picked for each term.
     const candidateSchedules = this.findCandidateSchedules({
       completedCourses,
       requiredCourses,
