@@ -93,7 +93,7 @@ class Plan extends Component {
           <h3> CourseBin</h3>
         </div>
         <Row>
-          <Col xs={1} />
+          <Col xs={2} />
           <Col xs={8} className='schedule-container'>
             <ExpansionPanel>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
@@ -105,7 +105,13 @@ class Plan extends Component {
                     <Paper>
                       <Scheduler data={data}>
                         <ViewState currentDate='2018-07-28' />
-                        <WeekView startDayHour={8} endDayHour={24} />
+                        <WeekView
+                          data={data}
+                          excludedDays={[ 0, 6 ]}
+                          cellDuration={60}
+                          startDayHour={8}
+                          endDayHour={24}
+                        />
                         <Appointments />
                       </Scheduler>
                     </Paper>
@@ -145,7 +151,7 @@ class Plan extends Component {
               </ExpansionPanelSummary>
             </ExpansionPanel>
           </Col>
-          <Col xs={3} />
+          <Col xs={2} />
         </Row>
 
       </div>
