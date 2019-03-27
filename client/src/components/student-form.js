@@ -6,7 +6,7 @@ import axios from 'axios';
 import {
   Form, Row, Col, Button, ToggleButtonGroup, ToggleButton,
 } from 'react-bootstrap';
-import Schedule from './schedule';
+import Plan from './plan';
 
 
 const _ = require('lodash');
@@ -330,7 +330,7 @@ class StudentForm extends Component {
     } = this.state;
 
     return showSchedule
-      ? <Schedule />
+      ? <Plan />
       : (
         <div>
           <div className='header-logo'>
