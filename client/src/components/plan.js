@@ -67,7 +67,12 @@ const burgundy = {
   A400: '#571D2E',
   A700: '#571D2E',
 };
-const theme = createMuiTheme({ palette: { primary: burgundy, secondary: burgundy, error: burgundy } });
+
+const theme = createMuiTheme({
+  palette: {
+    primary: burgundy, secondary: burgundy, error: burgundy,
+  },
+});
 
 
 class Plan extends Component {
@@ -88,24 +93,24 @@ class Plan extends Component {
           <h3> CourseBin</h3>
         </div>
         <Row>
-          <Col xs={3} />
-          <Col xs={6} className='schedule-container'>
+          <Col xs={1} />
+          <Col xs={8} className='schedule-container'>
             <ExpansionPanel>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography>Fall 2019</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
-                <MuiThemeProvider theme={theme}>
-                  <Paper>
-                    <h4> Weekly Schedule </h4>
-                    <Scheduler data={data}>
-
-                      <ViewState currentDate='2018-07-28' />
-                      <WeekView startDayHour={8} endDayHour={24} />
-                      <Appointments />
-                    </Scheduler>
-                  </Paper>
-                </MuiThemeProvider>
+                <div className='schedule'>
+                  <MuiThemeProvider theme={theme}>
+                    <Paper>
+                      <Scheduler data={data}>
+                        <ViewState currentDate='2018-07-28' />
+                        <WeekView startDayHour={8} endDayHour={24} />
+                        <Appointments />
+                      </Scheduler>
+                    </Paper>
+                  </MuiThemeProvider>
+                </div>
               </ExpansionPanelDetails>
             </ExpansionPanel>
             <ExpansionPanel>
