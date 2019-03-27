@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Col, Row } from 'react-bootstrap';
 import Paper from '@material-ui/core/Paper';
 import { ViewState } from '@devexpress/dx-react-scheduler';
 import {
@@ -82,62 +83,65 @@ class Plan extends Component {
     const { data } = this.state;
 
     return (
-      <div>
+      <div className='plan-container'>
         <div className='header-logo'>
-          <h3 className='title-for-loggedIn'> CourseBin</h3>
+          <h3> CourseBin</h3>
         </div>
+        <Row>
+          <Col xs={3} />
+          <Col xs={6} className='schedule-container'>
+            <ExpansionPanel>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography>Fall 2019</Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <MuiThemeProvider theme={theme}>
+                  <Paper>
+                    <h4> Weekly Schedule </h4>
+                    <Scheduler data={data}>
 
-        <div className='schedule-container'>
-          <ExpansionPanel>
-            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>Fall 2019</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <MuiThemeProvider theme={theme}>
-                <Paper>
-                  <h4> Weekly Schedule </h4>
-                  <Scheduler data={data}>
-
-                    <ViewState currentDate='2018-07-28' />
-                    <WeekView startDayHour={8} endDayHour={24} />
-                    <Appointments />
-                  </Scheduler>
-                </Paper>
-              </MuiThemeProvider>
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-          <ExpansionPanel>
-            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>Winter 2020</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <Typography>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                sit amet blandit leo lobortis eget.
-              </Typography>
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-          <ExpansionPanel>
-            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>Summer 2020</Typography>
-            </ExpansionPanelSummary>
-          </ExpansionPanel>
-          <ExpansionPanel>
-            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>Fall 2020</Typography>
-            </ExpansionPanelSummary>
-          </ExpansionPanel>
-          <ExpansionPanel>
-            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>Winter 2021</Typography>
-            </ExpansionPanelSummary>
-          </ExpansionPanel>
-          <ExpansionPanel>
-            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>Summer 2021</Typography>
-            </ExpansionPanelSummary>
-          </ExpansionPanel>
-        </div>
+                      <ViewState currentDate='2018-07-28' />
+                      <WeekView startDayHour={8} endDayHour={24} />
+                      <Appointments />
+                    </Scheduler>
+                  </Paper>
+                </MuiThemeProvider>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+            <ExpansionPanel>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography>Winter 2020</Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <Typography>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
+                  sit amet blandit leo lobortis eget.
+                </Typography>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+            <ExpansionPanel>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography>Summer 2020</Typography>
+              </ExpansionPanelSummary>
+            </ExpansionPanel>
+            <ExpansionPanel>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography>Fall 2020</Typography>
+              </ExpansionPanelSummary>
+            </ExpansionPanel>
+            <ExpansionPanel>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography>Winter 2021</Typography>
+              </ExpansionPanelSummary>
+            </ExpansionPanel>
+            <ExpansionPanel>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography>Summer 2021</Typography>
+              </ExpansionPanelSummary>
+            </ExpansionPanel>
+          </Col>
+          <Col xs={3} />
+        </Row>
 
       </div>
     );
