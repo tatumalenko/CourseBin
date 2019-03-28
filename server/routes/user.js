@@ -1,9 +1,14 @@
 const express = require('express');
 
 const router = express.Router();
+const passport = require('../passport');
 const { SignupValidator } = require('../passport/SignupValidator');
 const { User } = require('../database/models/User');
-const passport = require('../passport');
+const { Student } = require('../database/models/Student');
+const { ProgramBuilder } = require('../database/models/ProgramBuilder');
+const { Preferences } = require('../database/models/Preferences');
+const { SoftwareEngineeringDegree } = require('../database/models/SoftwareEngineeringDegree');
+const { Plan } = require('../database/models/Plan');
 
 router.post('/', async (req, res) => {
   console.log('post /');
@@ -109,45 +114,67 @@ router.post('/logout', (req, res) => {
   }
 });
 
-router.post('/schedule', (req, res) => {
-  console.log('post schedule');
-  // const preferences = req.body;
+router.post('/plan', async (req, res) => {
+  console.log('post plan');
+  try {
+    if (req.user) {
+      const preferences = req.body;
+      console.log(req.body);
 
-  if (req.user) {
-    // const { preferences } = req.body;
+      // Example preferences contents:
+      // {
+      //   fall: {
+      //     numberOfCourses: 4,
+      //     eveningTimePreference: true,
+      //     requestedCourses: [ 'COMP352', 'COMP348' ],
+      //   },
+      //   winter: {
+      //     numberOfCourses: 4,
+      //     eveningTimePreference: true,
+      //     requestedCourses: [ 'COMP***', 'COMP***' ],
+      //   },
+      //   summer: {
+      //     numberOfCourses: 4,
+      //     eveningTimePreference: true,
+      //     requestedCourses: [ 'COMP***', 'COMP***' ],
+      //   },
+      // };
 
-    // Example preferences contents:
-    // {
-    //   fall: {
-    //     numberOfCourses: 4,
-    //     eveningTimePreference: true,
-    //     requestedCourses: [ 'COMP352', 'COMP348' ],
-    //   },
-    //   winter: {
-    //     numberOfCourses: 4,
-    //     eveningTimePreference: true,
-    //     requestedCourses: [ 'COMP***', 'COMP***' ],
-    //   },
-    //   summer: {
-    //     numberOfCourses: 4,
-    //     eveningTimePreference: true,
-    //     requestedCourses: [ 'COMP***', 'COMP***' ],
-    //   },
-    // };
 
-    // const student = Student.find({id: req.user.id });
-    // const plan = ProgramBuilder.findCandidatePlan({
-    //   completedCourses: student.completedCourses,
-    //   requiredCourses: SoftwareEngineeringDegree.requirements(student.record.degree.option),
-    //   preferences
-    // });
+      const student = await Student.findOne({ id: 40055122 });
+
+      console.log(new Preferences(preferences));
+      console.log(student.record.completedCourses);
+      console.log(SoftwareEngineeringDegree.requirements(student.record.degree.option));
+
+      const plan = await ProgramBuilder.findCandidatePlan({
+        completedCourses: student.record.completedCourses,
+        requiredCourses: SoftwareEngineeringDegree.requirements(student.record.degree.option),
+        preferences: new Preferences(preferences),
+      });
+      res
+        .status(200)
+        .json({
+          message: 'OK',
+          plan: new Plan({
+            schedules: {
+              fall: plan.schedules.fall.slice(0, 50),
+              winter: plan.schedules.winter,
+              summer: plan.schedules.summer,
+            },
+            sequences: plan.sequences,
+          }),
+        });
+    } else {
+      res
+        .status(404)
+        .json({ message: 'No user logged in' });
+    }
+  } catch (e) {
+    console.error('routes.js: /user/plan:', e);
     res
-      .status(200)
-      .json({ message: 'Not implemented yet' });
-  } else {
-    res
-      .status(404)
-      .json({ message: 'No user logged in' });
+      .status(500)
+      .json({ message: 'Internal server error' });
   }
 });
 
