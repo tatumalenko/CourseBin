@@ -20,9 +20,12 @@ class ProgramBuilder {
       try {
         const course = await Catalog.findOne({ code: uncompletedCourse });
         // Verify if all prerequisites are met
+        // Check if completedCourses is an array of {} or ''
         allDependenciesMet = course.prerequisiteCodes ? course.prerequisiteCodes.every(
           prerequisiteOrCodes => prerequisiteOrCodes.some(
-            prerequisiteCode => completedCourses.includes(prerequisiteCode),
+            prerequisiteCode => (completedCourses[0] && _.isString(completedCourses[0]) ?
+              completedCourses.includes(prerequisiteCode) :
+              completedCourses.map(e => e.code).includes(prerequisiteCode)),
           ),
         ) : true;
 
@@ -196,7 +199,7 @@ class ProgramBuilder {
   }) {
     let updatedCompletedCourses = completedCourses;
 
-    const fallSchedules = this.findCandidateTermSchedules({
+    const fallSchedules = await this.findCandidateTermSchedules({
       completedCourses: updatedCompletedCourses,
       requiredCourses,
       termPreference: preferences.fall,
@@ -209,7 +212,7 @@ class ProgramBuilder {
     // Include the courses to be taken in fall
     updatedCompletedCourses = [ ...updatedCompletedCourses, ...fallCourses ];
 
-    const winterSchedules = this.findCandidateTermSchedules({
+    const winterSchedules = await this.findCandidateTermSchedules({
       completedCourses: updatedCompletedCourses,
       requiredCourses,
       termPreference: preferences.winter,
@@ -222,7 +225,7 @@ class ProgramBuilder {
     // Include the courses to be taken in winter
     updatedCompletedCourses = [ ...updatedCompletedCourses, ...winterCourses ];
 
-    const summerSchedules = this.findCandidateTermSchedules({
+    const summerSchedules = await this.findCandidateTermSchedules({
       completedCourses: updatedCompletedCourses,
       requiredCourses,
       termPreference: preferences.summer,
@@ -238,9 +241,9 @@ class ProgramBuilder {
   static async findCandidateSequences({
     completedCourses,
     requiredCourses,
-    Preferences,
+    preferences,
   }) {
-    let completed = completedCourses;
+    let completed = completedCourses.map(e => (_.isString(e) ? e : e.code));
     const required = requiredCourses;
     const termCourses = [];
     const terms = [ 'fall', 'winter', 'summer' ];
@@ -253,13 +256,13 @@ class ProgramBuilder {
       requiredCourses: required,
     });
     while (_.difference(required, completed).length > 0) {
-      if (Preferences[terms[termTracker % numberOfTerms]].numberOfCourses !== 0) {
+      if (preferences[terms[termTracker % numberOfTerms]].numberOfCourses !== 0) {
         // Of the candidate courses, pick at most the number specified in
         // termPreferences, and add those to the lot of completedCOurses
         const sequence = new Sequence({
           term: terms[termTracker % numberOfTerms],
           courses: candidateCourses.slice(0,
-            Preferences[terms[termTracker % numberOfTerms]].numberOfCourses),
+            preferences[terms[termTracker % numberOfTerms]].numberOfCourses),
         });
         termCourses.push(sequence);
         completed = _.uniq([ ...completed, ..._.flatten(sequence.sections) ]);
@@ -280,7 +283,7 @@ class ProgramBuilder {
     requiredCourses,
     preferences,
   }) {
-    const candidateSchedules = this.findCandidateSchedules({
+    const candidateSchedules = await this.findCandidateSchedules({
       completedCourses,
       requiredCourses,
       preferences,
@@ -308,8 +311,8 @@ class ProgramBuilder {
     ];
 
     // The completedCourses would need to be updated with those included in schedules
-    const candidateSequences = this.findCandidateSequences({
-      updatedCompletedCourses,
+    const candidateSequences = await this.findCandidateSequences({
+      completedCourses: updatedCompletedCourses,
       requiredCourses,
       preferences,
     });
