@@ -1,3 +1,4 @@
+const { Catalog } = require('./Catalog');
 const { Location } = require('./Location');
 const { TimeBlock } = require('./TimeBlock');
 
@@ -12,6 +13,7 @@ class Section {
   }) {
     this.courseCode = courseCode;
     this.code = code;
+    this.title = Catalog.find({ code: courseCode }).title;
     this.kind = kind;
     this.mode = mode;
     this.location = new Location(location);
