@@ -61,15 +61,12 @@ class LoginForm extends Component {
 
   render() {
     const {
-      redirectTo, username, password, err, invalid,
+      redirectTo, username, password, err,
     } = this.state;
     if (redirectTo) {
       return <Redirect to={{ pathname: redirectTo }} />;
     }
-    let invalidPassword = '';
-    if (invalid) {
-      invalidPassword = 'Username and Password must be different. Password must be at least 4 characters long.';
-    }
+
     return (
 
 
@@ -123,6 +120,8 @@ class LoginForm extends Component {
               <Button
                 onClick={this.handleSubmit}
                 type='submit'
+                variant='outline-info'
+                size='lg'
               >
                 Login
 
@@ -130,7 +129,7 @@ class LoginForm extends Component {
             </Col>
             <Col xs={12}>
 
-              <Form.Label>
+              <Form.Label className='label-info'>
                 <Link to='/signup'>Not a user? Signup here!</Link>
               </Form.Label>
 

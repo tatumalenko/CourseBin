@@ -6,6 +6,7 @@ const { User } = require('../database/models/User');
 const passport = require('../passport');
 
 router.post('/', async (req, res) => {
+  console.log('post /');
   try {
     console.log('user signup');
 
@@ -15,6 +16,7 @@ router.post('/', async (req, res) => {
     const credentialValidation = SignupValidator.validate({ username, password });
 
     if (user) { // user already exists
+      console.log('user already exists');
       res
         .status(400)
         .json({
@@ -22,6 +24,7 @@ router.post('/', async (req, res) => {
           user: null,
         });
     } else if (!credentialValidation.valid) {
+      console.log('!credentialValidation');
       res
         .status(400)
         .json({
@@ -29,6 +32,7 @@ router.post('/', async (req, res) => {
           user: null,
         });
     } else {
+      console.log('new user created');
       const newUser = new User({
         username,
         password,
@@ -42,6 +46,7 @@ router.post('/', async (req, res) => {
         });
     }
   } catch (err) {
+    console.log('error');
     res
       .status(500)
       .json({
@@ -52,9 +57,11 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.get('/', (req, res) => {
+router.get('/', (req, res) => { // this is hijacking all routes in yarn dev
+  console.log('get /');
   console.log('req.user: ', req.user);
   if (req.user) {
+    console.log('logged in');
     res
       .status(200)
       .json({
@@ -62,6 +69,7 @@ router.get('/', (req, res) => {
         user: req.user,
       });
   } else {
+    console.log('no user logged in');
     res
       .status(404)
       .json({
@@ -72,6 +80,7 @@ router.get('/', (req, res) => {
 });
 
 router.post('/login', (req, res, next) => {
+  console.log('post login');
   console.log('req.body: ', req.body);
   next();
 },
@@ -87,6 +96,7 @@ passport.authenticate('local'),
 });
 
 router.post('/logout', (req, res) => {
+  console.log('post logout');
   if (req.user) {
     req.logout();
     res
@@ -100,6 +110,9 @@ router.post('/logout', (req, res) => {
 });
 
 router.post('/schedule', (req, res) => {
+  console.log('post schedule');
+  // const preferences = req.body;
+
   if (req.user) {
     // const { preferences } = req.body;
 
