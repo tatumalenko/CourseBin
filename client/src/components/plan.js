@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import Paper from '@material-ui/core/Paper';
 import { ViewState } from '@devexpress/dx-react-scheduler';
+import { withStyles } from '@material-ui/core/styles';
 import {
   Scheduler,
   WeekView,
@@ -9,6 +10,11 @@ import {
 } from '@devexpress/dx-react-scheduler-material-ui';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
@@ -74,6 +80,16 @@ const theme = createMuiTheme({
   },
 });
 
+const sequenceRowFall = [
+  ["ENGR 301", "Engineering Management Principles and Economics", 3.00],
+  ["SOEN 321", "Information Systems Security", 3.00],
+  ["SOEN 490", "Capstone Software Engineering Design Project", 4.00],
+  ["COMP 353", "Databases", 4.00]
+].map((row, id) => createRow(id, ...row));
+
+function createRow(id, courseNum, courseTitle, credits){
+  return {id, courseNum, courseTitle, credits}
+}
 
 class Plan extends Component {
   constructor(props) {
@@ -139,16 +155,82 @@ class Plan extends Component {
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography>Fall 2020</Typography>
               </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <Typography>
+                  <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Course Code</TableCell>
+                      <TableCell align="center">Course Title</TableCell>
+                      <TableCell align="right">Credits</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+          {sequenceRowFall.map(row => (
+            <TableRow key={row.id}>
+              <TableCell>{row.courseNum}</TableCell>
+              <TableCell align="center">{row.courseTitle}</TableCell>
+              <TableCell align="right">{row.credits}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+                  </Table>
+                </Typography>
+              </ExpansionPanelDetails>
             </ExpansionPanel>
             <ExpansionPanel>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography>Winter 2021</Typography>
               </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <Typography>
+                  <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Course Code</TableCell>
+                      <TableCell align="center">Course Title</TableCell>
+                      <TableCell align="right">Credits</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+          {sequenceRowFall.map(row => (
+            <TableRow key={row.id}>
+              <TableCell>{row.courseNum}</TableCell>
+              <TableCell align="center">{row.courseTitle}</TableCell>
+              <TableCell align="right">{row.credits}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+                  </Table>
+                </Typography>
+              </ExpansionPanelDetails>
             </ExpansionPanel>
             <ExpansionPanel>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography>Summer 2021</Typography>
               </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <Typography>
+                  <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Course Code</TableCell>
+                      <TableCell align="center">Course Title</TableCell>
+                      <TableCell align="right">Credits</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+          {sequenceRowFall.map(row => (
+            <TableRow key={row.id}>
+              <TableCell>{row.courseNum}</TableCell>
+              <TableCell align="center">{row.courseTitle}</TableCell>
+              <TableCell align="right">{row.credits}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+                  </Table>
+                </Typography>
+              </ExpansionPanelDetails>
             </ExpansionPanel>
           </Col>
           <Col xs={2} />
