@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import Paper from '@material-ui/core/Paper';
 import { ViewState } from '@devexpress/dx-react-scheduler';
-import { withStyles } from '@material-ui/core/styles';
 import {
   Scheduler,
   WeekView,
