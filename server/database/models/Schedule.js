@@ -17,7 +17,7 @@ class Schedule {
     };
 
     sectionTimeBlocks.forEach((e) => {
-      weekDayTimeBlockMap[e.weekDay].push(e);
+      weekDayTimeBlockMap[e[0].weekDay].push(e);
     });
 
     // eslint-disable-next-line
