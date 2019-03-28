@@ -1,4 +1,4 @@
-const TermPreference = require('./TermPreference');
+const { TermPreference } = require('./TermPreference');
 
 class Preferences {
   constructor({ fall, winter, summer }) {
@@ -7,18 +7,17 @@ class Preferences {
       numberOfCourses: fall.numberOfCourses,
       requestedCourses: fall.requestedCourses,
       eveningTimePreference: fall.eveningTimePreference,
-      period: fall.period,
-      days: fall.days,
+      // period: fall.period,
+      // days: fall.days,
     });
-
 
     this.winter = new TermPreference({
       term: 'WINTER',
       numberOfCourses: winter.numberOfCourses,
       requestedCourses: winter.requestedCourses,
       eveningTimePreference: winter.eveningTimePreference,
-      period: winter.period,
-      days: winter.days,
+      // period: winter.period,
+      // days: winter.days,
     });
 
     this.summer = new TermPreference({
@@ -26,8 +25,8 @@ class Preferences {
       numberOfCourses: summer.numberOfCourses,
       requestedCourses: summer.requestedCourses,
       eveningTimePreference: summer.eveningTimePreference,
-      period: summer.period,
-      days: summer.days,
+      // period: summer.period,
+      // days: summer.days,
     });
   }
 }
