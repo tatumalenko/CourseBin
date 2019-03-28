@@ -81,7 +81,7 @@
 
 
 .label-info.form-label a{
-  color: rgb(23, 162, 184);
+  color: rgba(23, 162, 184);
   margin-top: 10px;
 }
 
@@ -206,7 +206,7 @@
 }
 
 .student-form .course-selection-box{
-  background: 5px rgb(23, 162, 184, 0.4);
+  background: 5px rgba(23, 162, 184, 0.4);
   padding: 15px;
   border-radius: 15px;
   margin-top: 15px;
@@ -219,9 +219,9 @@
 .student-form .selected-courses-container .selected-courses{
   padding: 8px;
   padding-bottom: 0;
-  background: rgb(87, 29, 46, 0.7);
-  border: 2px solid rgb(255, 201, 81, 1);
-  color: rgb(255, 201, 81, 1);
+  background: rgba(87, 29, 46, 0.7);
+  border: 2px solid rgba(255, 201, 81, 1);
+  color: rgba(255, 201, 81, 1);
   margin-right: 12px;
   border-radius: 5px;
   font-size: 12px;
@@ -271,5 +271,17 @@
   position: relative;
   bottom: 5px;
   left: 200px;
+}
 
+.plan-container .schedule-container{
+  margin-top: 50px;
+}
+
+.plan-container .schedule-container .schedule{
+  max-height: 350px;
+}
+
+.plan-container .schedule-container .VerticalViewLayout-container-124{
+  height: 300px;
+  overflow: scroll;
 }
