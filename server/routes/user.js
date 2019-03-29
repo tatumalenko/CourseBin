@@ -143,10 +143,6 @@ router.post('/plan', async (req, res) => {
 
       const student = await Student.findOne({ id: 40055122 });
 
-      console.log(new Preferences(preferences));
-      console.log(student.record.completedCourses);
-      console.log(SoftwareEngineeringDegree.requirements(student.record.degree.option));
-
       const plan = await ProgramBuilder.findCandidatePlan({
         completedCourses: student.record.completedCourses,
         requiredCourses: SoftwareEngineeringDegree.requirements(student.record.degree.option),
