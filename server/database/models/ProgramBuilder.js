@@ -250,22 +250,30 @@ class ProgramBuilder {
     const numberOfTerms = terms.length;
 
     let termTracker = 0;
+    let year = (new Date()).getFullYear();
+    const getTermYear = (year, termsPassed) => ((termsPassed % 3 === 0) ? year + 1 : year);
+    // Offset required since Winter and Summer will have passed when starting sequence in Fall
+    const termsPassedOffset = 2;
+
     // Get all candidate courses given currently completed courses
     let candidateCourses = await this.findCandidateCourses({
       completedCourses: completed,
       requiredCourses: required,
     });
     while (_.difference(required, completed).length > 0) {
+      year = getTermYear(year, termCourses.length + termsPassedOffset);
       if (preferences[terms[termTracker % numberOfTerms]].numberOfCourses !== 0) {
         // Of the candidate courses, pick at most the number specified in
         // termPreferences, and add those to the lot of completedCOurses
-        const sequence = new Sequence({
+        // eslint-disable-next-line
+        const sequence = await new Sequence({
           term: terms[termTracker % numberOfTerms],
+          year,
           courses: candidateCourses.slice(0,
             preferences[terms[termTracker % numberOfTerms]].numberOfCourses),
         });
         termCourses.push(sequence);
-        completed = _.uniq([ ...completed, ..._.flatten(sequence.sections) ]);
+        completed = _.uniq([ ...completed, ..._.flatten(sequence.courses.map(e => e.code)) ]);
         // eslint-disable-next-line
         candidateCourses = await this.findCandidateCourses({ 
           completedCourses: completed,

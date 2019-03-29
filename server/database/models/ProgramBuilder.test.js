@@ -4,8 +4,8 @@ const mongoose = require('mongoose');
 const { ProgramBuilder } = require('./ProgramBuilder');
 const { SoftwareEngineeringDegree } = require('./SoftwareEngineeringDegree');
 const { Util } = require('../../util/Util');
-const configs = require('../../../configs/configs');
 const { Sequence } = require('./Sequence');
+const configs = require('../../../configs/configs');
 
 mongoose.connect(configs.dbMongo.dbPath, { useNewUrlParser: true, useCreateIndex: true });
 
@@ -201,38 +201,45 @@ test('Sequence generation 5 courses per term', async (t) => {
   const termCourses = await ProgramBuilder.findCandidateSequences({
     completedCourses: student.record.completedCourses.map(e => e.code),
     requiredCourses: SoftwareEngineeringDegree.requirements().suggested.wsaOption,
-    Preferences: student.termPreferences,
+    preferences: student.termPreferences,
   });
-  const coursesTest = [ new Sequence({
+  const coursesTest = [ await new Sequence({
     term: 'fall',
+    year: 2019,
     courses: [ 'SOEN331', 'COMP335', 'COMP346', 'COMP348', 'ENCS282' ],
-  }), new Sequence({
+  }), await new Sequence({
     term: 'winter',
+    year: 2020,
     courses: [ 'SOEN321', 'SOEN341', 'ENGR201', 'ENGR202', 'ENGR213' ],
-  }), new Sequence({
+  }), await new Sequence({
     term: 'summer',
+    year: 2020,
     courses: [ 'SOEN342', 'SOEN384', 'ELEC275', 'ENGR233', 'ENGR301' ],
-  }), new Sequence({
+  }), await new Sequence({
     term: 'fall',
+    year: 2020,
     courses: [ 'SOEN343', 'SOEN357', 'SOEN385', 'ENGR371', 'ENGR391' ],
-  }), new Sequence({
+  }), await new Sequence({
     term: 'winter',
+    year: 2021,
     courses: [ 'SOEN344', 'ENGR392', 'PHYS284', 'ENGR251', 'COMP353' ],
-  }), new Sequence({
+  }), await new Sequence({
     term: 'summer',
+    year: 2021,
     courses: [ 'SOEN390', 'SOEN387', 'COMP445' ],
-  }), new Sequence({
+  }), await new Sequence({
     term: 'fall',
+    year: 2021,
     courses: [ 'SOEN490', 'SOEN487' ],
   }) ];
   t.deepEqual(termCourses, coursesTest);
 });
 
 test('Sequence generation 2 courses per term', async (t) => {
-  const termCourses = await ProgramBuilder.findCandidateSequences({
+  const sequences = await ProgramBuilder.findCandidateSequences({
     completedCourses: student.record.completedCourses.map(e => e.code),
     requiredCourses: SoftwareEngineeringDegree.requirements().suggested.wsaOption,
-    Preferences: {
+    preferences: {
       fall: {
         numberOfCourses: 2,
       },
@@ -245,33 +252,34 @@ test('Sequence generation 2 courses per term', async (t) => {
     },
   });
 
-  termCourses.forEach(e => t.true(e.sections.length <= 2));
+  sequences.forEach(sequence => t.true(sequence.courses.length <= 2));
 });
 
 test('Schedule generation 5 courses per term', async (t) => {
   // TODO: Needs work, need to finish implementing Util.timesOverlap first
-  const termSchedulesActual = await ProgramBuilder.findCandidateTermSchedules({
-    completedCourses: student.record.completedCourses.map(e => e.code),
-    requiredCourses: SoftwareEngineeringDegree.requirements().suggested.wsaOption,
-    termPreference: {
-      term: 'FALL',
-      numberOfCourses: 5,
-      requestedCourses: [ 'SOEN331', 'COMP335', 'COMP346', 'COMP348', 'ENCS282' ],
-    },
-  });
+  // const termSchedulesActual = await ProgramBuilder.findCandidateTermSchedules({
+  //   completedCourses: student.record.completedCourses.map(e => e.code),
+  //   requiredCourses: SoftwareEngineeringDegree.requirements().suggested.wsaOption,
+  //   termPreference: {
+  //     term: 'FALL',
+  //     numberOfCourses: 5,
+  //     requestedCourses: [ 'SOEN331', 'COMP335', 'COMP346', 'COMP348', 'ENCS282' ],
+  //   },
+  // });
 
-  const termSchedulesExpected = [
-    [
-      {
-        courseCode: 'SOEN331',
-        code: 'H',
-      },
-      {
-        courseCode: 'COMP335',
-        code: 'H',
-      },
-    ],
-  ];
+  // const termSchedulesExpected = [
+  //   [
+  //     {
+  //       courseCode: 'SOEN331',
+  //       code: 'H',
+  //     },
+  //     {
+  //       courseCode: 'COMP335',
+  //       code: 'H',
+  //     },
+  //   ],
+  // ];
 
-  t.deepEqual(termSchedulesActual, termSchedulesExpected);
+  // t.deepEqual(termSchedulesActual, termSchedulesExpected);
+  t.fail('Not yet implemented');
 });
