@@ -119,30 +119,7 @@ router.post('/plan', async (req, res) => {
   try {
     if (req.user) {
       const preferences = req.body;
-      console.log(req.body);
-
-      // Example preferences contents:
-      // {
-      //   fall: {
-      //     numberOfCourses: 4,
-      //     eveningTimePreference: true,
-      //     requestedCourses: [ 'COMP352', 'COMP348' ],
-      //   },
-      //   winter: {
-      //     numberOfCourses: 4,
-      //     eveningTimePreference: true,
-      //     requestedCourses: [ 'COMP***', 'COMP***' ],
-      //   },
-      //   summer: {
-      //     numberOfCourses: 4,
-      //     eveningTimePreference: true,
-      //     requestedCourses: [ 'COMP***', 'COMP***' ],
-      //   },
-      // };
-
-
       const student = await Student.findOne({ id: 40055122 });
-
       const plan = await ProgramBuilder.findCandidatePlan({
         completedCourses: student.record.completedCourses,
         requiredCourses: SoftwareEngineeringDegree.requirements(student.record.degree.option),
@@ -170,7 +147,7 @@ router.post('/plan', async (req, res) => {
     console.error('routes.js: /user/plan:', e);
     res
       .status(500)
-      .json({ message: 'Internal server error' });
+      .json({ message: e.message });
   }
 });
 
