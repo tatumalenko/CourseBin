@@ -361,7 +361,7 @@ E.g.
         "sequences": [
             {
                 "term": "fall",
-                "sections": [
+                "courses": [
                     "SOEN321",
                     "SOEN331",
                     "SOEN341",
@@ -370,7 +370,7 @@ E.g.
             },
             {
                 "term": "winter",
-                "sections": [
+                "courses": [
                     "SOEN342",
                     "SOEN384",
                     "ELEC275",
@@ -379,7 +379,7 @@ E.g.
             },
             {
                 "term": "summer",
-                "sections": [
+                "courses": [
                     "SOEN343",
                     "SOEN357",
                     "SOEN385",
@@ -388,7 +388,7 @@ E.g.
             },
             {
                 "term": "fall",
-                "sections": [
+                "courses": [
                     "SOEN344",
                     "ENGR371",
                     "ENGR391",
@@ -397,7 +397,7 @@ E.g.
             },
             {
                 "term": "winter",
-                "sections": [
+                "courses": [
                     "SOEN390",
                     "PHYS284",
                     "ENGR251",
@@ -406,7 +406,7 @@ E.g.
             },
             {
                 "term": "summer",
-                "sections": [
+                "courses": [
                     "SOEN490",
                     "SOEN387",
                     "COMP445"
@@ -414,7 +414,7 @@ E.g.
             },
             {
                 "term": "fall",
-                "sections": [
+                "courses": [
                     "SOEN487"
                 ]
             }
