@@ -32,17 +32,6 @@ const student = {
       { code: 'SOEN287', grade: 'A' },
     ],
   },
-  termPreferences: {
-    fall: {
-      numberOfCourses: 5,
-    },
-    winter: {
-      numberOfCourses: 5,
-    },
-    summer: {
-      numberOfCourses: 5,
-    },
-  },
 };
 
 // console.log(
@@ -198,41 +187,52 @@ test('Combinations COMP348', (t) => {
 });
 
 test('Sequence generation 5 courses per term', async (t) => {
-  const termCourses = await ProgramBuilder.findCandidateSequences({
+  const sequencesActual = await ProgramBuilder.findCandidateSequences({
     completedCourses: student.record.completedCourses.map(e => e.code),
     requiredCourses: SoftwareEngineeringDegree.requirements().suggested.wsaOption,
-    preferences: student.termPreferences,
+    preferences: {
+      fall: {
+        numberOfCourses: 5,
+      },
+      winter: {
+        numberOfCourses: 5,
+      },
+      summer: {
+        numberOfCourses: 5,
+      },
+    },
   });
-  const coursesTest = [ await new Sequence({
+
+  const sequencesExpected = [ new Sequence({
     term: 'fall',
     year: 2019,
     courses: [ 'SOEN331', 'COMP335', 'COMP346', 'COMP348', 'ENCS282' ],
-  }), await new Sequence({
+  }), new Sequence({
     term: 'winter',
     year: 2020,
     courses: [ 'SOEN321', 'SOEN341', 'ENGR201', 'ENGR202', 'ENGR213' ],
-  }), await new Sequence({
+  }), new Sequence({
     term: 'summer',
     year: 2020,
     courses: [ 'SOEN342', 'SOEN384', 'ELEC275', 'ENGR233', 'ENGR301' ],
-  }), await new Sequence({
+  }), new Sequence({
     term: 'fall',
     year: 2020,
     courses: [ 'SOEN343', 'SOEN357', 'SOEN385', 'ENGR371', 'ENGR391' ],
-  }), await new Sequence({
+  }), new Sequence({
     term: 'winter',
     year: 2021,
     courses: [ 'SOEN344', 'ENGR392', 'PHYS284', 'ENGR251', 'COMP353' ],
-  }), await new Sequence({
+  }), new Sequence({
     term: 'summer',
     year: 2021,
     courses: [ 'SOEN390', 'SOEN387', 'COMP445' ],
-  }), await new Sequence({
+  }), new Sequence({
     term: 'fall',
     year: 2021,
     courses: [ 'SOEN490', 'SOEN487' ],
   }) ];
-  t.deepEqual(termCourses, coursesTest);
+  t.deepEqual(sequencesActual, sequencesExpected);
 });
 
 test('Sequence generation 2 courses per term', async (t) => {

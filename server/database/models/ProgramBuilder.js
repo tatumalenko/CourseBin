@@ -137,7 +137,7 @@ class ProgramBuilder {
     // in requestedCourses
     const requestedCouseCodeSectionArrayMap = {};
     Object.keys(courseCodeSectionArrayMap)
-      .filter(key => termPreference.requestedCourses.includes(key))
+      .filter(key => termPreference.requestedCourses.map(e => e.code).includes(key))
       .forEach((key) => {
         requestedCouseCodeSectionArrayMap[key] = courseCodeSectionArrayMap[key];
       });
@@ -266,7 +266,7 @@ class ProgramBuilder {
         // Of the candidate courses, pick at most the number specified in
         // termPreferences, and add those to the lot of completedCOurses
         // eslint-disable-next-line
-        const sequence = await new Sequence({
+        const sequence = new Sequence({
           term: terms[termTracker % numberOfTerms],
           year,
           courses: candidateCourses.slice(0,
