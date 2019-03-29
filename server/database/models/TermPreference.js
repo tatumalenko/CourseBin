@@ -1,3 +1,5 @@
+const { Course } = require('./Course');
+
 class TermPreference {
   constructor({
     term = null,
@@ -13,7 +15,7 @@ class TermPreference {
 
     this.term = term;
     this.numberOfCourses = numberOfCourses;
-    this.requestedCourses = requestedCourses;
+    this.requestedCourses = requestedCourses.map(e => new Course(e));
     this.eveningTimePreference = eveningTimePreference;
     this.timeOfDay = eveningTimePreference ? 'EVENING' : timeOfDay;
     this.offDays = offDays;
