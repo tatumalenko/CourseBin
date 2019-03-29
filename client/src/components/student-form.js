@@ -285,7 +285,7 @@ class StudentForm extends Component {
       },
     };
 
-    axios.post('/user/schedule', jsonObject)
+    axios.post('/user/plan', jsonObject)
       .then((response) => {
         console.log(response);
       })
