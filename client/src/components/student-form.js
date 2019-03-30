@@ -267,25 +267,25 @@ class StudentForm extends Component {
 
     const jsonObject = {
       fall: {
-        requestedCourses: state.fallSelectedCourses,
+        requestedCourses: state.fallSelectedCourses.map(e => e.slice(0, 7)),
         eveningTimePreference: state.fallTimePreference,
         numberOfCourses: state.fallNumOfCourses,
       },
 
       winter: {
-        requestedCourses: state.winterSelectedCourses,
+        requestedCourses: state.winterSelectedCourses.map(e => e.slice(0, 7)),
         eveningTimePreference: state.winterTimePreference,
         numberOfCourses: state.winterNumOfCourses,
       },
 
       summer: {
-        requestedCourses: state.summerSelectedCourses,
+        requestedCourses: state.summerSelectedCourses.map(e => e.slice(0, 7)),
         eveningTimePreference: state.summerTimePreference,
         numberOfCourses: state.summerNumOfCourses,
       },
     };
 
-    axios.post('/user/schedule', jsonObject)
+    axios.post('/user/plan', jsonObject)
       .then((response) => {
         console.log(response);
       })

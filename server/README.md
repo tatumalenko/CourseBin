@@ -63,35 +63,363 @@
 }
 ```  
 ---
-#### POST /user/schedule
-**Route:** `/user/schedule`  
+#### POST /user/plan
+**Route:** `/user/plan`  
 **Method:** POST  
-**Desc:** Generate schedule for user  
+**Desc:** Fetch student plan given preferences  
 **Request:** 
 ```
-{ 
+{
   "fall": {
-    "requestedCourses": [String],
-    "eveningTimePreference": Boolean,
-    "numberOfCourses": Number
-  }, 
+    "numberOfCourses": Number,
+      "eveningTimePreference": Boolean,
+      "requestedCourses": [String]
+  },
   "winter": {
-    "requestedCourses": [String],
+    "numberOfCourses": Number,
     "eveningTimePreference": Boolean,
-    "numberOfCourses": Number
+      "requestedCourses": [String]
   },
   "summer": {
-    "requestedCourses": [String],
+    "numberOfCourses": Number,
     "eveningTimePreference": Boolean,
-    "numberOfCourses": Number
-  } 
+    "requestedCourses": [String]
+  }
 }
-``` 
+```  
 **Response:** 
 ```
-{ 
-  "message": String, 
-  "user": User 
+{
+  "message": String,
+  "plan": {
+    "schedules": {
+      "fall": [Schedule],
+      "winter": [Schedule],
+      "summer": [Schedule],
+    },
+  "sequences": [Sequence]
+  }
+}
+```
+E.g.
+```
+{
+    "message": "OK",
+    "plan": {
+        "schedules": {
+            "fall": [
+                {
+                    "term": "FALL",
+                    "sections": [
+                        {
+                            "courseCode": "COMP335",
+                            "code": "H",
+                            "title": "Introduction to Theoretical Computer Science",
+                            "kind": "LEC",
+                            "mode": "In Person",
+                            "location": {
+                                "code": "H820",
+                                "building": "H",
+                                "room": "820"
+                            },
+                            "times": [
+                                {
+                                    "startTime": "16.15.00",
+                                    "endTime": "17.30.00",
+                                    "weekDay": "MONDAY"
+                                },
+                                {
+                                    "startTime": "16.15.00",
+                                    "endTime": "17.30.00",
+                                    "weekDay": "WEDNESDAY"
+                                },
+                                {
+                                    "startTime": "16.15.00",
+                                    "endTime": "17.30.00",
+                                    "weekDay": "THURSDAY"
+                                }
+                            ]
+                        },
+                        {
+                            "courseCode": "COMP335",
+                            "code": "H HB",
+                            "title": "Introduction to Theoretical Computer Science",
+                            "kind": "TUT",
+                            "mode": "In Person",
+                            "location": {
+                                "code": "H619",
+                                "building": "H",
+                                "room": "619"
+                            },
+                            "times": [
+                                {
+                                    "startTime": "11.45.00",
+                                    "endTime": "12.35.00",
+                                    "weekDay": "THURSDAY"
+                                }
+                            ]
+                        },
+                        {
+                            "courseCode": "COMP346",
+                            "code": "DD",
+                            "title": "Operating Systems",
+                            "kind": "LEC",
+                            "mode": "In Person",
+                            "location": {
+                                "code": "FGB040",
+                                "building": "FG",
+                                "room": "B040"
+                            },
+                            "times": [
+                                {
+                                    "startTime": "17.45.00",
+                                    "endTime": "20.15.00",
+                                    "weekDay": "TUESDAY"
+                                },
+                                {
+                                    "startTime": "17.45.00",
+                                    "endTime": "20.15.00",
+                                    "weekDay": "THURSDAY"
+                                }
+                            ]
+                        },
+                        {
+                            "courseCode": "COMP346",
+                            "code": "DDDB",
+                            "title": "Operating Systems",
+                            "kind": "TUT",
+                            "mode": "In Person",
+                            "location": {
+                                "code": "H564",
+                                "building": "H",
+                                "room": "564"
+                            },
+                            "times": [
+                                {
+                                    "startTime": "20.30.00",
+                                    "endTime": "21.20.00",
+                                    "weekDay": "TUESDAY"
+                                },
+                                {
+                                    "startTime": "20.30.00",
+                                    "endTime": "21.20.00",
+                                    "weekDay": "THURSDAY"
+                                }
+                            ]
+                        },
+                        {
+                            "courseCode": "COMP348",
+                            "code": "W",
+                            "title": "Principles of Programming Languages",
+                            "kind": "LEC",
+                            "mode": "In Person",
+                            "location": {
+                                "code": "FGB060",
+                                "building": "FG",
+                                "room": "B060"
+                            },
+                            "times": [
+                                {
+                                    "startTime": "08.45.00",
+                                    "endTime": "10.00.00",
+                                    "weekDay": "MONDAY"
+                                },
+                                {
+                                    "startTime": "08.45.00",
+                                    "endTime": "10.00.00",
+                                    "weekDay": "WEDNESDAY"
+                                },
+                                {
+                                    "startTime": "08.45.00",
+                                    "endTime": "10.00.00",
+                                    "weekDay": "THURSDAY"
+                                }
+                            ]
+                        },
+                        {
+                            "courseCode": "COMP348",
+                            "code": "W WD",
+                            "title": "Principles of Programming Languages",
+                            "kind": "TUT",
+                            "mode": "In Person",
+                            "location": {
+                                "code": "H437",
+                                "building": "H",
+                                "room": "437"
+                            },
+                            "times": [
+                                {
+                                    "startTime": "08.45.00",
+                                    "endTime": "09.35.00",
+                                    "weekDay": "THURSDAY"
+                                },
+                                {
+                                    "startTime": "08.45.00",
+                                    "endTime": "09.35.00",
+                                    "weekDay": "FRIDAY"
+                                }
+                            ]
+                        },
+                        {
+                            "courseCode": "ENCS282",
+                            "code": "BB",
+                            "title": "Technical Writing and Communication",
+                            "kind": "LEC",
+                            "mode": "In Person",
+                            "location": {
+                                "code": "FGC070",
+                                "building": "FG",
+                                "room": "C070"
+                            },
+                            "times": [
+                                {
+                                    "startTime": "17.45.00",
+                                    "endTime": "20.15.00",
+                                    "weekDay": "TUESDAY"
+                                },
+                                {
+                                    "startTime": "17.45.00",
+                                    "endTime": "20.15.00",
+                                    "weekDay": "THURSDAY"
+                                }
+                            ]
+                        },
+                        {
+                            "courseCode": "ENCS282",
+                            "code": "BBBP",
+                            "title": "Technical Writing and Communication",
+                            "kind": "TUT",
+                            "mode": "In Person",
+                            "location": {
+                                "code": "MBS2.465",
+                                "building": "MB",
+                                "room": "S2.465"
+                            },
+                            "times": [
+                                {
+                                    "startTime": "16.05.00",
+                                    "endTime": "17.45.00",
+                                    "weekDay": "THURSDAY"
+                                },
+                                {
+                                    "startTime": "16.05.00",
+                                    "endTime": "17.45.00",
+                                    "weekDay": "FRIDAY"
+                                }
+                            ]
+                        }
+                    ]
+                }
+           ],
+            "winter": [
+                {
+                    "term": "WINTER",
+                    "sections": [
+                        {
+                            "courseCode": "ENGR201",
+                            "code": "BL",
+                            "title": "Professional Practice and Responsibility",
+                            "kind": "LEC",
+                            "mode": "Blended Learning",
+                            "location": {
+                                "code": "ONLINE",
+                                "building": "",
+                                "room": ""
+                            },
+                            "times": [
+                                {
+                                    "startTime": "00.00.00",
+                                    "endTime": "00.00.00",
+                                    "weekDay": "THURSDAY"
+                                }
+                            ]
+                        },
+                        {
+                            "courseCode": "ENGR202",
+                            "code": "R",
+                            "title": "Sustainable Development and Environmental Stewardship",
+                            "kind": "LEC",
+                            "mode": "In Person",
+                            "location": {
+                                "code": "H110",
+                                "building": "H",
+                                "room": "110"
+                            },
+                            "times": [
+                                {
+                                    "startTime": "16.15.00",
+                                    "endTime": "17.30.00",
+                                    "weekDay": "THURSDAY"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "summer": []
+        },
+        "sequences": [
+            {
+                "term": "fall",
+                "courses": [
+                    "SOEN321",
+                    "SOEN331",
+                    "SOEN341",
+                    "ENGR213"
+                ]
+            },
+            {
+                "term": "winter",
+                "courses": [
+                    "SOEN342",
+                    "SOEN384",
+                    "ELEC275",
+                    "ENGR233"
+                ]
+            },
+            {
+                "term": "summer",
+                "courses": [
+                    "SOEN343",
+                    "SOEN357",
+                    "SOEN385",
+                    "ENGR301"
+                ]
+            },
+            {
+                "term": "fall",
+                "courses": [
+                    "SOEN344",
+                    "ENGR371",
+                    "ENGR391",
+                    "ENGR392"
+                ]
+            },
+            {
+                "term": "winter",
+                "courses": [
+                    "SOEN390",
+                    "PHYS284",
+                    "ENGR251",
+                    "COMP353"
+                ]
+            },
+            {
+                "term": "summer",
+                "courses": [
+                    "SOEN490",
+                    "SOEN387",
+                    "COMP445"
+                ]
+            },
+            {
+                "term": "fall",
+                "courses": [
+                    "SOEN487"
+                ]
+            }
+        ]
+    }
 }
 ```  
 ---
@@ -602,4 +930,4 @@ E.g.:
   }
 }
 ```
-
+---

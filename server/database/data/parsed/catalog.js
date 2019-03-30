@@ -1,8 +1,8 @@
-// const fs = require('fs');
-// const path = require('path');
+const _ = require('lodash');
 
 const rawCatalog = require('../raw/catalog');
 
+// Filters courses from concordiaAPI
 const getCatalogCourses = async () => {
   const rawCourses = await rawCatalog.getCatalogCourses();
   const courses = [];
@@ -21,7 +21,7 @@ const getCatalogCourses = async () => {
     courses.push(course);
   });
 
-  return courses;
+  return _.uniqBy(courses, course => course.code);
 };
 
 function parsePrerequisites(prerequisites) {
@@ -37,9 +37,6 @@ function parsePrerequisites(prerequisites) {
   pre = pre ? pre.split(/[a-zA-Z]{5,}/)[0] : pre;
   co = co ? co.split(/[a-zA-Z]{5,}/)[0] : co;
   eq = eq ? eq.split(/[a-zA-Z]{5,}/)[0] : eq;
-  // pre = pre ? pre.split(/^((?![a-zA-Z]{4}\s?[0-9]{3}).)*$/)[0] : pre;
-  // co = co ? co.split(/^((?![a-zA-Z]{4}\s?[0-9]{3}).)*$/)[0] : co;
-  // eq = eq ? eq.split(/^((?![a-zA-Z]{4}\s?[0-9]{3}).)*$/)[0] : eq;
 
   eq = eq ? eq.split(/You must/)[0] : eq;
 
@@ -51,13 +48,14 @@ function parsePrerequisites(prerequisites) {
     str = str.replace(/and/, ';');
     let arr;
     if (str.includes(';')) {
-      arr = str.split(';');
+      arr = _.flatten(str.split(';').map(e => e.split(',')));
     } else if (str.includes(',')) {
       arr = str.split(',');
     } else {
       arr = [ str ];
     }
     return arr;
+    // return explodeCodes(str);
   };
   let pres = splitAtCommaOrSemiColon(pre);
   let cos = splitAtCommaOrSemiColon(co);
@@ -96,8 +94,9 @@ function parsePrerequisites(prerequisites) {
       }
       if (newNewInner.length > 0) { clean.push(newNewInner.filter(filterNonCourseCodes)); }
     }
-    return clean;
+    return _.filter(clean, _.size);
   };
+
   pres = filterEmptyStringAndTrimSpaces(pres);
   cos = filterEmptyStringAndTrimSpaces(cos);
   eqs = filterEmptyStringAndTrimSpaces(eqs);
@@ -114,20 +113,5 @@ module.exports = {
 };
 
 // getCatalogCourses().then((parsed) => {
-//   let str = '------------\n';
-//   console.log('------------');
-//   parsed.forEach((course) => {
-//     console.log(course.rawpre);
-//     console.log(course.prerequisiteCodes);
-//     console.log(course.corequisiteCodes);
-//     console.log(course.equivalentCodes);
-//     console.log('------------');
-//     str += `${course.rawpre}\n`;
-//     str += `${course.prerequisiteCodes}\n`;
-//     str += `${course.corequisiteCodes}\n`;
-//     str += `${course.equivalentCodes}\n`;
-//     str += '------------\n';
-//   });
-
-//   fs.writeFileSync(path.join(__dirname, 'output.txt'), str);
+//   fs.writeFileSync(path.join(__dirname, 'output.txt'), JSON.stringify(parsed));
 // });

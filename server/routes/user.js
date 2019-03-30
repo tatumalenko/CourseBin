@@ -1,9 +1,14 @@
 const express = require('express');
 
 const router = express.Router();
+const passport = require('../passport');
 const { SignupValidator } = require('../passport/SignupValidator');
 const { User } = require('../database/models/User');
-const passport = require('../passport');
+const { Student } = require('../database/models/Student');
+const { ProgramBuilder } = require('../database/models/ProgramBuilder');
+const { Preferences } = require('../database/models/Preferences');
+const { SoftwareEngineeringDegree } = require('../database/models/SoftwareEngineeringDegree');
+const { Plan } = require('../database/models/Plan');
 
 router.post('/', async (req, res) => {
   console.log('post /');
@@ -24,7 +29,7 @@ router.post('/', async (req, res) => {
           user: null,
         });
     } else if (!credentialValidation.valid) {
-      console.log('!credentialValidation')
+      console.log('!credentialValidation');
       res
         .status(400)
         .json({
@@ -109,18 +114,40 @@ router.post('/logout', (req, res) => {
   }
 });
 
-router.post('/schedule', (req, res) => {
-  console.log('post schedule');
-  // const preferences = req.body;
-
-  if (req.user) {
+router.post('/plan', async (req, res) => {
+  console.log('post plan');
+  try {
+    if (req.user) {
+      const preferences = req.body;
+      const student = await Student.findOne({ id: 40055122 });
+      const plan = await ProgramBuilder.findCandidatePlan({
+        completedCourses: student.record.completedCourses,
+        requiredCourses: SoftwareEngineeringDegree.requirements(student.record.degree.option),
+        preferences: new Preferences(preferences),
+      });
+      res
+        .status(200)
+        .json({
+          message: 'OK',
+          plan: new Plan({
+            schedules: {
+              fall: plan.schedules.fall.slice(0, 50),
+              winter: plan.schedules.winter,
+              summer: plan.schedules.summer,
+            },
+            sequences: plan.sequences,
+          }),
+        });
+    } else {
+      res
+        .status(404)
+        .json({ message: 'No user logged in' });
+    }
+  } catch (e) {
+    console.error('routes.js: /user/plan:', e);
     res
-      .status(200)
-      .json({ message: 'Not implemented yet' });
-  } else {
-    res
-      .status(404)
-      .json({ message: 'No user logged in' });
+      .status(500)
+      .json({ message: e.message });
   }
 });
 

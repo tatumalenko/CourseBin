@@ -1,3 +1,5 @@
+const _ = require('lodash');
+
 const { Degree } = require('./Degree');
 
 class SoftwareEngineeringDegree extends Degree {
@@ -5,7 +7,7 @@ class SoftwareEngineeringDegree extends Degree {
     return 120;
   }
 
-  static get requirements() {
+  static requirements(option = null) {
     const requirements = {
       soen: {
         numOfCoursesRequired: 13,
@@ -74,10 +76,14 @@ class SoftwareEngineeringDegree extends Degree {
           'PHYS284*',
           'PHYS385*',
         ],
+        suggested: [
+          'PHYS284',
+          'ENGR251',
+        ],
       },
       generalOption: {
         numOfCoursesRequired: undefined,
-        numOfCreditsRequired: 16,
+        numOfCreditsRequired: 15,
         courses: [
           'COMP345',
           'COMP353',
@@ -100,6 +106,66 @@ class SoftwareEngineeringDegree extends Degree {
           'SOEN491',
           'ENGR411',
         ],
+        suggested: [
+          'COMP345',
+          'COMP353',
+          'COMP445',
+          'COMP472',
+        ],
+      },
+      cgOption: {
+        numOfCoursesRequired: undefined,
+        numOfCreditsRequired: 15,
+        courses: [
+          'COMP345',
+          'COMP371*',
+          'COMP376*',
+          'COMP472',
+          'COMP476**',
+          'COMP477**',
+        ],
+        suggested: [
+          'COMP345',
+          'COMP371',
+          'COMP376',
+          'COMP476',
+        ],
+      },
+      wsaOption: {
+        numOfCoursesRequired: undefined,
+        numOfCreditsRequired: 15,
+        courses: [
+          'COMP353*',
+          'COMP445',
+          'COMP479**',
+          'SOEN387*',
+          'SOEN487**',
+        ],
+        suggested: [
+          'COMP353',
+          'SOEN387',
+          'COMP445',
+          'SOEN487',
+        ],
+      },
+      reaOption: {
+        numOfCoursesRequired: undefined,
+        numOfCreditsRequired: 15,
+        courses: [
+          'AERO480**',
+          'AERO482**',
+          'COEN320',
+          'COMP345',
+          'COMP444',
+          'SOEN422*',
+          'SOEN423*',
+        ],
+        suggested: [
+          'AERO480',
+          'COMP345',
+          'SOEN422',
+          'SOEN423',
+        ],
       },
     };
 
@@ -113,7 +179,56 @@ class SoftwareEngineeringDegree extends Degree {
       ...requirements.science.courses,
     ];
 
-    requirements.all = [ requirements.mandatory, ...requirements.optional ];
+    requirements.all = _.uniq([
+      ...requirements.mandatory,
+      ...requirements.science.courses,
+      ...requirements.generalOption.courses,
+      ...requirements.cgOption.courses,
+      ...requirements.wsaOption.courses,
+      ...requirements.reaOption.courses,
+    ]);
+
+    requirements.suggested = {
+      generalOption: [
+        ...requirements.mandatory,
+        ...requirements.science.suggested,
+        ...requirements.generalOption.suggested,
+      ],
+      cgOption: [
+        ...requirements.mandatory,
+        ...requirements.science.suggested,
+        ...requirements.cgOption.suggested,
+      ],
+      wsaOption: [
+        ...requirements.mandatory,
+        ...requirements.science.suggested,
+        ...requirements.wsaOption.suggested,
+      ],
+      reaOption: [
+        ...requirements.mandatory,
+        ...requirements.science.suggested,
+        ...requirements.reaOption.suggested,
+      ],
+    };
+
+    if (option) {
+      const optionSuggestedCoursesMap = {
+        GENERAL: 'generalOption',
+        CG: 'cgOption',
+        WSA: 'wsaOption',
+        REA: 'reaOption',
+      };
+
+      const optionRequirements = requirements.suggested[optionSuggestedCoursesMap[option]];
+
+      if (!optionRequirements) {
+        throw new Error(
+          'SoftwareEngineeringDegree.requirements(option): `option` did not correspond to any permitted value.',
+        );
+      }
+
+      return requirements.suggested[optionSuggestedCoursesMap[option]];
+    }
 
     return requirements;
   }
