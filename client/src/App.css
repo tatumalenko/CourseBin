@@ -130,65 +130,9 @@
   width: 100%;
 }
 
-.student-form .semester-form-component .row{
-  display: block;
-  font-size: 12px;
-  text-align: left;
-  margin-left: 150px;
-}
-
-.student-form .semester-form-component #checkbox:hover{
-  cursor: pointer;
-}
-
-.student-form .semester-form-component i{
-  margin-top: 6.5px;
-  float: right;
-}
-
-.student-form .semester-form-component .form-group{
-  margin-left: 10px;
-}
-
-.student-form .number-courses{
-  width: 100%;
-  display: inline-flex;
-}
-
-.student-form .number-courses label{
-  max-width: 90%;
-  margin-left: 15px;
-}
-
-.student-form .number-courses select{
-  max-width: 10%;
-  margin-left: 25px;
-}
-
-.student-form .form-section-content{
-  min-width: 500px;
-}
-
-.student-form .form-check{
-  margin-left: 10px;
-}
-
-#student-form-content{
-  margin-bottom: 75px;
-  margin-top: 75px;
-}
 
 .student-form .btn{
   margin-bottom: 75px;
-}
-
-.student-form .evening-checkbox{
-  margin-left: 15px;
-}
-
-.student-form .evening-checkbox .btn-group{
-  float: right;
-  margin-bottom: 30px;
 }
 
 .student-form .course-preferences{
