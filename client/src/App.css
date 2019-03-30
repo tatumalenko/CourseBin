@@ -275,13 +275,19 @@
 
 .plan-container .schedule-container{
   margin-top: 50px;
-}
-
-.plan-container .schedule-container .schedule{
-  max-height: 350px;
+  
 }
 
 .plan-container .schedule-container .VerticalViewLayout-container-124{
-  height: 300px;
+  height: 400px;
   overflow: scroll;
 }
+
+.card-container{
+  height: 120px;
+  width: 280px;
+}
+
+
+
+

@@ -18,6 +18,10 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ChildBox from './box-child';
+
+
+
 
 
 // Fake data
@@ -90,12 +94,18 @@ function createRow(id, courseNum, courseTitle, credits){
   return {id, courseNum, courseTitle, credits}
 }
 
+
+
 class Plan extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       data: classes,
+      class: 'COMP-472',
+      subject: 'Artificial Intelligence',
+      lecture: 'LEC LL 1234, Hall building 937',
+      tutorial: 'TUT A, Hall building 435 '
     };
   }
 
@@ -108,30 +118,59 @@ class Plan extends Component {
           <h3> CourseBin</h3>
         </div>
         <Row>
-          <Col xs={2} />
-          <Col xs={8} className='schedule-container'>
+        
+          <Col xs={1} />
+          <Col xs={10} className='schedule-container'>
             <ExpansionPanel>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography>Fall 2019</Typography>
               </ExpansionPanelSummary>
+              
               <ExpansionPanelDetails>
-                <div className='schedule'>
-                  <MuiThemeProvider theme={theme}>
-                    <Paper>
-                      <Scheduler data={data}>
-                        <ViewState currentDate='2018-07-28' />
-                        <WeekView
-                          data={data}
-                          excludedDays={[ 0, 6 ]}
-                          cellDuration={60}
-                          startDayHour={8}
-                          endDayHour={24}
-                        />
-                        <Appointments />
-                      </Scheduler>
-                    </Paper>
-                  </MuiThemeProvider>
-                </div>
+                
+                <Col xs={3}>
+                <ChildBox titleClass={this.state.class} subject={this.state.subject}
+                    lecture={this.state.lecture} 
+                    tutorial={this.state.tutorial}
+                />
+                <br/>
+                <ChildBox titleClass={this.state.class} subject={this.state.subject}
+                    lecture={this.state.lecture} 
+                    tutorial={this.state.tutorial}
+                />
+                <br/>
+                <ChildBox titleClass={this.state.class} subject={this.state.subject}
+                    lecture={this.state.lecture} tutorial={this.state.tutorial}
+                />
+                <br/>
+                <ChildBox titleClass={this.state.class} subject={this.state.subject}
+                    lecture={this.state.lecture} tutorial={this.state.tutorial}
+                />
+                <br/>
+                <ChildBox titleClass={this.state.class} subject={this.state.subject}
+                    lecture={this.state.lecture} tutorial={this.state.tutorial}
+                />
+                </Col>
+                <Col xs={9}> 
+                  <div className='schedule'>
+                    <MuiThemeProvider theme={theme}>
+                      <Paper>
+                        <Scheduler data={data}>
+                          <ViewState currentDate='2018-07-28' />
+                          <WeekView
+                            data={data}
+                            excludedDays={[ 0, 6 ]}
+                            cellDuration={60}
+                            startDayHour={8}
+                            endDayHour={24}
+                          />
+                          <Appointments />
+                        </Scheduler>
+                      </Paper>
+                    </MuiThemeProvider>
+                  </div>
+                </Col>
+                
               </ExpansionPanelDetails>
             </ExpansionPanel>
             <ExpansionPanel>
@@ -232,7 +271,7 @@ class Plan extends Component {
               </ExpansionPanelDetails>
             </ExpansionPanel>
           </Col>
-          <Col xs={2} />
+          <Col xs={1} />
         </Row>
 
       </div>
