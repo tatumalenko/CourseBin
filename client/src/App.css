@@ -1,5 +1,7 @@
 .App {
+  align-items: center;
   text-align: center;
+  min-width: 400px;
 }
 
 /* global styles */
@@ -7,17 +9,18 @@
 .title-wrapper{
   margin-top: 100px;
   margin-bottom: 50px;
-  text-transform: uppercase;
   font-family: 'Londrina Solid', cursive;
 }
 .title-wrapper h1{
-    color:  #571D2E;
-    font-size: 120px;
-    text-align: center;
+  color: #571D2E;
+  font-size: 80px;
+  text-align: center;
+  min-width: 400px;
 }
 
 .home-bottom{
   background-color: white;
+  text-align: center;
 }
 
 .home-bottom img{
@@ -35,6 +38,7 @@
   background-color:#571D2E;
   height: 90px;
   padding: 20px;
+  display: flex;
 }
 
 .App-header .text-secondary{
@@ -67,7 +71,7 @@
 }
 
 #nav-container {
-  align-items: flex-end;
+  min-width: 630px;
 }
 
 @keyframes App-logo-spin {
@@ -93,23 +97,20 @@
 
 .header-logo{
   font-family: 'Londrina Solid', cursive;
-  color: #A98638;
-  position: relative;
-  bottom: 48px;
-  text-shadow: 2px 2px 800px bisque;
-  margin-left: 400px;
-  margin-right: 400px;
+    color: #A98638;
+    position: relative;
+    bottom: 96px
 }
+
+.home-form-wrapper{
+  min-width: 400px;
+  text-align: center;
+}
+
 .title-for-loggedIn{
   position: absolute;
   font-size: 51px;
   margin-left: 43%;
-}
-.semester-form-component{
-  text-align: left;
-  width: 107%;
-  margin-left: -4%;
-  padding: 25px;
 }
 
 .student-form{
@@ -119,6 +120,10 @@
 
 .student-form #form-header{
  margin-bottom: 30px;
+}
+
+.student-form .student-form-control{
+  padding-top: 10px;
 }
 
 .student-form .material-icons.toggle{

@@ -58,6 +58,15 @@ const styles = theme => ({
     backgroundColor: theme.palette.background.paper,
     minWidth: '500px',
   },
+  formPaper: {
+    padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
+    display: 'flex',
+    alignItems: 'left',
+    justifyContent: 'flex-start',
+    textAlign: 'left',
+    margin: `${theme.spacing.unit}px -20px`,
+    background: theme.palette.background.pr,
+  },
   toggleContainer: {
     height: 56,
     padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
@@ -68,7 +77,6 @@ const styles = theme => ({
     background: theme.palette.background.pr,
   },
   formContent: {
-    width: '50%',
     margin: '30px 25%',
     minWidth: '400px',
   },
@@ -76,7 +84,7 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'center',
     flexWrap: 'wrap',
-    padding: theme.spacing.unit / 2,
+    padding: theme.spacing.unit*2,
   },
   chip: {
     margin: theme.spacing.unit / 2,
@@ -505,13 +513,13 @@ class StudentForm extends Component {
       ? <Plan formData={this.generatedPlan} />
       : (
         <MuiThemeProvider theme={custTheme}>
-          <div className='header-logo'>
-            <h3>CourseBin</h3>
-          </div>
           <div className='student-form'>
             <form onSubmit={this.handleSubmit}>
-              <Typography component='h3' variant='h6' id='form-header'>First, we will just need some basic information... </Typography>
               <div className={classes.formContent}>
+              <div className='header-logo'>
+                <h3>CourseBin</h3>
+              </div>
+              <Typography component='h3' variant='h6' id='form-header'>First, we will just need some basic information... </Typography>
                 <AppBar position='static' color='default'>
                   <Tabs
                     value={currentView}
@@ -531,10 +539,10 @@ class StudentForm extends Component {
                   onChangeIndex={this.handleChangeIndex}
                 >
                   <TabContainer dir={theme.direction}>
-                    <Paper className='semester-form-component'>
+                    <Paper className={classes.formPaper}>
                       <Grid container spacing={24}>
                         <Grid item xs={12}>
-                          <FormControl>
+                          <FormControl className='student-form-control'>
                             <FormLabel>
                               What is your Fall time preference?
                             </FormLabel>
@@ -563,6 +571,7 @@ class StudentForm extends Component {
                         </Grid>
 
                         <Grid item xs={12}>
+                        <FormControl className='student-form-control'>
                           <FormLabel>
                             How many courses do you prefer to take in the Fall?
                           </FormLabel>
@@ -582,11 +591,12 @@ class StudentForm extends Component {
                               <ToggleButton value={6} variant='outline-info'>6</ToggleButton>
                             </ToggleButtonGroup>
                           </div>
+                          </FormControl>
                         </Grid>
 
                         <div className='selected-courses-container'>
                           {courseMap && fallSelectedFaculty ? (
-                            <Grid container spacing={16}>
+                            <Grid container spacing={24}>
                               <FormLabel className='course-selector-label'>
                                 Choose a department
                               </FormLabel>
@@ -664,10 +674,10 @@ class StudentForm extends Component {
                     </Paper>
                   </TabContainer>
                   <TabContainer dir={theme.direction}>
-                    <Paper className='semester-form-component'>
+                    <Paper className={classes.formPaper}>
                       <Grid container spacing={24}>
                         <Grid item xs={12}>
-                          <FormControl>
+                        <FormControl className='student-form-control'>
                             <FormLabel>
                               What is your Winter time preference?
                             </FormLabel>
@@ -696,6 +706,7 @@ class StudentForm extends Component {
                         </Grid>
 
                         <Grid item xs={12}>
+                        <FormControl className='student-form-control'>
                           <FormLabel>
                             How many courses do you prefer to take in the Winter?
                           </FormLabel>
@@ -715,11 +726,12 @@ class StudentForm extends Component {
                               <ToggleButton value={6} variant='outline-info'>6</ToggleButton>
                             </ToggleButtonGroup>
                           </div>
+                          </FormControl>
                         </Grid>
 
                         <div className='selected-courses-container'>
                           {courseMap && winterSelectedFaculty ? (
-                            <Grid container spacing={16}>
+                            <Grid container spacing={24}>
                               <FormLabel className='course-selector-label'>
                                 Choose a department
                               </FormLabel>
@@ -797,10 +809,10 @@ class StudentForm extends Component {
                     </Paper>
                   </TabContainer>
                   <TabContainer dir={theme.direction}>
-                    <Paper className='semester-form-component'>
+                    <Paper className={classes.formPaper}>
                       <Grid container spacing={24}>
                         <Grid item xs={12}>
-                          <FormControl>
+                        <FormControl className='student-form-control'>
                             <FormLabel>
                               What is your Summer time preference?
                             </FormLabel>
@@ -829,6 +841,7 @@ class StudentForm extends Component {
                         </Grid>
 
                         <Grid item xs={12}>
+                        <FormControl className='student-form-control'>
                           <FormLabel>
                             How many courses do you prefer to take Summer?
                           </FormLabel>
@@ -848,11 +861,12 @@ class StudentForm extends Component {
                               <ToggleButton value={6} variant='outline-info'>6</ToggleButton>
                             </ToggleButtonGroup>
                           </div>
+                          </FormControl>
                         </Grid>
 
                         <div className='selected-courses-container'>
                           {courseMap && summerSelectedFaculty ? (
-                            <Grid container spacing={16}>
+                            <Grid container spacing={24}>
                               <FormLabel className='course-selector-label'>
                                 Choose a department
                               </FormLabel>
@@ -930,17 +944,17 @@ class StudentForm extends Component {
                     </Paper>
                   </TabContainer>
                 </SwipeableViews>
+                <Button id='submit' size='large' variant='outlined' color='primary' type='submit'>Generate My Schedule!</Button>
+                <Grid container spacing={24}>
+                  {formErrorMsg.length > 0 ? formErrorMsg.map(msg => (
+                    <FormLabel className='submit-error' color='secondary'>
+                      {msg}
+                    </FormLabel>
+                  )) : null}
+                </Grid>
               </div>
 
-              <Button id='submit' size='large' variant='outlined' color='primary' type='submit'>Generate My Schedule!</Button>
-
-              <Grid container spacing={16}>
-                {formErrorMsg.length > 0 ? formErrorMsg.map(msg => (
-                  <FormLabel className='submit-error' color='secondary'>
-                    {msg}
-                  </FormLabel>
-                )) : null}
-              </Grid>
+      
             </form>
           </div>
         </MuiThemeProvider>
