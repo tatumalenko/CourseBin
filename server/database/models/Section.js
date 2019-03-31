@@ -21,7 +21,7 @@ class Section {
     this.mode = mode;
     this.location = new Location(location);
     this.times = [ ...times ].map(e => new TimeBlock(e)); // Needed to convert to primitive Array
-    this.dates = dates;
+    this.dates = [ ...dates ]; // Needed to convert to primitive Array
   }
 }
 
