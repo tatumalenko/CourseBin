@@ -1,23 +1,28 @@
 import React, { Component } from 'react';
-import { Col, Row } from 'react-bootstrap';
 import { ViewState } from '@devexpress/dx-react-scheduler';
 import {
   Scheduler,
   WeekView,
   Appointments,
 } from '@devexpress/dx-react-scheduler-material-ui';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import Typography from '@material-ui/core/Typography';
+
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
+import {
+  MuiThemeProvider,
+  createMuiTheme,
+  Paper,
+  ExpansionPanel,
+  Grid,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
+  Typography,
+} from '@material-ui/core';
 
 
 // Fake data
@@ -95,23 +100,27 @@ function createRow(id, courseNum, courseTitle, credits) {
 class Plan extends Component {
   constructor(props) {
     super(props);
+    const plan = props.formData;
+    const schedules = plan.schedules;
+    const sequences = plan.sequences;
 
     this.state = {
-      data: classes,
+      fallSchedule: schedules.fall,
     };
+    console.log(this.state.fallSchedule);
   }
 
   render() {
-    const { data } = this.state;
+    const { fallSchedule } = this.state;
 
     return (
       <div className='plan-container'>
         <div className='header-logo'>
           <h3> CourseBin</h3>
         </div>
-        <Row>
-          <Col xs={2} />
-          <Col xs={8} className='schedule-container'>
+        <Grid container spacing={16}>
+          <Grid item xs={2} />
+          <Grid item xs={8} className='schedule-container'>
             <ExpansionPanel>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography>Fall 2019</Typography>
@@ -120,17 +129,20 @@ class Plan extends Component {
                 <div className='schedule'>
                   <MuiThemeProvider theme={theme}>
                     <Paper>
-                      <Scheduler data={data}>
-                        <ViewState currentDate='2018-07-28' />
-                        <WeekView
-                          data={data}
-                          excludedDays={[ 0, 6 ]}
-                          cellDuration={60}
-                          startDayHour={8}
-                          endDayHour={24}
-                        />
-                        <Appointments />
-                      </Scheduler>
+                      {fallSchedule.length > 0 ? (fallSchedule.map(schedule => (
+                        <Scheduler data={schedule.sections}>
+                          <ViewState currentDate='2018-07-28' />
+                          <WeekView
+                            data={schedule.sections}
+                            excludedDays={[ 0, 6 ]}
+                            cellDuration={60}
+                            startDayHour={8}
+                            endDayHour={24}
+                          />
+                          <Appointments />
+                        </Scheduler>
+                      ))
+                      ) : null}
                     </Paper>
                   </MuiThemeProvider>
                 </div>
@@ -233,9 +245,9 @@ class Plan extends Component {
                 </Typography>
               </ExpansionPanelDetails>
             </ExpansionPanel>
-          </Col>
-          <Col xs={2} />
-        </Row>
+          </Grid>
+          <Grid item xs={2} />
+        </Grid>
 
       </div>
     );
