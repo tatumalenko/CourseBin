@@ -125,22 +125,6 @@
   margin-right: 5px;
   font-size: 18px;
 }
-/* .student-form .semester-form-component .season:hover{
-  text-decoration: none;
-  color:#A98638;
-  cursor: pointer;
-  background-color:rgba(0, 0, 0, 0.1);
-}
-.student-form .semester-form-component .season{
-  text-decoration: none;
-  list-style-type: none;
-  font-size: 24px;
-  color:#571D2E;
-  border: 2px;
-  border-radius: 8px;
-  padding: 10px;
-  width: 100%;
-} */
 
 .student-form  .selected-courses-container{
   margin-top: 25px;
@@ -148,10 +132,15 @@
 
 .student-form .selected-courses-container .course-selector, .student-form .selected-courses-container .course-selector-label{
   margin-left: 22px;
+  max-width: 380px;
 }
 
 .student-form .selected-courses-container .course-selector{
   margin-bottom: 30px;
+}
+
+.student-form .selected-courses-container .selected-courses{
+  margin-left: 15px;
 }
 
 .student-form .course-err-msg{
@@ -159,19 +148,8 @@
   margin-left: 0;
   width: 100%;
   margin-bottom: 15px;
+  margin-left: 14px;
   font-size: 16px;
-}
-
-.student-form .selected-courses-label{
-  min-width: 100%;
-  font-size: 16px;
-}
-
-
-.student-form .num-courses-button{
-  position: relative;
-  bottom: 5px;
-  left: 200px;
 }
 
 .plan-container .schedule-container{

@@ -25,9 +25,6 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import {
-  CalendarToday,
-} from '@material-ui/icons';
 
 import Plan from './plan';
 
@@ -64,11 +61,11 @@ const styles = theme => ({
     justifyContent: 'center',
     flexWrap: 'wrap',
     padding: theme.spacing.unit / 2,
-    marginLeft: '22px',
   },
   chip: {
     margin: theme.spacing.unit / 2,
     color: '#17a2b8',
+    fontSize: '10px',
   },
 });
 
@@ -111,6 +108,8 @@ class StudentForm extends Component {
       summerSelectedCourses: [],
       summerErrMsg: null,
 
+
+      formErrorMsg: [],
       showPlan: false,
     };
 
@@ -225,7 +224,7 @@ class StudentForm extends Component {
 
     if (!state[property]) {
       this.setState({
-        [property]: [ courseCode ],
+        [property]: [courseCode],
       });
       this.setErrMsg(property, null);
     } else if (state[property].length === state[numCourses]) {
@@ -274,11 +273,23 @@ class StudentForm extends Component {
     event.preventDefault();
     const state = this.state;
 
-    if (state.fallSelectedCourses.length < state.fallNumOfCourses) {
+    if (state.fallSelectedCourses.length !== state.fallNumOfCourses) {
+      const msg = `You indicated a preference of ${state.fallNumOfCourses} courses for Fall, but did not select that amount!`;
+      const newState = Object.assign({}, state);
+      newState.formErrorMsg.push(msg);
+      this.setState(newState);
       return;
-    } if (state.winterSelectedCourses.length < state.winterNumOfCourses) {
+    } if (state.winterSelectedCourses.length !== state.winterNumOfCourses) {
+      const msg = `You indicated a preference of ${state.winterNumOfCourses} courses for Winter, but did not select that amount!`;
+      const newState = Object.assign({}, state);
+      newState.formErrorMsg.push(msg);
+      this.setState(newState);
       return;
-    } if (state.winterSelectedCourses.length < state.winterNumOfCourses) {
+    } if (state.winterSelectedCourses.length !== state.winterNumOfCourses) {
+      const msg = `You indicated a preference of ${state.fallNumOfCourses} courses for Summer, but did not select that amount!`;
+      const newState = Object.assign({}, state);
+      newState.formErrorMsg.push(msg);
+      this.setState(newState);
       return;
     }
 
@@ -367,7 +378,7 @@ class StudentForm extends Component {
           }
 
           if (!map[departmentName] && displayName !== '') {
-            map[departmentName] = [ displayName ];
+            map[departmentName] = [displayName];
           } else {
             map[departmentName].push(displayName);
           }
@@ -393,7 +404,7 @@ class StudentForm extends Component {
 
   removeFallCourseSelection = course => () => {
     this.setState((state) => {
-      const fallSelectedCourses = [ ...state.fallSelectedCourses ];
+      const fallSelectedCourses = [...state.fallSelectedCourses];
       const toDelete = fallSelectedCourses.indexOf(course);
       fallSelectedCourses.splice(toDelete, 1);
       return { fallSelectedCourses };
@@ -402,7 +413,7 @@ class StudentForm extends Component {
 
   removeWinterCourseSelection = course => () => {
     this.setState((state) => {
-      const winterSelectedCourses = [ ...state.winterSelectedCourses ];
+      const winterSelectedCourses = [...state.winterSelectedCourses];
       const toDelete = winterSelectedCourses.indexOf(course);
       winterSelectedCourses.splice(toDelete, 1);
       return { winterSelectedCourses };
@@ -411,7 +422,7 @@ class StudentForm extends Component {
 
   removeSummerCourseSelection = course => () => {
     this.setState((state) => {
-      const summerSelectedCourses = [ ...state.summerSelectedCourses ];
+      const summerSelectedCourses = [...state.summerSelectedCourses];
       const toDelete = summerSelectedCourses.indexOf(course);
       summerSelectedCourses.splice(toDelete, 1);
       return { summerSelectedCourses };
@@ -448,6 +459,7 @@ class StudentForm extends Component {
       summerSelectedCourses,
       summerErrMsg,
 
+      formErrorMsg,
       showPlan,
     } = this.state;
 
@@ -589,23 +601,19 @@ class StudentForm extends Component {
                           <Grid item xs={12}>
                             <div className='course-err-msg'>{fallErrMsg}</div>
 
-                            <FormLabel className='course-selector-label' style={{ display: fallSelectedCourses.length === 0 ? 'none' : 'initial' }}>Selected Courses:</FormLabel>
+                            <FormLabel className='selected-courses' style={{ display: fallSelectedCourses.length === 0 ? 'none' : 'initial' }}>Selected Courses:</FormLabel>
                             {fallSelectedCourses.length > 0 ? (
 
                               <div className={classes.root}>
-                                {fallSelectedCourses.map((course) => {
-                                  const icon = CalendarToday;
-                                  return (
-                                    <Chip
-                                      key={course.key}
-                                      icon={icon}
-                                      variant='outlined'
-                                      label={course}
-                                      onDelete={this.removeFallCourseSelection(course)}
-                                      className={classes.chip}
-                                    />
-                                  );
-                                })}
+                                {fallSelectedCourses.map(course => (
+                                  <Chip
+                                    key={course.key}
+                                    variant='outlined'
+                                    label={course}
+                                    onDelete={this.removeFallCourseSelection(course)}
+                                    className={classes.chip}
+                                  />
+                                ))}
 
                               </div>) : <div />
                             }
@@ -620,6 +628,12 @@ class StudentForm extends Component {
               </div>
 
               <Button size='large' variant='outlined' color='secondary' type='submit'>Generate My Schedule!</Button>
+
+              {formErrorMsg.length > 0 ? formErrorMsg.map(msg => (
+                <FormLabel color='secondary'>
+                  {msg}
+                </FormLabel>
+              )) : null}
             </form>
           </div>
         </div>
