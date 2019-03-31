@@ -2,6 +2,9 @@ import test from 'ava';
 
 const { Util } = require('./Util');
 
+const { Sequence } = require('./../database/models/Sequence');
+const { TimeBlock } = require('./../database/models/TimeBlock');
+
 test('allCombinations: Integers - all non-empty arrays', (t) => {
   t.deepEqual(Util.allCombinations([
     [ 1, 2, 3 ],
@@ -40,4 +43,44 @@ test('subCombinations: Integers - 3 of 5', (t) => {
     [ 2, 4, 5 ],
     [ 3, 4, 5 ],
   ]);
+});
+
+test('timesOverlap: Overlapping timeBlocks', (t) => {
+  const timeArray = [ new TimeBlock({
+    startTime: '11.45.00',
+    endTime: '13.00.00',
+    weekDay: 'Friday',
+  }),
+  new TimeBlock({
+    startTime: '13.00.00',
+    endTime: '15.30.00',
+    weekDay: 'Friday',
+  }),
+  new TimeBlock({
+    startTime: '17.45.00',
+    endTime: '19.30.00',
+    weekDay: 'Friday',
+  }),
+  ];
+  t.true(Util.timesOverlap(timeArray));
+});
+
+test('timesOverlap: No Overlapping timeBlocks', (t) => {
+  const timeArray = [ new TimeBlock({
+    startTime: '11.45.00',
+    endTime: '13.00.00',
+    weekDay: 'Friday',
+  }),
+  new TimeBlock({
+    startTime: '13.30.00',
+    endTime: '15.30.00',
+    weekDay: 'Friday',
+  }),
+  new TimeBlock({
+    startTime: '17.45.00',
+    endTime: '19.30.00',
+    weekDay: 'Friday',
+  }),
+  ];
+  t.false(Util.timesOverlap(timeArray));
 });

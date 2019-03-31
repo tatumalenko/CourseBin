@@ -2,12 +2,15 @@ const _ = require('lodash');
 
 class Util {
   static timesOverlap(timeBlocks) {
-    // Given an array of TimeBlock objects all for the same weekDay, determine
-    // whether or not there contains any overlapping times. For example,
-    // if one element contains a startTime of 13:00:00 and endTime of 14:30:00,
-    // then if another element contains startTime 14:00:00, this would indeed
-    //  indicate a overlap in time across two different TimeBlock elements.
-    return !!timeBlocks; // Returns boolean
+    const blockArray = timeBlocks;
+    const length = timeBlocks.length;
+    // Sort array based on start times.
+    blockArray.sort((a, b) => ((a.startTime > b.startTime) ? 1 : ((b.startTime > a.startTime) ? -1 : 0)));
+
+    for (let i = 0; i < length - 1; i += 1) {
+      if (blockArray[i + 1].startTime <= blockArray[i].endTime) { return true; }
+    }
+    return false;
   }
 
   static objectFromMap(map) {
