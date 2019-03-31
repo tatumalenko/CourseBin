@@ -1,3 +1,16 @@
+const { Preferences } = require('./Preferences');
+const { TermPreference } = require('./TermPreference');
+
+/*
+
+We need to take the following into consideration when ranking schedules:
+
+- day or evening
+- number of courses
+- requested courses?
+
+*/
+
 class Plan {
   constructor({ schedules, sequences }) {
     this.schedules = schedules;
