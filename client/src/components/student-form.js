@@ -4,7 +4,6 @@
 /* eslint-disable prefer-destructuring */
 import React, { Component } from 'react';
 import axios from 'axios';
-import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import SwipeableViews from 'react-swipeable-views';
 import { withStyles } from '@material-ui/core/styles';
@@ -18,15 +17,28 @@ import {
   FormControl,
   Grid,
   Select,
+  MuiThemeProvider,
+  createMuiTheme,
   NativeSelect,
   Paper,
   Tabs,
   Tab,
   Typography,
 } from '@material-ui/core';
+import cyan from '@material-ui/core/colors/cyan';
 
 
 import Plan from './plan';
+
+const custTheme = createMuiTheme({
+  palette: {
+    primary: cyan,
+    secondary: {
+      main: '#571D2E',
+      light: '#A98638',
+    },
+  },
+});
 
 
 const _ = require('lodash');
@@ -289,10 +301,11 @@ class StudentForm extends Component {
     const state = this.state;
 
     if (state.fallNumOfCourses === 0 && state.summerNumOfCourses === 0 && state.winterNumOfCourses === 0) {
-      const msg = `You have selected a preference of no courses for every semester, please try again!`;
+      const msg = 'You have selected a preference of no courses for every semester, please try again!';
       const newState = Object.assign({}, state);
       newState.formErrorMsg.push(msg);
       this.setState(newState);
+      return;
     }
 
     if (state.fallSelectedCourses.length !== state.fallNumOfCourses) {
@@ -492,7 +505,7 @@ class StudentForm extends Component {
     return showPlan
       ? <Plan />
       : (
-        <div className={classes.root}>
+        <MuiThemeProvider theme={custTheme}>
           <div className='header-logo'>
             <h3>CourseBin</h3>
           </div>
@@ -504,8 +517,8 @@ class StudentForm extends Component {
                   <Tabs
                     value={currentView}
                     onChange={this.handleViewChange}
-                    indicatorColor='primary'
-                    textColor='primary'
+                    indicatorColor='secondary'
+                    textColor='secondary'
                     variant='fullWidth'
                   >
                     <Tab label='Fall ' />
@@ -931,7 +944,7 @@ class StudentForm extends Component {
               </Grid>
             </form>
           </div>
-        </div>
+        </MuiThemeProvider>
       );
   }
 }
