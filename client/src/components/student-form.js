@@ -20,10 +20,8 @@ import {
   FormLabel,
   FormControl,
   Grid,
-  Checkbox,
-  ListItemText,
   Select,
-  MenuItem,
+  NativeSelect,
   Tabs,
   Tab,
   Typography,
@@ -85,23 +83,25 @@ class StudentForm extends Component {
       courseMap: null,
 
       currentView: 0,
-      openFaculty: false,
 
       fallTimePreference: false,
       fallNumOfCourses: 4,
       fallSelectedFaculty: null,
+      fallSelectedCourse: '',
       fallSelectedCourses: [],
       fallErrMsg: null,
 
       winterTimePreference: false,
       winterNumOfCourses: 4,
       winterSelectedFaculty: null,
+      winterSelectedCourse: '',
       winterSelectedCourses: [],
       winterErrMsg: null,
 
       summerTimePreference: false,
       summerNumOfCourses: 4,
       summerSelectedFaculty: null,
+      summerSelectedCourse: '',
       summerSelectedCourses: [],
       summerErrMsg: null,
 
@@ -111,8 +111,6 @@ class StudentForm extends Component {
 
     this.handleFacultyChange = this.handleFacultyChange.bind(this);
     this.handleViewChange = this.handleViewChange.bind(this);
-    this.handleOpenFaculty = this.handleOpenFaculty.bind(this);
-    this.handleCloseFaculty = this.handleCloseFaculty.bind(this);
     this.handleChangeIndex = this.handleChangeIndex.bind(this);
     this.handleFallNumCourseChange = this.handleFallNumCourseChange.bind(this);
     this.handleWinterNumCourseChange = this.handleWinterNumCourseChange.bind(this);
@@ -195,65 +193,73 @@ class StudentForm extends Component {
     this.setState({ summerNumOfCourses });
   }
 
-  handleCloseFaculty = () => {
-    this.setState({ openFaculty: false });
-  };
 
-  handleOpenFaculty = () => {
-    this.setState({ openFaculty: true });
-  };
-
-
-  handleCourseSelection = (event) => {
+  handleCourseSelection = name => (event) => {
     event.preventDefault();
     const state = this.state;
     const target = event.target;
-    const property = target.name;
+    const courseCode = target.value;
+    let property;
 
-    for (let i = 0, l = target.length; i < l; i += 1) {
-      console.log(property);
-      const courseCode = target[i].value;
-
-      let numCourses;
-      switch (property) {
-        case 'fallSelectedCourses': numCourses = 'fallNumOfCourses';
-          break;
-        case 'winterSelectedCourses': numCourses = 'winterNumOfCourses';
-          break;
-        case 'summerSelectedCourses': numCourses = 'summerNumOfCourses';
-          break;
-        default:
-      }
-
-      if (!state[property]) {
-        this.setState({
-          [property]: [ courseCode ],
-        });
-        this.setErrMsg(property, null);
-      } else if (state[property].length === state[numCourses]) {
-        this.setErrMsg(property, 'Cannot add more courses than you have requested per semester');
-      } else if (state[property].length === this.MAX_NUM_COURSES) {
-        this.setErrMsg(property, 'You have added the maximum number of courses per semester');
-      } else if (_.includes(state[property], courseCode)) {
-        this.setErrMsg(property, `You have already added the course ${courseCode}`);
-      } else if (state[property]) {
-        const newState = Object.assign({}, state);
-        newState[property].push(courseCode);
-        this.setState(newState);
-        this.setErrMsg(property, null);
-      }
+    let numCourses;
+    switch (name) {
+      case 'fallSelectedCourse': numCourses = 'fallNumOfCourses';
+        property = 'fallSelectedCourses';
+        break;
+      case 'winterSelectedCourse': numCourses = 'winterNumOfCourses';
+        property = 'winterSelectedCourses';
+        break;
+      case 'summerSelectedCourse': numCourses = 'summerNumOfCourses';
+        property = 'summerSelectedCourses';
+        break;
+      default:
     }
-    console.log(this.state);
+
+    if (!state[property]) {
+      this.setState({
+        [property]: [courseCode],
+      });
+      this.setErrMsg(property, null);
+    } else if (state[property].length === state[numCourses]) {
+      this.setErrMsg(property, 'Cannot add more courses than you have requested per semester');
+    } else if (state[property].length === this.MAX_NUM_COURSES) {
+      this.setErrMsg(property, 'You have added the maximum number of courses per semester');
+    } else if (_.includes(state[property], courseCode)) {
+      this.setErrMsg(property, `You have already added the course ${courseCode}`);
+    } else if (state[property]) {
+      const newState = Object.assign({}, state);
+      newState[property].push(courseCode);
+      newState[name] = target.value;
+      this.setState(newState);
+      this.setErrMsg(property, null);
+    }
   }
 
   handleFacultyChange(event) {
     event.preventDefault();
     const target = event.target;
-    this.setState({
-      [target.name]: target.value,
-    });
+    switch (target.name) {
+      case 'fallSelectedFaculty':
+        this.setState({
+          [target.name]: target.value,
+          fallSelectedCourse: '',
+        });
+        break;
+      case 'winterSelectedFaculty':
 
-    console.log(this.state);
+        this.setState({
+          [target.name]: target.value,
+          winterSelectedCourse: '',
+        });
+        break;
+      case 'summerSelectedFaculty':
+        this.setState({
+          [target.name]: target.value,
+          summerSelectedCourse: '',
+        });
+        break;
+      default: break;
+    }
   }
 
   handleSubmit(event) {
@@ -346,7 +352,7 @@ class StudentForm extends Component {
           }
 
           if (!map[departmentName] && displayName !== '') {
-            map[departmentName] = [ displayName ];
+            map[departmentName] = [displayName];
           } else {
             map[departmentName].push(displayName);
           }
@@ -385,9 +391,8 @@ class StudentForm extends Component {
 
       currentView,
 
-      openFaculty,
-
       fallTimePreference,
+      fallSelectedCourse,
       fallNumOfCourses,
       fallSelectedFaculty,
       fallSelectedCourses,
@@ -476,13 +481,14 @@ class StudentForm extends Component {
                         </div>
                       </Grid>
                       {courseMap && fallSelectedFaculty ? (
-                        <Grid container spacing={16} className='course-selection-box'>
-                          <Grid item xs={12}>
+                        <Grid container spacing={24} className='course-selection-box'>
+                          <Grid item xs={6}>
+                            <FormLabel>
+                              Choose a department
+                            </FormLabel>
                             <FormControl>
                               <Select
-                                open={openFaculty}
-                                onClose={this.handleCloseFaculty}
-                                onOpen={this.handleOpenFaculty}
+                                native
                                 value={fallSelectedFaculty}
                                 onChange={this.handleFacultyChange}
                                 inputProps={{
@@ -491,37 +497,37 @@ class StudentForm extends Component {
                                 }}
                               >
                                 {courseMap ? Object.keys(courseMap).map(faculty => (
-                                  <MenuItem key={faculty} value={faculty}>
+                                  <option key={faculty} value={faculty}>
                                     {faculty}
-                                  </MenuItem>
+                                  </option>
                                 )) : null}
                               </Select>
                             </FormControl>
                           </Grid>
 
-                          <FormLabel className='course-selection-label'>
-                            Select a class:
-                          </FormLabel>
-                          <FormControl>
-                            <Select
-                              multiple
-                              native
-                              value={fallSelectedCourses}
-                              onChange={this.handleCourseSelection}
-                              name='fallSelectedCourses'
-                              inputProps={{
-                                name: 'fallSelectedCourses',
-                                id: 'demo-controlled-open-select',
-                              }}
-                            >
-                              {courseMap && fallSelectedFaculty && courseMap[fallSelectedFaculty] ? courseMap[fallSelectedFaculty].map(course => (
-                                <option key={course} value={course}>
-                                  {course}
+                          <Grid item xs={6}>
+
+                            <FormLabel className='course-selection-label'>
+                              Choose your courses
+                            </FormLabel>
+                            <FormControl>
+                              <NativeSelect
+                                value={fallSelectedCourse}
+                                onChange={this.handleCourseSelection('fallSelectedCourse')}
+                                name='fallSelectedCourse'
+                              >
+                                <option value='' disabled>
+                                  Select
                                 </option>
-                              )) : null
-                              }
-                            </Select>
-                          </FormControl>
+                                {courseMap && fallSelectedFaculty && courseMap[fallSelectedFaculty] ? courseMap[fallSelectedFaculty].map(course => (
+                                  <option value={course}>
+                                    {course}
+                                  </option>
+                                )) : null
+                                }
+                              </NativeSelect>
+                            </FormControl>
+                          </Grid>
                         </Grid>
                       )
                         : null
