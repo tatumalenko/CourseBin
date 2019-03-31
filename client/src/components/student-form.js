@@ -20,7 +20,8 @@ import {
   FormLabel,
   FormControl,
   Grid,
-  InputLabel,
+  Checkbox,
+  ListItemText,
   Select,
   MenuItem,
   Tabs,
@@ -85,7 +86,6 @@ class StudentForm extends Component {
 
       currentView: 0,
       openFaculty: false,
-      openCourses: false,
 
       fallTimePreference: false,
       fallNumOfCourses: 4,
@@ -109,12 +109,10 @@ class StudentForm extends Component {
     };
 
 
-    this.handleChange = this.handleChange.bind(this);
+    this.handleFacultyChange = this.handleFacultyChange.bind(this);
     this.handleViewChange = this.handleViewChange.bind(this);
     this.handleOpenFaculty = this.handleOpenFaculty.bind(this);
-    this.handleOpenCourses = this.handleOpenCourses.bind(this);
     this.handleCloseFaculty = this.handleCloseFaculty.bind(this);
-    this.handleCloseCourses = this.handleCloseCourses.bind(this);
     this.handleChangeIndex = this.handleChangeIndex.bind(this);
     this.handleFallNumCourseChange = this.handleFallNumCourseChange.bind(this);
     this.handleWinterNumCourseChange = this.handleWinterNumCourseChange.bind(this);
@@ -171,13 +169,6 @@ class StudentForm extends Component {
     this.setState({ value: index });
   };
 
-  handleChange(event) {
-    event.preventDefault();
-    const target = event.target;
-    this.setState({
-      [target.name]: target.value,
-    });
-  }
 
   handleFallTimeChange = (event, fallTimePreference) => {
     this.setState({ fallTimePreference });
@@ -204,25 +195,24 @@ class StudentForm extends Component {
     this.setState({ summerNumOfCourses });
   }
 
-  handleFacultySelection(event) {
+  handleCloseFaculty = () => {
+    this.setState({ openFaculty: false });
+  };
+
+  handleOpenFaculty = () => {
+    this.setState({ openFaculty: true });
+  };
+
+
+  handleCourseSelection = (event) => {
     event.preventDefault();
+    const state = this.state;
     const target = event.target;
     const property = target.name;
-    const departmentName = target.value;
 
-    this.setState({
-      [property]: departmentName,
-    });
-  }
-
-  handleCourseSelection(event) {
-    event.preventDefault();
-    if (event && event.target && event.target.value) {
-      const state = this.state;
-      const target = event.target;
-      const property = target.name;
-      const course = target.value;
-      const courseCode = course.split(' – ')[0];
+    for (let i = 0, l = target.length; i < l; i += 1) {
+      console.log(property);
+      const courseCode = target[i].value;
 
       let numCourses;
       switch (property) {
@@ -234,7 +224,6 @@ class StudentForm extends Component {
           break;
         default:
       }
-
 
       if (!state[property]) {
         this.setState({
@@ -254,22 +243,17 @@ class StudentForm extends Component {
         this.setErrMsg(property, null);
       }
     }
+    console.log(this.state);
   }
 
-  handleCloseFaculty = () => {
-    this.setState({ openFaculty: false });
-  };
+  handleFacultyChange(event) {
+    event.preventDefault();
+    const target = event.target;
+    this.setState({
+      [target.name]: target.value,
+    });
 
-  handleCloseCourses = () => {
-    this.setState({ openCourses: false });
-  };
-
-  handleOpenFaculty = () => {
-    this.setState({ openFaculty: true });
-  };
-
-  handleOpenCourses = () => {
-    this.setState({ openCourses: true });
+    console.log(this.state);
   }
 
   handleSubmit(event) {
@@ -377,17 +361,12 @@ class StudentForm extends Component {
     });
 
     const defaultFaculty = 'Software Engineering';
-    const defaultClass = 'SOEN287 – Web Programming';
 
     this.setState({
       courseMap: map,
       fallSelectedFaculty: defaultFaculty,
       winterSelectedFaculty: defaultFaculty,
       summerSelectedFaculty: defaultFaculty,
-
-      fallSelectedCourses: [ defaultClass ],
-      summerSelectedCourses: [ defaultClass ],
-      winterSelectedCourses: [ defaultClass ],
     });
   }
 
@@ -405,8 +384,8 @@ class StudentForm extends Component {
       courseMap,
 
       currentView,
+
       openFaculty,
-      openCourses,
 
       fallTimePreference,
       fallNumOfCourses,
@@ -496,9 +475,7 @@ class StudentForm extends Component {
                           </ToggleButtonGroup>
                         </div>
                       </Grid>
-
-                      <div className='course-preferences' style={{ display: courseMap ? 'initial' : 'none' }}>
-
+                      {courseMap && fallSelectedFaculty ? (
                         <Grid container spacing={16} className='course-selection-box'>
                           <Grid item xs={12}>
                             <FormControl>
@@ -507,7 +484,7 @@ class StudentForm extends Component {
                                 onClose={this.handleCloseFaculty}
                                 onOpen={this.handleOpenFaculty}
                                 value={fallSelectedFaculty}
-                                onChange={this.handleChange}
+                                onChange={this.handleFacultyChange}
                                 inputProps={{
                                   name: 'fallSelectedFaculty',
                                   id: 'demo-controlled-open-select',
@@ -522,53 +499,54 @@ class StudentForm extends Component {
                             </FormControl>
                           </Grid>
 
-                          <div style={{ display: !fallSelectedFaculty ? 'none' : 'initial' }}>
-                            <FormLabel className='course-selection-label'>
-                              Select a class:
+                          <FormLabel className='course-selection-label'>
+                            Select a class:
+                          </FormLabel>
+                          <FormControl>
+                            <Select
+                              multiple
+                              native
+                              value={fallSelectedCourses}
+                              onChange={this.handleCourseSelection}
+                              name='fallSelectedCourses'
+                              inputProps={{
+                                name: 'fallSelectedCourses',
+                                id: 'demo-controlled-open-select',
+                              }}
+                            >
+                              {courseMap && fallSelectedFaculty && courseMap[fallSelectedFaculty] ? courseMap[fallSelectedFaculty].map(course => (
+                                <option key={course} value={course}>
+                                  {course}
+                                </option>
+                              )) : null
+                              }
+                            </Select>
+                          </FormControl>
+                        </Grid>
+                      )
+                        : null
+                      }
+
+
+                      <Grid item xs={12} className='selected-courses-container'>
+                        <div className='course-err-msg'>{fallErrMsg}</div>
+                        <FormLabel className='selected-courses-label' style={{ display: fallSelectedCourses.length === 0 ? 'none' : 'initial' }}>Selected Courses:</FormLabel>
+                        {fallSelectedCourses ? Object.keys(fallSelectedCourses).map(index => (
+                          <div className='selected-courses'>
+                            <FormLabel
+                              className='rm-course'
+                              title='remove course?'
+                              onClick={() => this.removeCourseSelection('fallSelectedCourses', index)}
+                            >
+                              <i className='material-icons'>
+                                delete_forever
+                              </i>
                             </FormLabel>
-                            <FormControl>
-                              <Select
-                                open={openCourses}
-                                onClose={this.handleCloseCourses}
-                                onOpen={this.handleOpenCourses}
-                                value={fallSelectedCourses}
-                                onChange={this.handleCourseSelection}
-                                inputProps={{
-                                  name: 'fallSelectedCourses',
-                                  id: 'demo-controlled-open-select',
-                                }}
-                              >
-                                {courseMap && fallSelectedFaculty && courseMap[fallSelectedFaculty] ? Object.keys(courseMap[fallSelectedFaculty]).map(index => (
-                                  <MenuItem key={courseMap[fallSelectedFaculty][index]} value={courseMap[fallSelectedFaculty][index]}>
-                                    {courseMap[fallSelectedFaculty][index]}
-                                  </MenuItem>
-                                )) : null
-                                }
-                              </Select>
-                            </FormControl>
+                            {fallSelectedCourses[index]}
                           </div>
-                        </Grid>
+                        )) : <div />}
+                      </Grid>
 
-
-                        <Grid item xs={12} className='selected-courses-container'>
-                          <div className='course-err-msg'>{fallErrMsg}</div>
-                          <FormLabel className='selected-courses-label' style={{ display: fallSelectedCourses.length === 0 ? 'none' : 'initial' }}>Selected Courses:</FormLabel>
-                          {fallSelectedCourses ? Object.keys(fallSelectedCourses).map(index => (
-                            <div className='selected-courses'>
-                              <FormLabel
-                                className='rm-course'
-                                title='reomve course?'
-                                onClick={() => this.removeCourseSelection('fallSelectedCourses', index)}
-                              >
-                                <i className='material-icons'>
-                                  delete_forever
-                                </i>
-                              </FormLabel>
-                              {fallSelectedCourses[index]}
-                            </div>
-                          )) : <div />}
-                        </Grid>
-                      </div>
                     </Grid>
                   </TabContainer>
                   <TabContainer dir={theme.direction}>Item Two</TabContainer>
