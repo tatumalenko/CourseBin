@@ -42,6 +42,10 @@ function TabContainer(props) {
 }
 
 const styles = theme => ({
+  root: {
+    backgroundColor: theme.palette.background.paper,
+    minWidth: '500px',
+  },
   toggleContainer: {
     height: 56,
     padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
@@ -53,10 +57,10 @@ const styles = theme => ({
   },
   formContent: {
     width: '50%',
-    margin: '0 25%',
+    margin: '30px 25%',
     minWidth: '400px',
   },
-  root: {
+  chips: {
     display: 'flex',
     justifyContent: 'center',
     flexWrap: 'wrap',
@@ -234,7 +238,7 @@ class StudentForm extends Component {
 
     if (!state[property]) {
       this.setState({
-        [property]: [ courseCode ],
+        [property]: [courseCode],
       });
       this.setErrMsg(property, null);
     } else if (state[property].length === state[numCourses]) {
@@ -284,6 +288,13 @@ class StudentForm extends Component {
 
     const state = this.state;
 
+    if (state.fallNumOfCourses === 0 && state.summerNumOfCourses === 0 && state.winterNumOfCourses === 0) {
+      const msg = `You have selected a preference of no courses for every semester, please try again!`;
+      const newState = Object.assign({}, state);
+      newState.formErrorMsg.push(msg);
+      this.setState(newState);
+    }
+
     if (state.fallSelectedCourses.length !== state.fallNumOfCourses) {
       const msg = `You indicated a preference of ${state.fallNumOfCourses} courses for Fall, but did not select that amount!`;
       const newState = Object.assign({}, state);
@@ -298,8 +309,8 @@ class StudentForm extends Component {
       this.setState(newState);
       return;
     }
-    if (state.winterSelectedCourses.length !== state.winterNumOfCourses) {
-      const msg = `You indicated a preference of ${state.fallNumOfCourses} courses for Summer, but did not select that amount!`;
+    if (state.summerSelectedCourses.length !== state.summerNumOfCourses) {
+      const msg = `You indicated a preference of ${state.summerNumOfCourses} courses for Summer, but did not select that amount!`;
       const newState = Object.assign({}, state);
       newState.formErrorMsg.push(msg);
       this.setState(newState);
@@ -393,7 +404,7 @@ class StudentForm extends Component {
           }
 
           if (!map[departmentName] && displayName !== '') {
-            map[departmentName] = [ displayName ];
+            map[departmentName] = [displayName];
           } else {
             map[departmentName].push(displayName);
           }
@@ -419,7 +430,7 @@ class StudentForm extends Component {
 
   removeFallCourseSelection = course => () => {
     this.setState((state) => {
-      const fallSelectedCourses = [ ...state.fallSelectedCourses ];
+      const fallSelectedCourses = [...state.fallSelectedCourses];
       const toDelete = fallSelectedCourses.indexOf(course);
       fallSelectedCourses.splice(toDelete, 1);
       return { fallSelectedCourses };
@@ -428,7 +439,7 @@ class StudentForm extends Component {
 
   removeWinterCourseSelection = course => () => {
     this.setState((state) => {
-      const winterSelectedCourses = [ ...state.winterSelectedCourses ];
+      const winterSelectedCourses = [...state.winterSelectedCourses];
       const toDelete = winterSelectedCourses.indexOf(course);
       winterSelectedCourses.splice(toDelete, 1);
       return { winterSelectedCourses };
@@ -437,7 +448,7 @@ class StudentForm extends Component {
 
   removeSummerCourseSelection = course => () => {
     this.setState((state) => {
-      const summerSelectedCourses = [ ...state.summerSelectedCourses ];
+      const summerSelectedCourses = [...state.summerSelectedCourses];
       const toDelete = summerSelectedCourses.indexOf(course);
       summerSelectedCourses.splice(toDelete, 1);
       return { summerSelectedCourses };
@@ -481,18 +492,20 @@ class StudentForm extends Component {
     return showPlan
       ? <Plan />
       : (
-        <div>
+        <div className={classes.root}>
           <div className='header-logo'>
-            <Typography component='h3' variant='h3'>CourseBin</Typography>
+            <h3>CourseBin</h3>
           </div>
           <div className='student-form'>
             <form onSubmit={this.handleSubmit}>
-              <Typography component='h3' variant='h5' id='form-header'>First, we will just need some basic information... </Typography>
+              <Typography component='h3' variant='h6' id='form-header'>First, we will just need some basic information... </Typography>
               <div className={classes.formContent}>
-                <AppBar position='static'>
+                <AppBar position='static' color='default'>
                   <Tabs
                     value={currentView}
                     onChange={this.handleViewChange}
+                    indicatorColor='primary'
+                    textColor='primary'
                     variant='fullWidth'
                   >
                     <Tab label='Fall ' />
@@ -511,7 +524,7 @@ class StudentForm extends Component {
                         <Grid item xs={12}>
                           <FormControl>
                             <FormLabel>
-                              What is your time preference?
+                              What is your Fall time preference?
                             </FormLabel>
                             <div className={classes.toggleContainer}>
                               <ToggleButtonGroup
@@ -539,7 +552,7 @@ class StudentForm extends Component {
 
                         <Grid item xs={12}>
                           <FormLabel>
-                            How many courses do you prefer to take per semester?
+                            How many courses do you prefer to take in the Fall?
                           </FormLabel>
                           <div className={classes.toggleContainer}>
                             <ToggleButtonGroup
@@ -548,6 +561,7 @@ class StudentForm extends Component {
                               exclusive
                               onChange={this.handleFallNumCourseChange}
                             >
+                              <ToggleButton value={0} variant='outline-info'>None!</ToggleButton>
                               <ToggleButton value={1} variant='outline-info'>1</ToggleButton>
                               <ToggleButton value={2} variant='outline-info'>2</ToggleButton>
                               <ToggleButton value={3} variant='outline-info'>3</ToggleButton>
@@ -619,7 +633,7 @@ class StudentForm extends Component {
                             <FormLabel className='selected-courses' style={{ display: fallSelectedCourses.length === 0 ? 'none' : 'initial' }}>Selected Courses:</FormLabel>
                             {fallSelectedCourses.length > 0 ? (
 
-                              <div className={classes.root}>
+                              <div className={classes.chips}>
                                 {fallSelectedCourses.map(course => (
                                   <Chip
                                     key={course.key}
@@ -643,7 +657,7 @@ class StudentForm extends Component {
                         <Grid item xs={12}>
                           <FormControl>
                             <FormLabel>
-                              What is your time preference?
+                              What is your Winter time preference?
                             </FormLabel>
                             <div className={classes.toggleContainer}>
                               <ToggleButtonGroup
@@ -671,7 +685,7 @@ class StudentForm extends Component {
 
                         <Grid item xs={12}>
                           <FormLabel>
-                            How many courses do you prefer to take per semester?
+                            How many courses do you prefer to take in the Winter?
                           </FormLabel>
                           <div className={classes.toggleContainer}>
                             <ToggleButtonGroup
@@ -680,6 +694,7 @@ class StudentForm extends Component {
                               exclusive
                               onChange={this.handleWinterNumCourseChange}
                             >
+                              <ToggleButton value={0} variant='outline-info'>None!</ToggleButton>
                               <ToggleButton value={1} variant='outline-info'>1</ToggleButton>
                               <ToggleButton value={2} variant='outline-info'>2</ToggleButton>
                               <ToggleButton value={3} variant='outline-info'>3</ToggleButton>
@@ -751,7 +766,7 @@ class StudentForm extends Component {
                             <FormLabel className='selected-courses' style={{ display: winterSelectedCourses.length === 0 ? 'none' : 'initial' }}>Selected Courses:</FormLabel>
                             {winterSelectedCourses.length > 0 ? (
 
-                              <div className={classes.root}>
+                              <div className={classes.chips}>
                                 {winterSelectedCourses.map(course => (
                                   <Chip
                                     key={course.key}
@@ -775,7 +790,7 @@ class StudentForm extends Component {
                         <Grid item xs={12}>
                           <FormControl>
                             <FormLabel>
-                              What is your time preference?
+                              What is your Summer time preference?
                             </FormLabel>
                             <div className={classes.toggleContainer}>
                               <ToggleButtonGroup
@@ -803,7 +818,7 @@ class StudentForm extends Component {
 
                         <Grid item xs={12}>
                           <FormLabel>
-                            How many courses do you prefer to take per semester?
+                            How many courses do you prefer to take Summer?
                           </FormLabel>
                           <div className={classes.toggleContainer}>
                             <ToggleButtonGroup
@@ -812,6 +827,7 @@ class StudentForm extends Component {
                               exclusive
                               onChange={this.handleSummerNumCourseChange}
                             >
+                              <ToggleButton value={0} variant='outline-info'>None!</ToggleButton>
                               <ToggleButton value={1} variant='outline-info'>1</ToggleButton>
                               <ToggleButton value={2} variant='outline-info'>2</ToggleButton>
                               <ToggleButton value={3} variant='outline-info'>3</ToggleButton>
@@ -883,7 +899,7 @@ class StudentForm extends Component {
                             <FormLabel className='selected-courses' style={{ display: summerSelectedCourses.length === 0 ? 'none' : 'initial' }}>Selected Courses:</FormLabel>
                             {summerSelectedCourses.length > 0 ? (
 
-                              <div className={classes.root}>
+                              <div className={classes.chips}>
                                 {summerSelectedCourses.map(course => (
                                   <Chip
                                     key={course.key}
@@ -904,7 +920,7 @@ class StudentForm extends Component {
                 </SwipeableViews>
               </div>
 
-              <Button size='large' variant='outlined' color='primary' type='submit'>Generate My Schedule!</Button>
+              <Button id='submit' size='large' variant='outlined' color='primary' type='submit'>Generate My Schedule!</Button>
 
               <Grid container spacing={16}>
                 {formErrorMsg.length > 0 ? formErrorMsg.map(msg => (
