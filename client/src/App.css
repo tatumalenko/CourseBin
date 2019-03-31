@@ -152,6 +152,14 @@
   font-size: 16px;
 }
 
+.student-form .submit-error{
+  text-align: center;
+  width: 50%;
+  margin: 15px 25%;
+  font-size: 12px;
+  color: red;
+}
+
 .plan-container .schedule-container{
   margin-top: 50px;
   
