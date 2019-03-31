@@ -5,7 +5,6 @@ import {
   WeekView,
   Appointments,
 } from '@devexpress/dx-react-scheduler-material-ui';
-
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {
   MuiThemeProvider,
@@ -29,8 +28,8 @@ const classes = [
   {
     title: 'COMP-346, LECTURE SS',
     // Year, month, day, time (9:30AM)
-    startDate: new Date(2018, 6, 25, 9, 30),
-    endDate: new Date(2018, 6, 25, 11, 30),
+    startDate: '9, 30',
+    endDate: '11, 30',
     id: 0,
 
   },
@@ -173,21 +172,28 @@ class Plan extends Component {
                   <div className='schedule'>
                     <MuiThemeProvider theme={theme}>
                       <Paper>
+                        
                         {fallSchedule.length > 0 ? (fallSchedule.map(schedule => (
-                          <Scheduler data={schedule.sections}>
+                          
+                          <Scheduler data={classes}>
                             <ViewState currentDate='2018-07-28' />
                             <WeekView
-                              data={schedule.sections}
                               excludedDays={[ 0, 6 ]}
                               cellDuration={60}
                               startDayHour={8}
                               endDayHour={24}
                             />
                             <Appointments />
+                    
                           </Scheduler>
+                        
+                          
                         ))
                         ) : null}
+                        
+                  
                       </Paper>
+                      
                     </MuiThemeProvider>
                   </div>
                 </Grid>
