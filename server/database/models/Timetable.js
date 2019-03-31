@@ -45,6 +45,7 @@ const sectionSchema = new Schema({
   },
   // professor: { type: professorSchema, unique: false, required: true },
   times: { type: [ timeBlockSchema ], unique: false, required: true },
+  dates: { type: [ String ], unique: false, required: true },
 });
 
 module.exports = {

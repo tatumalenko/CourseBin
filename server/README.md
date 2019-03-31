@@ -138,6 +138,10 @@ E.g.
                                     "endTime": "17.30.00",
                                     "weekDay": "THURSDAY"
                                 }
+                            ],
+                            "dates": [
+                                "04/09/2018",
+                                "03/12/2018"
                             ]
                         },
                         {
@@ -157,6 +161,10 @@ E.g.
                                     "endTime": "12.35.00",
                                     "weekDay": "THURSDAY"
                                 }
+                            ],
+                            "dates": [
+                                "04/09/2018",
+                                "03/12/2018"
                             ]
                         },
                         {
@@ -181,6 +189,10 @@ E.g.
                                     "endTime": "20.15.00",
                                     "weekDay": "THURSDAY"
                                 }
+                            ],
+                            "dates": [
+                                "04/09/2018",
+                                "03/12/2018"
                             ]
                         },
                         {
@@ -205,6 +217,10 @@ E.g.
                                     "endTime": "21.20.00",
                                     "weekDay": "THURSDAY"
                                 }
+                            ],
+                            "dates": [
+                                "04/09/2018",
+                                "03/12/2018"
                             ]
                         },
                         {
@@ -234,6 +250,10 @@ E.g.
                                     "endTime": "10.00.00",
                                     "weekDay": "THURSDAY"
                                 }
+                            ],
+                            "dates": [
+                                "04/09/2018",
+                                "03/12/2018"
                             ]
                         },
                         {
@@ -258,6 +278,10 @@ E.g.
                                     "endTime": "09.35.00",
                                     "weekDay": "FRIDAY"
                                 }
+                            ],
+                            "dates": [
+                                "04/09/2018",
+                                "03/12/2018"
                             ]
                         },
                         {
@@ -282,6 +306,10 @@ E.g.
                                     "endTime": "20.15.00",
                                     "weekDay": "THURSDAY"
                                 }
+                            ],
+                            "dates": [
+                                "04/09/2018",
+                                "03/12/2018"
                             ]
                         },
                         {
@@ -306,6 +334,10 @@ E.g.
                                     "endTime": "17.45.00",
                                     "weekDay": "FRIDAY"
                                 }
+                            ],
+                            "dates": [
+                                "04/09/2018",
+                                "03/12/2018"
                             ]
                         }
                     ]
@@ -332,6 +364,10 @@ E.g.
                                     "endTime": "00.00.00",
                                     "weekDay": "THURSDAY"
                                 }
+                            ],
+                            "dates": [
+                                "04/09/2018",
+                                "03/12/2018"
                             ]
                         },
                         {
@@ -351,6 +387,10 @@ E.g.
                                     "endTime": "17.30.00",
                                     "weekDay": "THURSDAY"
                                 }
+                            ],
+                            "dates": [
+                                "04/09/2018",
+                                "03/12/2018"
                             ]
                         }
                     ]
@@ -566,6 +606,10 @@ E.g.:
           "endTime": "hh.mm.ss",
           "weekDay": "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY"
         }
+      ],
+      "dates": [
+          "dd/mm/yyyy",
+          "dd/mm/yyyy"
       ]
     }, 
   ]
@@ -577,119 +621,57 @@ E.g.:
   "message": "OK",
   "timetable": [
     {
-        "_id": "5c7416be14d29885ffb3854e",
-        "courseCode": "COMP354",
-        "code": "BB",
-        "term": "SPRING/SUMMER",
-        "mode": "In Person",
-        "location": {
-            "_id": "5c7416be14d29885ffb3854f",
-            "code": "H435",
-            "room": "435",
-            "building": "H"
-        },
-        "kind": "LEC",
-        "times": [
-            {
-                "_id": "5c7416be14d29885ffb38550",
-                "startTime": "18.30.00",
-                "endTime": "21.00.00",
-                "weekDay": "WEDNESDAY"
-            }
-        ],
-        "__v": 0
+      "courseCode": "COMP249",
+      "code": "D",
+      "term": "FALL",
+      "title": "Object-Oriented Programming II",
+      "kind": "LEC",
+      "mode": "In Person",
+      "location": {
+          "code": "H411",
+          "building": "H",
+          "room": "411"
+      },
+      "times": [
+          {
+              "startTime": "14.45.00",
+              "endTime": "16.00.00",
+              "weekDay": "MONDAY"
+          },
+          {
+              "startTime": "14.45.00",
+              "endTime": "16.00.00",
+              "weekDay": "WEDNESDAY"
+          }
+      ],
+      "dates": [
+          "04/09/2018",
+          "03/12/2018"
+      ]
     },
     {
-        "_id": "5c7416be14d29885ffb38551",
-        "courseCode": "COMP354",
-        "code": "BBBE",
-        "term": "SPRING/SUMMER",
-        "mode": "In Person",
-        "location": {
-            "_id": "5c7416be14d29885ffb38552",
-            "code": "FGB040",
-            "room": "B040",
-            "building": "FG"
-        },
-        "kind": "TUT",
-        "times": [
-            {
-                "_id": "5c7416be14d29885ffb38553",
-                "startTime": "17.30.00",
-                "endTime": "18.20.00",
-                "weekDay": "WEDNESDAY"
-            }
-        ],
-        "__v": 0
-    },
-    {
-        "_id": "5c7416be14d29885ffb38554",
-        "courseCode": "COMP354",
-        "code": "BBBF",
-        "term": "SPRING/SUMMER",
-        "mode": "In Person",
-        "location": {
-            "_id": "5c7416be14d29885ffb38555",
-            "code": "FGB050",
-            "room": "B050",
-            "building": "FG"
-        },
-        "kind": "TUT",
-        "times": [
-            {
-                "_id": "5c7416be14d29885ffb38556",
-                "startTime": "17.30.00",
-                "endTime": "18.20.00",
-                "weekDay": "WEDNESDAY"
-            }
-        ],
-        "__v": 0
-    },
-    {
-        "_id": "5c7416be14d29885ffb38557",
-        "courseCode": "COMP354",
-        "code": "BI-X",
-        "term": "SPRING/SUMMER",
-        "mode": "In Person",
-        "location": {
-            "_id": "5c7416be14d29885ffb38558",
-            "code": "H967",
-            "room": "967",
-            "building": "H"
-        },
-        "kind": "LAB",
-        "times": [
-            {
-                "_id": "5c7416be14d29885ffb38559",
-                "startTime": "21.10.00",
-                "endTime": "23.00.00",
-                "weekDay": "WEDNESDAY"
-            }
-        ],
-        "__v": 0
-    },
-    {
-        "_id": "5c7416be14d29885ffb3855a",
-        "courseCode": "COMP354",
-        "code": "BJ-X",
-        "term": "SPRING/SUMMER",
-        "mode": "In Person",
-        "location": {
-            "_id": "5c7416be14d29885ffb3855b",
-            "code": "H967",
-            "room": "967",
-            "building": "H"
-        },
-        "kind": "LAB",
-        "times": [
-            {
-                "_id": "5c7416be14d29885ffb3855c",
-                "startTime": "21.10.00",
-                "endTime": "23.00.00",
-                "weekDay": "WEDNESDAY"
-            }
-        ],
-        "__v": 0
+      "courseCode": "COMP249",
+      "code": "D DA",
+      "term": "FALL",
+      "title": "Object-Oriented Programming II",
+      "kind": "TUT",
+      "mode": "In Person",
+      "location": {
+        "code": "H627",
+        "building": "H",
+        "room": "627"
+      },
+      "times": [
+        {
+          "startTime": "12.45.00",
+          "endTime": "14.35.00",
+          "weekDay": "MONDAY"
+        }
+      ],
+      "dates": [
+        "04/09/2018",
+        "03/12/2018"
+      ]
     },
     ...
   ]
