@@ -107,134 +107,40 @@
 }
 .semester-form-component{
   text-align: left;
+  width: 107%;
+  margin-left: -4%;
+  padding: 25px;
 }
 
-.student-form .form-header{
-  margin-top: 75px;
+.student-form{
+  margin-top: 50px;
+  min-width: 400px;
 }
 
-.student-form .semester-form-component .season:hover{
-  text-decoration: none;
-  color:#A98638;
-  cursor: pointer;
-  background-color:rgba(0, 0, 0, 0.1);
-}
-.student-form .semester-form-component .season{
-  text-decoration: none;
-  list-style-type: none;
-  font-size: 24px;
-  color:#571D2E;
-  border: 2px;
-  border-radius: 8px;
-  padding: 10px;
-  width: 100%;
+.student-form #form-header{
+ margin-bottom: 30px;
 }
 
-.student-form .semester-form-component .row{
-  display: block;
-  font-size: 12px;
-  text-align: left;
-  margin-left: 150px;
+.student-form .material-icons.toggle{
+  margin-right: 5px;
+  font-size: 18px;
 }
 
-.student-form .semester-form-component #checkbox:hover{
-  cursor: pointer;
+.student-form  .selected-courses-container{
+  margin-top: 25px;
 }
 
-.student-form .semester-form-component i{
-  margin-top: 6.5px;
-  float: right;
+.student-form .selected-courses-container .course-selector, .student-form .selected-courses-container .course-selector-label{
+  margin-left: 22px;
+  max-width: 380px;
 }
 
-.student-form .semester-form-component .form-group{
-  margin-left: 10px;
-}
-
-.student-form .number-courses{
-  width: 100%;
-  display: inline-flex;
-}
-
-.student-form .number-courses label{
-  max-width: 90%;
-  margin-left: 15px;
-}
-
-.student-form .number-courses select{
-  max-width: 10%;
-  margin-left: 25px;
-}
-
-.student-form .form-section-content{
-  min-width: 500px;
-}
-
-.student-form .form-check{
-  margin-left: 10px;
-}
-
-#student-form-content{
-  margin-bottom: 75px;
-  margin-top: 75px;
-}
-
-.student-form .btn{
-  margin-bottom: 75px;
-}
-
-.student-form .evening-checkbox{
-  margin-left: 15px;
-}
-
-.student-form .evening-checkbox .btn-group{
-  float: right;
+.student-form .selected-courses-container .course-selector{
   margin-bottom: 30px;
 }
 
-.student-form .course-preferences{
-  margin-left: 15px;
-}
-
-.student-form .course-selection-box .row{
-  display: table-cell;
-  padding: 10px;
-  
-}
-
-.student-form .course-selection-box .add-course-button{ 
-  margin-left: 10px;
-}
-
-.student-form .course-selection-box{
-  background: 5px rgba(23, 162, 184, 0.4);
-  padding: 15px;
-  border-radius: 15px;
-  margin-top: 15px;
-  margin-bottom: 15px;
-}
-.student-form .course-selection-box .selected-courses-container{
-  display: inline-flex;
-  margin-left: 0;
-}
 .student-form .selected-courses-container .selected-courses{
-  padding: 8px;
-  padding-bottom: 0;
-  background: rgba(87, 29, 46, 0.7);
-  border: 2px solid rgba(255, 201, 81, 1);
-  color: rgba(255, 201, 81, 1);
-  margin-right: 12px;
-  border-radius: 5px;
-  font-size: 12px;
-  margin-bottom: 15px;
-  min-width: 150px;
-}
-
-.student-form .course-selection-label.form-label{
-  font-size: 16px;
-}
-
-.student-form select.form-control[multiple]{
-  border-radius: 10px;
+  margin-left: 15px;
 }
 
 .student-form .course-err-msg{
@@ -242,35 +148,24 @@
   margin-left: 0;
   width: 100%;
   margin-bottom: 15px;
-  font-size: 16px;
+  margin-left: 14px;
+  font-size: 12px;
 }
 
-.student-form .selected-courses-label{
-  min-width: 100%;
-  font-size: 16px;
-}
-
-.student-form .rm-course{
-  float: right;
-  margin-top: -15px;
-  margin-right: -5px;
-}
-
-.student-form .rm-course i{
-  margin-top: 9.5px;
-  margin-left: 8px;
-  float: right;
-}
-
-.student-form .rm-course:hover i{
-  cursor: pointer;
+.student-form .submit-error{
+  text-align: center;
+  width: 50%;
+  margin: 15px 25%;
+  font-size: 12px;
   color: red;
 }
 
-.student-form .num-courses-button{
-  position: relative;
-  bottom: 5px;
-  left: 200px;
+.student-form select{
+  font-size: 16px;
+}
+
+.student-form #submit{
+  margin-bottom: 20px;
 }
 
 .plan-container .schedule-container{
