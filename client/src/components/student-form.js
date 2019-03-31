@@ -96,6 +96,7 @@ class StudentForm extends Component {
 
     this.catalog = {};
     this.faculty = '';
+    this.generatedPlan = {};
     this.MAX_NUM_COURSES = 6;
 
     this.state = {
@@ -250,7 +251,7 @@ class StudentForm extends Component {
 
     if (!state[property]) {
       this.setState({
-        [property]: [courseCode],
+        [property]: [ courseCode ],
       });
       this.setErrMsg(property, null);
     } else if (state[property].length === state[numCourses]) {
@@ -350,20 +351,18 @@ class StudentForm extends Component {
       },
     };
 
-    console.log(jsonObject);
 
     axios.post('/user/plan', jsonObject)
       .then((response) => {
-        console.log(response);
+        this.generatedPlan = response.data.plan;
+        // go to schedule page
+        this.setState({
+          showPlan: true,
+        });
       })
       .catch((error) => {
         console.log(error);
       });
-
-    // go to schedule page
-    this.setState({
-      showPlan: true,
-    });
   }
 
   parseCourseCatalog() {
@@ -417,7 +416,7 @@ class StudentForm extends Component {
           }
 
           if (!map[departmentName] && displayName !== '') {
-            map[departmentName] = [displayName];
+            map[departmentName] = [ displayName ];
           } else {
             map[departmentName].push(displayName);
           }
@@ -443,7 +442,7 @@ class StudentForm extends Component {
 
   removeFallCourseSelection = course => () => {
     this.setState((state) => {
-      const fallSelectedCourses = [...state.fallSelectedCourses];
+      const fallSelectedCourses = [ ...state.fallSelectedCourses ];
       const toDelete = fallSelectedCourses.indexOf(course);
       fallSelectedCourses.splice(toDelete, 1);
       return { fallSelectedCourses };
@@ -452,7 +451,7 @@ class StudentForm extends Component {
 
   removeWinterCourseSelection = course => () => {
     this.setState((state) => {
-      const winterSelectedCourses = [...state.winterSelectedCourses];
+      const winterSelectedCourses = [ ...state.winterSelectedCourses ];
       const toDelete = winterSelectedCourses.indexOf(course);
       winterSelectedCourses.splice(toDelete, 1);
       return { winterSelectedCourses };
@@ -461,7 +460,7 @@ class StudentForm extends Component {
 
   removeSummerCourseSelection = course => () => {
     this.setState((state) => {
-      const summerSelectedCourses = [...state.summerSelectedCourses];
+      const summerSelectedCourses = [ ...state.summerSelectedCourses ];
       const toDelete = summerSelectedCourses.indexOf(course);
       summerSelectedCourses.splice(toDelete, 1);
       return { summerSelectedCourses };
@@ -503,7 +502,7 @@ class StudentForm extends Component {
     } = this.state;
 
     return showPlan
-      ? <Plan />
+      ? <Plan formData={this.generatedPlan} />
       : (
         <MuiThemeProvider theme={custTheme}>
           <div className='header-logo'>
