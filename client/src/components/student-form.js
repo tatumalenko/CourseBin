@@ -19,6 +19,7 @@ import {
   Button,
   FormLabel,
   FormControl,
+  FormGroup,
   Grid,
   Select,
   NativeSelect,
@@ -43,18 +44,6 @@ function TabContainer(props) {
 }
 
 const styles = theme => ({
-  fab: {
-    position: 'absolute',
-    bottom: theme.spacing.unit * 2,
-    right: theme.spacing.unit * 2,
-  },
-  fabGreen: {
-    'color': theme.palette.common.white,
-    'backgroundColor': green[500],
-    '&:hover': {
-      backgroundColor: green[600],
-    },
-  },
   toggleContainer: {
     height: 56,
     padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
@@ -63,6 +52,10 @@ const styles = theme => ({
     justifyContent: 'flex-start',
     margin: `${theme.spacing.unit}px 0`,
     background: theme.palette.background.pr,
+  },
+  formContent: {
+    width: '50%',
+    margin: '0 25%',
   },
 });
 
@@ -217,7 +210,7 @@ class StudentForm extends Component {
 
     if (!state[property]) {
       this.setState({
-        [property]: [courseCode],
+        [property]: [ courseCode ],
       });
       this.setErrMsg(property, null);
     } else if (state[property].length === state[numCourses]) {
@@ -265,7 +258,14 @@ class StudentForm extends Component {
   handleSubmit(event) {
     event.preventDefault();
     const state = this.state;
-    console.log(state);
+
+    if (state.fallSelectedCourses.length < state.fallNumOfCourses) {
+      return;
+    } if (state.winterSelectedCourses.length < state.winterNumOfCourses) {
+      return;
+    } if (state.winterSelectedCourses.length < state.winterNumOfCourses) {
+      return;
+    }
 
     const jsonObject = {
       fall: {
@@ -352,7 +352,7 @@ class StudentForm extends Component {
           }
 
           if (!map[departmentName] && displayName !== '') {
-            map[departmentName] = [displayName];
+            map[departmentName] = [ displayName ];
           } else {
             map[departmentName].push(displayName);
           }
@@ -398,10 +398,16 @@ class StudentForm extends Component {
       fallSelectedCourses,
       fallErrMsg,
 
+      winterTimePreference,
+      winterSelectedCourse,
+      winterNumOfCourses,
       winterSelectedFaculty,
       winterSelectedCourses,
       winterErrMsg,
 
+      summerTimePreference,
+      summerSelectedCourse,
+      summerNumOfCourses,
       summerSelectedFaculty,
       summerSelectedCourses,
       summerErrMsg,
@@ -419,7 +425,7 @@ class StudentForm extends Component {
           <div className='student-form'>
             <form onSubmit={this.handleSubmit}>
               <h3 id='form-header'>First, we will just need some basic information... </h3>
-              <div id='student-form-content'>
+              <div className={classes.formContent}>
                 <AppBar position='static' color='secondary'>
                   <Tabs
                     value={currentView}
@@ -480,78 +486,84 @@ class StudentForm extends Component {
                           </ToggleButtonGroup>
                         </div>
                       </Grid>
-                      {courseMap && fallSelectedFaculty ? (
-                        <Grid container spacing={24} className='course-selection-box'>
-                          <Grid item xs={6}>
-                            <FormLabel>
-                              Choose a department
-                            </FormLabel>
-                            <FormControl>
-                              <Select
-                                native
-                                value={fallSelectedFaculty}
-                                onChange={this.handleFacultyChange}
-                                inputProps={{
-                                  name: 'fallSelectedFaculty',
-                                  id: 'demo-controlled-open-select',
-                                }}
-                              >
-                                {courseMap ? Object.keys(courseMap).map(faculty => (
-                                  <option key={faculty} value={faculty}>
-                                    {faculty}
-                                  </option>
-                                )) : null}
-                              </Select>
-                            </FormControl>
-                          </Grid>
+                      <Grid container spacing={24}>
 
-                          <Grid item xs={6}>
+                        {courseMap && fallSelectedFaculty ? (
+                          <span>
+                            <Grid item xs={12}>
+                              <FormLabel>
+                                Choose a department
+                              </FormLabel>
+                              <FormControl>
+                                <Select
+                                  native
+                                  value={fallSelectedFaculty}
+                                  onChange={this.handleFacultyChange}
+                                  inputProps={{
+                                    name: 'fallSelectedFaculty',
+                                    id: 'demo-controlled-open-select',
+                                  }}
+                                >
+                                  {courseMap ? Object.keys(courseMap).map(faculty => (
+                                    <option key={faculty} value={faculty}>
+                                      {faculty}
+                                    </option>
+                                  )) : null}
+                                </Select>
+                              </FormControl>
+                            </Grid>
 
-                            <FormLabel className='course-selection-label'>
-                              Choose your courses
-                            </FormLabel>
-                            <FormControl>
-                              <NativeSelect
-                                value={fallSelectedCourse}
-                                onChange={this.handleCourseSelection('fallSelectedCourse')}
-                                name='fallSelectedCourse'
+                            <Grid item xs={12}>
+                              <FormGroup>
+                                <FormLabel>
+                                  Choose your courses
+                                </FormLabel>
+                                <FormControl>
+                                  <NativeSelect
+                                    value={fallSelectedCourse}
+                                    onChange={this.handleCourseSelection('fallSelectedCourse')}
+                                    name='fallSelectedCourse'
+                                  >
+                                    <option value='' disabled>
+                                      Select
+                                    </option>
+                                    {courseMap && fallSelectedFaculty && courseMap[fallSelectedFaculty] ? courseMap[fallSelectedFaculty].map(course => (
+                                      <option value={course}>
+                                        {course}
+                                      </option>
+                                    )) : null
+                                    }
+                                  </NativeSelect>
+                                </FormControl>
+                              </FormGroup>
+                            </Grid>
+                          </span>
+
+                        )
+                          : null
+                        }
+
+                        <Grid item xs={12} className='selected-courses-container'>
+                          <div className='course-err-msg'>{fallErrMsg}</div>
+                          <FormLabel className='selected-courses-label' style={{ display: fallSelectedCourses.length === 0 ? 'none' : 'initial' }}>Selected Courses:</FormLabel>
+                          {fallSelectedCourses ? Object.keys(fallSelectedCourses).map(index => (
+                            <div className='selected-courses'>
+                              <Typography
+                                className='rm-course'
+                                title='remove course?'
+                                onClick={() => this.removeCourseSelection('fallSelectedCourses', index)}
                               >
-                                <option value='' disabled>
-                                  Select
-                                </option>
-                                {courseMap && fallSelectedFaculty && courseMap[fallSelectedFaculty] ? courseMap[fallSelectedFaculty].map(course => (
-                                  <option value={course}>
-                                    {course}
-                                  </option>
-                                )) : null
-                                }
-                              </NativeSelect>
-                            </FormControl>
-                          </Grid>
+                                <i className='material-icons'>
+                                  delete_forever
+                                </i>
+                              </Typography>
+                              {fallSelectedCourses[index]}
+                            </div>
+                          )) : <div />}
                         </Grid>
-                      )
-                        : null
-                      }
 
-
-                      <Grid item xs={12} className='selected-courses-container'>
-                        <div className='course-err-msg'>{fallErrMsg}</div>
-                        <FormLabel className='selected-courses-label' style={{ display: fallSelectedCourses.length === 0 ? 'none' : 'initial' }}>Selected Courses:</FormLabel>
-                        {fallSelectedCourses ? Object.keys(fallSelectedCourses).map(index => (
-                          <div className='selected-courses'>
-                            <FormLabel
-                              className='rm-course'
-                              title='remove course?'
-                              onClick={() => this.removeCourseSelection('fallSelectedCourses', index)}
-                            >
-                              <i className='material-icons'>
-                                delete_forever
-                              </i>
-                            </FormLabel>
-                            {fallSelectedCourses[index]}
-                          </div>
-                        )) : <div />}
                       </Grid>
+
 
                     </Grid>
                   </TabContainer>

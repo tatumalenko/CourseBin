@@ -112,8 +112,7 @@
 .student-form .form-header{
   margin-top: 75px;
 }
-
-.student-form .semester-form-component .season:hover{
+/* .student-form .semester-form-component .season:hover{
   text-decoration: none;
   color:#A98638;
   cursor: pointer;
@@ -128,7 +127,7 @@
   border-radius: 8px;
   padding: 10px;
   width: 100%;
-}
+} */
 
 
 .student-form .btn{
