@@ -59,10 +59,10 @@ class Signup extends Component {
     }
     return (
 
-      <div>
+      <div className='home-form-wrapper'> 
 
         <div className='title-wrapper'>
-          <h1>Coursebin</h1>
+          <h1>CourseBin</h1>
         </div>
 
         <Form>
