@@ -160,6 +160,10 @@
   color: red;
 }
 
+.student-form select{
+  font-size: 16px;
+}
+
 .student-form #submit{
   margin-bottom: 20px;
 }
