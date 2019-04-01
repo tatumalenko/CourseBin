@@ -16,7 +16,7 @@ class App extends Component {
     super();
     // Must set state to null otherwise UI will load prematurely before server response
     this.state = null;
-
+    this._isMounted = false;
     this.getUser = this.getUser.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
     this.updateUser = this.updateUser.bind(this);
@@ -24,6 +24,11 @@ class App extends Component {
 
   componentDidMount() {
     this.getUser();
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   getUser() {
@@ -33,31 +38,37 @@ class App extends Component {
       if (response.data.user) {
         console.log('Get User: There is a user saved in the server session: ');
 
-        this.setState({
-          loggedIn: true,
-          username: response.data.user.username,
-        });
+        if (this._isMounted) {
+          this.setState({
+            loggedIn: true,
+            username: response.data.user.username,
+          });
+        }
       } else {
         console.log('Get user: no user');
-        this.setState({
-          loggedIn: false,
-          username: null,
-        });
+        if (this._isMounted) {
+          this.setState({
+            loggedIn: false,
+            username: null,
+          });
+        }
       }
 
       console.log('SHOULD RELOAD PAGE HERE');
     }).catch((error) => {
       console.log('Get user: no user');
       console.error(error);
-      this.setState({
-        loggedIn: false,
-        username: null,
-      });
+      if (this._isMounted) {
+        this.setState({
+          loggedIn: false,
+          username: null,
+        });
+      }
     });
   }
 
   updateUser(userObject) {
-    this.setState(userObject);
+    if (this._isMounted) { this.setState(userObject); }
   }
 
   render() {
@@ -74,17 +85,14 @@ class App extends Component {
         {/* greet user if logged in: */}
         {state.loggedIn
           && (
-
             <Home />
-            
           )
         }
-        
 
-        
         {}
         {/* Routes to different components */}
-        {!state.loggedIn && (
+        {
+          !state.loggedIn && (
           <Route
             exact
             path='/'
@@ -94,9 +102,11 @@ class App extends Component {
               />
             )}
           />
-        )
+          )
         }
-        {!state.loggedIn && (
+
+        {
+          !state.loggedIn && (
           <Route
             path='/signup'
             render={() => (
@@ -105,8 +115,8 @@ class App extends Component {
               />
             )}
           />
-        )}
-
+          )
+        }
 
         <div className='home-bottom'>
           <img src={concordiaLogo} alt='Concordia University' />
