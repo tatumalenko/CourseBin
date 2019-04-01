@@ -6,10 +6,14 @@ class Util {
     const length = timeBlocks.length;
     // Sort array based on start times.
     blockArray.sort((a, b) => ((a.startTime > b.startTime) ? 1 : ((b.startTime > a.startTime) ? -1 : 0)));
+    if (length <= 1) {
+      return false;
+    }
 
     for (let i = 0; i < length - 1; i += 1) {
       if (blockArray[i + 1].startTime <= blockArray[i].endTime) { return true; }
     }
+
     return false;
   }
 

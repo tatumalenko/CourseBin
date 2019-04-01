@@ -84,3 +84,14 @@ test('timesOverlap: No Overlapping timeBlocks', (t) => {
   ];
   t.false(Util.timesOverlap(timeArray));
 });
+
+test('timesOverlap: single timeBlock in array', (t) => {
+  const timeArray = [
+    new TimeBlock({
+      startTime: '17.45.00',
+      endTime: '19.30.00',
+      weekDay: 'Friday',
+    }),
+  ];
+  t.false(Util.timesOverlap(timeArray));
+});
