@@ -10,7 +10,7 @@ class Signup extends Component {
       username: '',
       password: '',
       redirectTo: null,
-      displayError: false,
+      signupError: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -45,26 +45,23 @@ class Signup extends Component {
         this.setState({
           username: '',
           password: '',
-          displayError: true,
+          signupError: error.response,
         });
       });
   }
 
   render() {
     const {
-      username, password, redirectTo, displayError,
+      username, password, redirectTo, signupError,
     } = this.state;
     if (redirectTo) {
       return <Redirect to={{ pathname: redirectTo }} />;
     }
     return (
-
-      <div className='home-form-wrapper'> 
-
+      <div className='home-form-wrapper'>
         <div className='title-wrapper'>
           <h1>CourseBin</h1>
         </div>
-
         <Form>
           <Form.Row>
             <Col xs={5} />
@@ -79,7 +76,6 @@ class Signup extends Component {
               />
             </Col>
           </Form.Row>
-
           <Form.Row>
             <Col xs={5} />
             <Col xs={2}>
@@ -93,16 +89,16 @@ class Signup extends Component {
             </Col>
             <Col xs={5} />
             <Col xs={5} />
-
-            {displayError
-              ? (
-                <Col xs={2}>
-                  <Form.Label id='error' className='error-msg'>
-                    The signup process did not work! Please try again.
-                  </Form.Label>
-                </Col>
-              )
-              : null
+            {
+              signupError
+                ? (
+                  <Col xs={2}>
+                    <Form.Label id='error' className='error-msg'>
+                      {signupError.data.message.toString()}
+                    </Form.Label>
+                  </Col>
+                )
+                : null
             }
           </Form.Row>
           <br />
@@ -115,7 +111,6 @@ class Signup extends Component {
                 size='lg'
               >
                 Sign up
-
               </Button>
             </Col>
             <Col xs={12}>
@@ -128,7 +123,6 @@ class Signup extends Component {
           </Form.Row>
         </Form>
       </div>
-
     );
   }
 }
