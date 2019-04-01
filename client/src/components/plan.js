@@ -153,7 +153,7 @@ class Plan extends Component {
 
 
     this.state = {
-      data: [],
+      dataFall2019: [],
       class: 'COMP-472',
       subject: 'Artificial Intelligence',
       lecture: 'LEC LL 1234, Hall building 937',
@@ -177,7 +177,7 @@ class Plan extends Component {
           let finishDateTime = findWeekDayDate2({ dayOfWeek, dateStr, timeEnd });
 
           
-          this.state.data.push({
+          this.state.dataFall2019.push({
             id: scheduleIndex,
             title: section.courseCode + ' - ' + section.code + ' '+ section.kind,
             startDate: new Date(beginDateTime.format("MM/DD/YYYY HH:mm:ss")),
@@ -215,7 +215,7 @@ class Plan extends Component {
       }
     ];
     console.log(appointments);
-    console.log(this.state.data);
+    console.log(this.state.dataFall2019);
 
     
     
@@ -241,8 +241,8 @@ class Plan extends Component {
 
 
   render() {
-    const {data, fallSchedule, activeStep} = this.state;
-    const filterDataFall2019 = data.filter(function (el) {
+    const {dataFall2019, fallSchedule, activeStep} = this.state;
+    const filterDataFall2019 = dataFall2019.filter(function (el) {
       return el.id == activeStep
     });
     return (
