@@ -85,20 +85,6 @@ const theme = createMuiTheme({
   },
 });
 
-const sequenceRowFall = [
-  [ 'ENGR 301', 'Engineering Management Principles and Economics', 3.00 ],
-  [ 'SOEN 321', 'Information Systems Security', 3.00 ],
-  [ 'SOEN 490', 'Capstone Software Engineering Design Project', 4.00 ],
-  [ 'COMP 353', 'Databases', 4.00 ],
-].map((row, id) => createRow(id, ...row));
-
-function createRow(id, courseNum, courseTitle, credits) {
-  return {
-    id, courseNum, courseTitle, credits,
-  };
-}
-
-
 class Plan extends Component {
   constructor(props) {
     super(props);
@@ -107,6 +93,7 @@ class Plan extends Component {
     const sequences = plan.sequences;
 
     this.state = {
+      availableSequences: [],
       data: classes,
       class: 'COMP-472',
       subject: 'Artificial Intelligence',
@@ -115,6 +102,14 @@ class Plan extends Component {
       fallSchedule: schedules.fall,
     };
     console.log(this.state.fallSchedule);
+
+    for (var i=0; i < sequences.length; i++){
+      this.state.availableSequences.push({
+        'code': sequences[i].courses[0].code,
+        'title': sequences[i].courses[0].title,
+        'credits': sequences[i].courses[0].credits,
+      });
+    }
   }
 
   render() {
@@ -226,10 +221,10 @@ class Plan extends Component {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {sequenceRowFall.map(row => (
+                      {this.state.availableSequences.slice(0,5).map(row => (
                         <TableRow key={row.id}>
-                          <TableCell>{row.courseNum}</TableCell>
-                          <TableCell align='center'>{row.courseTitle}</TableCell>
+                          <TableCell>{row.code}</TableCell>
+                          <TableCell align='center'>{row.title}</TableCell>
                           <TableCell align='right'>{row.credits}</TableCell>
                         </TableRow>
                       ))}
@@ -253,10 +248,10 @@ class Plan extends Component {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {sequenceRowFall.map(row => (
+                      {this.state.availableSequences.slice(5,10).map(row => (
                         <TableRow key={row.id}>
-                          <TableCell>{row.courseNum}</TableCell>
-                          <TableCell align='center'>{row.courseTitle}</TableCell>
+                          <TableCell>{row.code}</TableCell>
+                          <TableCell align='center'>{row.title}</TableCell>
                           <TableCell align='right'>{row.credits}</TableCell>
                         </TableRow>
                       ))}
@@ -280,10 +275,10 @@ class Plan extends Component {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {sequenceRowFall.map(row => (
+                      {this.state.availableSequences.slice(10,15).map(row => (
                         <TableRow key={row.id}>
-                          <TableCell>{row.courseNum}</TableCell>
-                          <TableCell align='center'>{row.courseTitle}</TableCell>
+                          <TableCell>{row.code}</TableCell>
+                          <TableCell align='center'>{row.title}</TableCell>
                           <TableCell align='right'>{row.credits}</TableCell>
                         </TableRow>
                       ))}
