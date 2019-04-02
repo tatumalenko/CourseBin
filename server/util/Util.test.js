@@ -2,7 +2,6 @@ import test from 'ava';
 
 const { Util } = require('./Util');
 
-const { Sequence } = require('./../database/models/Sequence');
 const { TimeBlock } = require('./../database/models/TimeBlock');
 
 test('allCombinations: Integers - all non-empty arrays', (t) => {
