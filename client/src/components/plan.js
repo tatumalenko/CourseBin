@@ -5,7 +5,6 @@ import {
   WeekView,
   Appointments,
 } from '@devexpress/dx-react-scheduler-material-ui';
-
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {
   MuiThemeProvider,
@@ -80,6 +79,9 @@ const burgundy = {
 const theme = createMuiTheme({
   palette: {
     primary: burgundy, secondary: burgundy, error: burgundy,
+  },
+  typography: {
+    useNextVariants: true,
   },
 });
 

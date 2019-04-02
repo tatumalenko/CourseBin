@@ -1,9 +1,14 @@
 /* eslint-disable react/jsx-boolean-value */
 /* eslint-disable react/jsx-indent-props */
 /* eslint-disable react/jsx-indent */
+/* eslint-disable react/sort-comp */
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable prefer-destructuring */
+/* eslint-disable max-len */
+
 import React, { Component } from 'react';
 import axios from 'axios';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import SwipeableViews from 'react-swipeable-views';
 import { withStyles } from '@material-ui/core/styles';
@@ -27,7 +32,6 @@ import {
 } from '@material-ui/core';
 import cyan from '@material-ui/core/colors/cyan';
 
-
 import Plan from './plan';
 
 const custTheme = createMuiTheme({
@@ -38,10 +42,10 @@ const custTheme = createMuiTheme({
       light: '#A98638',
     },
   },
+  typography: {
+    useNextVariants: true,
+  },
 });
-
-
-const _ = require('lodash');
 
 function TabContainer(props) {
   const { children, dir } = props;
@@ -84,7 +88,7 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'center',
     flexWrap: 'wrap',
-    padding: theme.spacing.unit*2,
+    padding: theme.spacing.unit * 2,
   },
   chip: {
     margin: theme.spacing.unit / 2,
@@ -591,7 +595,7 @@ class StudentForm extends Component {
                               <ToggleButton value={6} variant='outline-info'>6</ToggleButton>
                             </ToggleButtonGroup>
                           </div>
-                          </FormControl>
+                        </FormControl>
                         </Grid>
 
                         <div className='selected-courses-container'>
@@ -636,7 +640,7 @@ class StudentForm extends Component {
                                       Select
                                     </option>
                                     {courseMap && fallSelectedFaculty && courseMap[fallSelectedFaculty] ? courseMap[fallSelectedFaculty].map(course => (
-                                      <option value={course}>
+                                      <option key={course} value={course}>
                                         {course}
                                       </option>
                                     )) : null
@@ -658,7 +662,7 @@ class StudentForm extends Component {
                               <div className={classes.chips}>
                                 {fallSelectedCourses.map(course => (
                                   <Chip
-                                    key={course.key}
+                                    key={course}
                                     variant='outlined'
                                     label={course}
                                     onDelete={this.removeFallCourseSelection(course)}
@@ -702,7 +706,7 @@ class StudentForm extends Component {
                                 </ToggleButton>
                               </ToggleButtonGroup>
                             </div>
-                          </FormControl>
+                        </FormControl>
                         </Grid>
 
                         <Grid item xs={12}>
@@ -726,7 +730,7 @@ class StudentForm extends Component {
                               <ToggleButton value={6} variant='outline-info'>6</ToggleButton>
                             </ToggleButtonGroup>
                           </div>
-                          </FormControl>
+                        </FormControl>
                         </Grid>
 
                         <div className='selected-courses-container'>
@@ -771,7 +775,7 @@ class StudentForm extends Component {
                                       Select
                                     </option>
                                     {courseMap && winterSelectedFaculty && courseMap[winterSelectedFaculty] ? courseMap[winterSelectedFaculty].map(course => (
-                                      <option value={course}>
+                                      <option key={course} value={course}>
                                         {course}
                                       </option>
                                     )) : null
@@ -793,7 +797,7 @@ class StudentForm extends Component {
                               <div className={classes.chips}>
                                 {winterSelectedCourses.map(course => (
                                   <Chip
-                                    key={course.key}
+                                    key={course}
                                     variant='outlined'
                                     label={course}
                                     onDelete={this.removeWinterCourseSelection(course)}
@@ -837,7 +841,7 @@ class StudentForm extends Component {
                                 </ToggleButton>
                               </ToggleButtonGroup>
                             </div>
-                          </FormControl>
+                        </FormControl>
                         </Grid>
 
                         <Grid item xs={12}>
@@ -861,7 +865,7 @@ class StudentForm extends Component {
                               <ToggleButton value={6} variant='outline-info'>6</ToggleButton>
                             </ToggleButtonGroup>
                           </div>
-                          </FormControl>
+                        </FormControl>
                         </Grid>
 
                         <div className='selected-courses-container'>
@@ -906,7 +910,7 @@ class StudentForm extends Component {
                                       Select
                                     </option>
                                     {courseMap && summerSelectedFaculty && courseMap[summerSelectedFaculty] ? courseMap[summerSelectedFaculty].map(course => (
-                                      <option value={course}>
+                                      <option key={course} value={course}>
                                         {course}
                                       </option>
                                     )) : null
@@ -928,7 +932,7 @@ class StudentForm extends Component {
                               <div className={classes.chips}>
                                 {summerSelectedCourses.map(course => (
                                   <Chip
-                                    key={course.key}
+                                    key={course}
                                     variant='outlined'
                                     label={course}
                                     onDelete={this.removeSummerCourseSelection(course)}
@@ -954,7 +958,7 @@ class StudentForm extends Component {
                 </Grid>
               </div>
 
-      
+
             </form>
           </div>
         </MuiThemeProvider>

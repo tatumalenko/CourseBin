@@ -11,16 +11,27 @@ class LoginForm extends Component {
       password: '',
       redirectTo: null,
       invalid: false,
-      err: false,
+      loginError: false,
     };
+    this._isMounted = false;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   handleChange(event) {
-    this.setState({
-      [event.target.name]: event.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        [event.target.name]: event.target.value,
+      });
+    }
   }
 
   handleSubmit(event) {
@@ -29,7 +40,7 @@ class LoginForm extends Component {
     const { username, password } = this.state;
     const { updateUser } = this.props;
 
-    this.setState({ invalid: false });
+    if (this._isMounted) { this.setState({ invalid: false }); }
     axios
       .post('/user/login', {
         username,
@@ -44,32 +55,34 @@ class LoginForm extends Component {
             username: response.data.username,
           });
           // update the state to redirect to home
-          this.setState({
-            redirectTo: '/',
-          });
+          if (this._isMounted) {
+            this.setState({
+              redirectTo: '/',
+            });
+          }
         }
       }).catch((error) => {
-        this.setState({
-          username: '',
-          password: '',
-          redirectTo: null,
-        });
+        if (this._isMounted) {
+          this.setState({
+            username: '',
+            password: '',
+            redirectTo: null,
+            loginError: error,
+          });
+        }
         console.error('Login error: ', error);
-        this.setState({ err: true });
       });
   }
 
   render() {
     const {
-      redirectTo, username, password, err,
+      redirectTo, username, password, loginError,
     } = this.state;
     if (redirectTo) {
       return <Redirect to={{ pathname: redirectTo }} />;
     }
 
     return (
-
-
       <div className='home-form-wrapper'>
 
         <div className='title-wrapper'>
@@ -103,11 +116,16 @@ class LoginForm extends Component {
             </Col>
             <Col xs={5} />
             <Col xs={5} />
-            {err
+            {loginError
               ? (
                 <Col xs={2}>
                   <Form.Label id='error' className='error-msg'>
-                    Sorry, this username/password combination is not valid. Please try again or try signing up.
+                    {
+                      loginError.data
+                        ? loginError.data.message.toString()
+                        : 'Sorry, this username/password combination is not valid.'
+                        + 'Please try again or try signing up.'
+                    }
                   </Form.Label>
                 </Col>
               )
@@ -124,23 +142,17 @@ class LoginForm extends Component {
                 size='lg'
               >
                 Login
-
               </Button>
             </Col>
             <Col xs={12}>
-
               <Form.Label className='label-info'>
                 <Link to='/signup'>Not a user? Signup here!</Link>
               </Form.Label>
-
             </Col>
-
           </Form.Row>
-
-
         </Form>
-      </div>
 
+      </div>
     );
   }
 }
