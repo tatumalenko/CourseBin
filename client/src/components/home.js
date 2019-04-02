@@ -12,6 +12,9 @@ const custTheme = createMuiTheme({
       light: '#A98638',
     },
   },
+  typography: {
+    useNextVariants: true,
+  },
 });
 
 class Home extends Component {
@@ -30,7 +33,6 @@ class Home extends Component {
     });
   }
 
-
   render() {
     const { redirectTo, showForm } = this.state;
     if (redirectTo) {
@@ -38,9 +40,7 @@ class Home extends Component {
     }
 
     return (
-
       <MuiThemeProvider theme={custTheme}>
-
         {showForm
           ? <StudentForm />
           : (
@@ -48,13 +48,20 @@ class Home extends Component {
               <div className='title-wrapper'>
                 <h1>CourseBin</h1>
               </div>
-              <Button id='submit' size='large' variant='outlined' color='primary' type='submit' onClick={this.handleClick}>Let's Get Started!</Button>
+              <Button
+                id='submit'
+                size='large'
+                variant='outlined'
+                color='primary'
+                type='submit'
+                onClick={this.handleClick}
+              >
+                Let&apos;s Get Started!
+              </Button>
             </div>
           )
         }
       </MuiThemeProvider>
-
-
     );
   }
 }
