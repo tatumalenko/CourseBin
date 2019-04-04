@@ -82,6 +82,7 @@ const styles = theme => ({
   },
   formContent: {
     margin: '0 12%',
+    minWidth: '330px',
   },
   chips: {
     display: 'flex',
