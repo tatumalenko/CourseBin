@@ -22,7 +22,8 @@ import {
   ExpansionPanelDetails,
   Typography,
 } from '@material-ui/core';
-import { KeyboardArrowLeft, KeyboardArrowRight, ExpandMoreIcon } from '@material-ui/icons';
+import { KeyboardArrowLeft, KeyboardArrowRight } from '@material-ui/icons';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import moment from 'moment';
 import ChildBox from './box-child';
 
@@ -62,11 +63,14 @@ class Plan extends Component {
 
       // schedules
       dataFall2019: [],
+      fallSchedule: this.schedules.fall,
+
+      // dummy info for the description box component
+      // TODO real implementation
       course: 'COMP-472',
       subject: 'Artificial Intelligence',
       lecture: 'LEC LL 1234, Hall building 937',
       tutorial: 'TUT A, Hall building 435 ',
-      fallSchedule: this.schedules.fall,
       activeStep: 0,
     };
 
@@ -88,30 +92,6 @@ class Plan extends Component {
   }
 
   parseSchedules = () => {
-    const appointments = [
-      {
-        title: 'Website Re-Design Plan',
-        startDate: new Date(2018, 5, 25, 9, 30),
-        endDate: new Date(2018, 5, 25, 11, 30),
-        location: 'Room 1',
-      },
-      {
-        title: 'Book Flights to San Fran for Sales Trip',
-        startDate: new Date(2018, 5, 25, 12, 0),
-        endDate: new Date(2018, 5, 25, 13, 0),
-        id: 1,
-        location: 'Room 1',
-      },
-      {
-        title: 'Install New Router in Dev Room',
-        startDate: new Date(2018, 5, 25, 14, 30),
-        endDate: new Date(2018, 5, 25, 15, 30),
-        id: 2,
-        location: 'Room 2',
-      },
-    ];
-    console.log(appointments);
-    console.log(this.state.dataFall2019);
     const state = this.state;
 
     // Populating the data for all classes
@@ -154,6 +134,8 @@ class Plan extends Component {
     console.log('printin out AvailableSequences');
     console.log(this.state.availableSequences);
   }
+
+  // ******** functions to parse schedules *************
 
   createDate = (dateStr) => {
     const dateParseFormatStr = 'DD/MM/YYYY';
@@ -203,6 +185,10 @@ class Plan extends Component {
     return actualDateOfWeekDay;
   };
 
+  // ******** functions to parse sequences *************
+
+
+  // ******** functions to dynamically handle state *************
   handleNext = () => {
     this.setState(prevState => ({
       activeStep: prevState.activeStep + 1,
