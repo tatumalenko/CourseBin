@@ -40,11 +40,9 @@ class Signup extends Component {
   }
 
   handleChange = name => (event) => {
-    if (this._isMounted) {
-      this.setState({
-        [name]: event.target.value,
-      });
-    }
+    this.setState({
+      [name]: event.target.value,
+    });
   }
 
   handleSubmit(event) {
