@@ -55,149 +55,41 @@ class Plan extends Component {
   constructor(props) {
     super(props);
     const plan = props.formData;
-    const schedules = plan.schedules;
-    const sequences = plan.sequences;
-
-    const createDate = (dateStr) => {
-      const dateParseFormatStr = 'DD/MM/YYYY';
-      const date = moment(dateStr, dateParseFormatStr);
-      return date;
-    };
-
-    const createTime = timeStr => moment(timeStr, 'HH:mm:ss');
-
-    const createTime2 = timeEnd => moment(timeEnd, 'HH:mm:ss');
-
-    const createDateTime = (dateStr, timeStr) => {
-      const date = createDate(dateStr);
-      const time = createTime(timeStr);
-      date.set({
-        hour: time.get('hour'),
-        minute: time.get('minute'),
-        second: time.get('second'),
-      });
-      return date;
-    };
-
-    const createDateTime2 = (dateStr, timeEnd) => {
-      const date = createDate(dateStr);
-      const time = createTime(timeEnd);
-      date.set({
-        hour: time.get('hour'),
-        minute: time.get('minute'),
-        second: time.get('second'),
-      });
-      return date;
-    };
-
-    // find if weekDay is before or after startDate and return
-    // next week's weekDay date if startDate occured after weekDay
-    // of that week
-    const findWeekDayDate = ({ dayOfWeek, dateStr, timeStr }) => {
-      const date = createDate(dateStr);
-      const dateOfWeekDayInSameWeek = createDate(dateStr).day(dayOfWeek);
-      // if dateOfWeekDayInSameWeek occurs before the date, then it has
-      // passed and the actual date with that day of the week will occur
-      // in the next week
-      const actualDateOfWeekDay = dateOfWeekDayInSameWeek.isBefore(date)
-        ? dateOfWeekDayInSameWeek.add(7, 'day')
-        : dateOfWeekDayInSameWeek;
-      const time = createTime(timeStr);
-      actualDateOfWeekDay.set({
-        hour: time.get('hour'),
-        minute: time.get('minute'),
-        second: time.get('second'),
-      });
-
-      return actualDateOfWeekDay;
-    };
-
-    const findWeekDayDate2 = ({ dayOfWeek, dateStr, timeEnd }) => {
-      const date = createDate(dateStr);
-      const dateOfWeekDayInSameWeek = createDate(dateStr).day(dayOfWeek);
-      // if dateOfWeekDayInSameWeek occurs before the date, then it has
-      // passed and the actual date with that day of the week will occur
-      // in the next week
-      const actualDateOfWeekDay = dateOfWeekDayInSameWeek.isBefore(date)
-        ? dateOfWeekDayInSameWeek.add(7, 'day')
-        : dateOfWeekDayInSameWeek;
-      const time = createTime(timeEnd);
-      actualDateOfWeekDay.set({
-        hour: time.get('hour'),
-        minute: time.get('minute'),
-        second: time.get('second'),
-      });
-      return actualDateOfWeekDay;
-    };
-
+    this.schedules = plan.schedules;
+    this.sequences = plan.sequences;
 
     this.state = {
+      // sequences
       availableSequences: [],
+
+      // schedules
       dataFall2019: [],
-      class: 'COMP-472',
+      course: 'COMP-472',
       subject: 'Artificial Intelligence',
       lecture: 'LEC LL 1234, Hall building 937',
       tutorial: 'TUT A, Hall building 435 ',
-      fallSchedule: schedules.fall,
+      fallSchedule: this.schedules.fall,
       activeStep: 0,
     };
-    console.log(this.state.fallSchedule);
 
-    for (var i=0; i < sequences.length; i++){
-      var coursesLength = sequences[i].courses.length;
-      console.log("courses length at: " + i + " is: " + coursesLength);
-      this.state.availableSequences.push({
-        'term': sequences[i].term,
-         'year': sequences[i].year,
-         'courses': sequences[i].courses
-       });
-    //   for (var x = i; x < coursesLength; x++){
-    //   this.state.availableSequences.push({
-    //   'courses': sequences[i].courses[x]
-    //   });
-    // }
+    this.createDate = this.createDate.bind(this);
+    this.createTime = this.createTime.bind(this);
+    this.findWeekDayDate = this.findWeekDayDate.bind(this);
+    this.findWeekDayDate2 = this.findWeekDayDate2.bind(this);
+    this.parseSchedules = this.parseSchedules.bind(this);
+    this.parseSequences = this.parseSequences.bind(this);
+    this.handleBack = this.handleBack.bind(this);
+    this.handleNext = this.handleNext.bind(this);
+    this.handleStepChange = this.handleStepChange.bind(this);
   }
-  console.log('printin out AvailableSequences')
-  console.log(this.state.availableSequences);
-
-  // var arrayOfYears = []; 
-  // for (var i = 0; i < this.state.availableSequences.length; i++){
-  //     {
-  //       if (arrayOfYears[i-1] != this)
-  //       arrayOfYears.push(
-  //         this.state.availableSequences[i].year
-  //       )
-  //     }
-  // }
-  // console.log("Printing out array of years");
-  // console.log(arrayOfYears);
 
 
-    //Populating the data for all classes
-    this.state.fallSchedule && this.state.fallSchedule.map( (schedule, scheduleIndex) => {
-      this.state.fallSchedule[scheduleIndex].sections.map((section, sectionIndex) => {
-        this.state.fallSchedule[scheduleIndex].sections[sectionIndex].times.map((time, timeIndex) => {
-          const dayOfWeek = time.weekDay;
-          const dateStr = '04/09/2018';
-          const timeStr = time.startTime;
-          const timeEnd = time.endTime;
+  componentDidMount() {
+    this.parseSequences();
+    this.parseSchedules();
+  }
 
-          const beginDateTime = findWeekDayDate({ dayOfWeek, dateStr, timeStr });
-          const finishDateTime = findWeekDayDate2({ dayOfWeek, dateStr, timeEnd });
-
-
-          this.state.dataFall2019.push({
-            id: scheduleIndex,
-            title: `${section.courseCode} - ${section.code} ${section.kind}`,
-            startDate: new Date(beginDateTime.format('MM/DD/YYYY HH:mm:ss')),
-            endDate: new Date(finishDateTime.format('MM/DD/YYYY HH:mm:ss')),
-
-
-          });
-        });
-      });
-    });
-
+  parseSchedules = () => {
     const appointments = [
       {
         title: 'Website Re-Design Plan',
@@ -222,7 +114,98 @@ class Plan extends Component {
     ];
     console.log(appointments);
     console.log(this.state.dataFall2019);
+
+
+    // Populating the data for all classes
+    this.state.fallSchedule && this.state.fallSchedule.map((schedule, scheduleIndex) => {
+      this.state.fallSchedule[scheduleIndex].sections.map((section, sectionIndex) => {
+        this.state.fallSchedule[scheduleIndex].sections[sectionIndex].times.map((time) => {
+          const dayOfWeek = time.weekDay;
+          const dateStr = '04/09/2018';
+          const timeStr = time.startTime;
+          const timeEnd = time.endTime;
+          const beginDateTime = findWeekDayDate({ dayOfWeek, dateStr, timeStr });
+          const finishDateTime = findWeekDayDate2({ dayOfWeek, dateStr, timeEnd });
+
+          this.state.dataFall2019.push({
+            id: scheduleIndex,
+            title: `${section.courseCode} - ${section.code} ${section.kind}`,
+            startDate: new Date(beginDateTime.format('MM/DD/YYYY HH:mm:ss')),
+            endDate: new Date(finishDateTime.format('MM/DD/YYYY HH:mm:ss')),
+
+
+          });
+        });
+      });
+    });
   }
+
+  parseSequences = () => {
+    const sequences = this.sequences;
+    console.log(sequences);
+
+    for (let i = 0; i < this.sequences.length; i++) {
+      const coursesLength = this.sequences[i].courses.length;
+      console.log(`courses length at: ${i} is: ${coursesLength}`);
+      const newState = Object.assign({}, this.state);
+      newState.availableSequences.push({
+        term: this.sequences[i].term,
+        year: this.sequences[i].year,
+        courses: this.sequences[i].courses,
+      });
+      this.setState(newState);
+    }
+    console.log('printin out AvailableSequences');
+    console.log(this.state.availableSequences);
+  }
+
+  createDate = (dateStr) => {
+    const dateParseFormatStr = 'DD/MM/YYYY';
+    const date = moment(dateStr, dateParseFormatStr);
+    return date;
+  };
+
+  createTime = timeStr => moment(timeStr, 'HH:mm:ss');
+
+  // find if weekDay is before or after startDate and return
+  // next week's weekDay date if startDate occured after weekDay
+  // of that week
+  findWeekDayDate = ({ dayOfWeek, dateStr, timeStr }) => {
+    const date = createDate(dateStr);
+    const dateOfWeekDayInSameWeek = createDate(dateStr).day(dayOfWeek);
+    // if dateOfWeekDayInSameWeek occurs before the date, then it has
+    // passed and the actual date with that day of the week will occur
+    // in the next week
+    const actualDateOfWeekDay = dateOfWeekDayInSameWeek.isBefore(date)
+      ? dateOfWeekDayInSameWeek.add(7, 'day')
+      : dateOfWeekDayInSameWeek;
+    const time = createTime(timeStr);
+    actualDateOfWeekDay.set({
+      hour: time.get('hour'),
+      minute: time.get('minute'),
+      second: time.get('second'),
+    });
+
+    return actualDateOfWeekDay;
+  };
+
+  findWeekDayDate2 = ({ dayOfWeek, dateStr, timeEnd }) => {
+    const date = createDate(dateStr);
+    const dateOfWeekDayInSameWeek = createDate(dateStr).day(dayOfWeek);
+    // if dateOfWeekDayInSameWeek occurs before the date, then it has
+    // passed and the actual date with that day of the week will occur
+    // in the next week
+    const actualDateOfWeekDay = dateOfWeekDayInSameWeek.isBefore(date)
+      ? dateOfWeekDayInSameWeek.add(7, 'day')
+      : dateOfWeekDayInSameWeek;
+    const time = createTime(timeEnd);
+    actualDateOfWeekDay.set({
+      hour: time.get('hour'),
+      minute: time.get('minute'),
+      second: time.get('second'),
+    });
+    return actualDateOfWeekDay;
+  };
 
   handleNext = () => {
     this.setState(prevState => ({
@@ -242,8 +225,10 @@ class Plan extends Component {
 
 
   render() {
-    const { dataFall2019, fallSchedule, activeStep } = this.state;
-    const filterDataFall2019 = dataFall2019.filter((el) => el.id == activeStep);
+    const {
+      availableSequences, dataFall2019, fallSchedule, activeStep, course, subject, lecture, tutorial,
+    } = this.state;
+    const filterDataFall2019 = dataFall2019.filter(el => el.id == activeStep);
     return (
       <div className='plan-container'>
         <div className='header-logo'>
@@ -261,38 +246,38 @@ class Plan extends Component {
 
                 <Grid item xs={3}>
                   <ChildBox
-                    titleClass={this.state.class}
-                    subject={this.state.subject}
-                    lecture={this.state.lecture}
-                    tutorial={this.state.tutorial}
+                    titleClass={course}
+                    subject={subject}
+                    lecture={lecture}
+                    tutorial={tutorial}
                   />
                   <br />
                   <ChildBox
-                    titleClass={this.state.class}
-                    subject={this.state.subject}
-                    lecture={this.state.lecture}
-                    tutorial={this.state.tutorial}
+                    titleClass={course}
+                    subject={subject}
+                    lecture={lecture}
+                    tutorial={tutorial}
                   />
                   <br />
                   <ChildBox
-                    titleClass={this.state.class}
-                    subject={this.state.subject}
-                    lecture={this.state.lecture}
-                    tutorial={this.state.tutorial}
+                    titleClass={course}
+                    subject={subject}
+                    lecture={lecture}
+                    tutorial={tutorial}
                   />
                   <br />
                   <ChildBox
-                    titleClass={this.state.class}
-                    subject={this.state.subject}
-                    lecture={this.state.lecture}
-                    tutorial={this.state.tutorial}
+                    titleClass={course}
+                    subject={subject}
+                    lecture={lecture}
+                    tutorial={tutorial}
                   />
                   <br />
                   <ChildBox
-                    titleClass={this.state.class}
-                    subject={this.state.subject}
-                    lecture={this.state.lecture}
-                    tutorial={this.state.tutorial}
+                    titleClass={course}
+                    subject={subject}
+                    lecture={lecture}
+                    tutorial={tutorial}
                   />
                 </Grid>
                 <Grid item xs={9}>
@@ -325,10 +310,10 @@ class Plan extends Component {
                             >
                               Next
                               {theme.direction === 'rtl' ? (
-                                  <KeyboardArrowLeft />
-                                ) : (
+                                <KeyboardArrowLeft />
+                              ) : (
                                 <KeyboardArrowRight />
-                                )}
+                              )}
                             </Button>
                           )}
                           backButton={(
@@ -385,15 +370,14 @@ class Plan extends Component {
                     </TableHead>
                     <TableBody>
                       {this.state.availableSequences.map((x) => {
-                          {debugger;}
-                          x.courses.map((row) => (
+                        x.courses.map(row => (
                           <TableRow key={row.id}>
                             <TableCell>{row.code}</TableCell>
                             <TableCell align='center'>{row.title}</TableCell>
                             <TableCell align='right'>{row.credits}</TableCell>
                           </TableRow>
-                          ))
-                      }
+                        ));
+                      },
                         // <TableRow key={row.id}>
                         //   <TableCell>{row.code}</TableCell>
                         //   <TableCell align='center'>{row.title}</TableCell>
@@ -420,7 +404,7 @@ class Plan extends Component {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {this.state.availableSequences.map(row => (
+                      {availableSequences.map(row => (
                         <TableRow key={row.id}>
                           <TableCell>{row.code}</TableCell>
                           <TableCell align='center'>{row.title}</TableCell>
