@@ -1,5 +1,6 @@
 const test = require('ava');
 const mongoose = require('mongoose');
+const _ = require('lodash');
 
 const { ProgramBuilder } = require('./ProgramBuilder');
 const { SoftwareEngineeringDegree } = require('./SoftwareEngineeringDegree');
@@ -256,30 +257,62 @@ test('Sequence generation 2 courses per term', async (t) => {
 });
 
 test('Schedule generation 5 courses per term', async (t) => {
-  // TODO: Needs work, need to finish implementing Util.timesOverlap first
-  // const termSchedulesActual = await ProgramBuilder.findCandidateTermSchedules({
-  //   completedCourses: student.record.completedCourses.map(e => e.code),
-  //   requiredCourses: SoftwareEngineeringDegree.requirements().suggested.wsaOption,
-  //   termPreference: {
-  //     term: 'FALL',
-  //     numberOfCourses: 5,
-  //     requestedCourses: [ 'SOEN331', 'COMP335', 'COMP346', 'COMP348', 'ENCS282' ],
-  //   },
-  // });
+  const args = {
+    completedCourses: student.record.completedCourses.map(e => e.code),
+    requiredCourses: SoftwareEngineeringDegree.requirements().suggested.wsaOption,
+    termPreference: {
+      term: 'FALL',
+      numberOfCourses: 5,
+      requestedCourses: [ 'SOEN331', 'COMP335', 'COMP346', 'COMP348', 'ENCS282' ],
+    },
+  };
 
-  // const termSchedulesExpected = [
-  //   [
-  //     {
-  //       courseCode: 'SOEN331',
-  //       code: 'H',
-  //     },
-  //     {
-  //       courseCode: 'COMP335',
-  //       code: 'H',
-  //     },
-  //   ],
-  // ];
+  const schedules = await ProgramBuilder.findCandidateTermSchedules(args);
 
-  // t.deepEqual(termSchedulesActual, termSchedulesExpected);
-  t.fail('Not yet implemented');
+  // Each schedule should contain only up to the number of courses requested.
+  t.true(schedules.every(schedule => Object.keys(
+    schedule.getCourseCodeSectionsMap(),
+  ).length <= args.termPreference.numberOfCourses));
+
+  // Each schedule should contain only the sections corresponding to those
+  // that match the requested course codes (set difference with the requested
+  // courses should be zero).
+  t.true(schedules.every(
+    schedule => _.difference(
+      Object.keys(schedule.getCourseCodeSectionsMap()),
+      args.termPreference.requestedCourses,
+    ).length === 0,
+  ));
+
+  // Each schedule should contain only sections offered in the term requested.
+  t.true(schedules.every(
+    schedule => schedule.term === args.termPreference.term,
+  ));
+
+  // Each schedule should contain sections corresponding to courses in the set
+  // of required courses (leaving possibility to retake a course).
+  t.true(schedules.every(
+    schedule => _.difference(
+      Object.keys(schedule.getCourseCodeSectionsMap()),
+      args.requiredCourses,
+    ).length === 0,
+  ));
+
+  // Each schedule should contain sections corresponding to courses that they
+  // are eligible to take (satisfy pre- and co-requisites).
+  const hasNoUnmetDependencies = await ProgramBuilder.hasNoUnmetDependenciesPartial({
+    completedCourses: args.completedCourses,
+  });
+  t.true(schedules.every(
+    async schedule => Object.keys(schedule.getCourseCodeSectionsMap()).every(
+      async courseCode => hasNoUnmetDependencies(courseCode),
+    ),
+  ));
+
+  // Each schedule should not contain any time block conflicts nor should it have
+  // any invalid section kind combinations (e.g. LEC 'DD' with TUT 'NNNA').
+  t.false(schedules.some(
+    schedule => schedule.hasInvalidSectionKindCombination() ||
+    schedule.hasConflict(),
+  ));
 });
