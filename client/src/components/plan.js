@@ -21,13 +21,12 @@ import {
   ExpansionPanelDetails,
   Typography,
 } from '@material-ui/core';
-import moment from 'moment';
-import MobileStepper from '@material-ui/core/MobileStepper';
-import Button from '@material-ui/core/Button';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import moment from "moment";
+import MobileStepper from "@material-ui/core/MobileStepper";
+import Button from "@material-ui/core/Button";
+import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
+import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import ChildBox from './box-child';
-
 
 const burgundy = {
   50: '#571D2E',
@@ -58,7 +57,6 @@ class Plan extends Component {
     const plan = props.formData;
     const schedules = plan.schedules;
     const sequences = plan.sequences;
-    console.log(sequences);
 
     const createDate = (dateStr) => {
       const dateParseFormatStr = 'DD/MM/YYYY';
@@ -66,7 +64,31 @@ class Plan extends Component {
       return date;
     };
 
-    const createTime = timeStr => moment(timeStr, 'HH:mm:ss');
+    const createTime = (timeStr) => moment(timeStr, "HH:mm:ss");
+
+    const createTime2 = (timeEnd) => moment(timeEnd, "HH:mm:ss");
+
+    const createDateTime = (dateStr, timeStr) => {
+      const date = createDate(dateStr);
+      const time = createTime(timeStr);
+      date.set({
+        hour: time.get('hour'),
+        minute: time.get('minute'),
+        second: time.get('second'),
+      });
+      return date;
+    };
+
+    const createDateTime2 = (dateStr, timeEnd) => {
+      const date = createDate(dateStr);
+      const time = createTime(timeEnd);
+      date.set({
+        hour: time.get('hour'),
+        minute: time.get('minute'),
+        second: time.get('second'),
+      });
+      return date;
+    };
 
     // find if weekDay is before or after startDate and return
     // next week's weekDay date if startDate occured after weekDay
@@ -110,17 +132,25 @@ class Plan extends Component {
 
 
     this.state = {
+      availableSequences: [],
       dataFall2019: [],
       class: 'COMP-472',
       subject: 'Artificial Intelligence',
       lecture: 'LEC LL 1234, Hall building 937',
       tutorial: 'TUT A, Hall building 435 ',
       fallSchedule: schedules.fall,
-      availableSequences: [],
       activeStep: 0,
     };
     console.log(this.state.fallSchedule);
 
+
+    for (let i = 0; i < sequences.length; i++) {
+      this.state.availableSequences.push({
+        code: sequences[i].courses[0].code,
+        title: sequences[i].courses[0].title,
+        credits: sequences[i].courses[0].credits,
+      });
+    }
     // Populating the data for all classes
     this.state.fallSchedule && this.state.fallSchedule.map((schedule, scheduleIndex) => {
       this.state.fallSchedule[scheduleIndex].sections.map((section, sectionIndex) => {
@@ -139,6 +169,8 @@ class Plan extends Component {
             title: `${section.courseCode} - ${section.code} ${section.kind}`,
             startDate: new Date(beginDateTime.format('MM/DD/YYYY HH:mm:ss')),
             endDate: new Date(finishDateTime.format('MM/DD/YYYY HH:mm:ss')),
+
+
           });
         });
       });
@@ -196,7 +228,9 @@ class Plan extends Component {
 
   render() {
     const { dataFall2019, fallSchedule, activeStep } = this.state;
-    const filterDataFall2019 = dataFall2019.filter(el => el.id == activeStep);
+    const filterDataFall2019 = dataFall2019.filter((el) => {
+      return el.id == activeStep
+    });
     return (
       <div className='plan-container'>
         <div className='header-logo'>
@@ -272,12 +306,12 @@ class Plan extends Component {
                           activeStep={activeStep}
                           nextButton={(
                             <Button
-                              size='small'
+                              size="small"
                               onClick={this.handleNext}
                               disabled={activeStep === fallSchedule.length - 1}
                             >
                               Next
-                              {theme.direction === 'rtl' ? (
+                                {theme.direction === "rtl" ? (
                                 <KeyboardArrowLeft />
                               ) : (
                                   <KeyboardArrowRight />
@@ -286,21 +320,19 @@ class Plan extends Component {
                           )}
                           backButton={(
                             <Button
-                              size='small'
+                              size="small"
                               onClick={this.handleBack}
                               disabled={activeStep === 0}
                             >
-                              {theme.direction === 'rtl' ? (
+                              {theme.direction === "rtl" ? (
                                 <KeyboardArrowRight />
                               ) : (
                                   <KeyboardArrowLeft />
                                 )}
                               Back
-                            </Button>
+                              </Button>
                           )}
                         />
-
-
                       </Paper>
 
                     </MuiThemeProvider>
