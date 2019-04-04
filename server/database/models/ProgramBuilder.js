@@ -137,7 +137,7 @@ class ProgramBuilder {
     // in requestedCourses
     const requestedCouseCodeSectionArrayMap = {};
     Object.keys(courseCodeSectionArrayMap)
-      .filter(key => termPreference.requestedCourses.map(e => e.code).includes(key))
+      .filter(key => termPreference.requestedCourses.map(e => (_.isString(e) ? e : e.code)).includes(key))
       .forEach((key) => {
         requestedCouseCodeSectionArrayMap[key] = courseCodeSectionArrayMap[key];
       });
@@ -163,6 +163,46 @@ class ProgramBuilder {
         ]);
       });
 
+    // Filter possible combinations within each course section group based on their
+    // codes. Tutorials are restricted to the lecture component based on their
+    // first or both first and second letters. For example, lecture with code "U"
+    // can take tutorials with code "U UA" or "U UC", and lecture code "DD" can
+    // take tutorials with code "DDDA" and "DDDC". For single letter lecture codes,
+    // the corresponding tutorial codes must start with this letter and a space.
+    // For two letter lecture codes, the corresponding tutorials must start with
+    // both letters. Labs do not seem to have any restrictions based on lecture
+    // codes.
+    Object.keys(courseCodeSectionCombinationArrayMap).forEach((courseCode) => {
+      const sectionCombinationSliceIndices = [];
+
+      courseCodeSectionCombinationArrayMap[courseCode].forEach((sectionCombinationArray, combinationIdx) => {
+        const lec = _.find(sectionCombinationArray, section => section.kind === 'LEC');
+        const tut = _.find(sectionCombinationArray, section => section.kind === 'TUT');
+
+        let shouldSplice = false;
+
+        if (lec.code.length === 1) {
+          if (tut && !tut.code.startsWith(`${lec.code} `)) { // Should contain space
+            shouldSplice = true;
+          }
+        } else if (lec.code.length === 2) {
+          if (tut && !tut.code.startsWith(`${lec.code}`)) {
+            shouldSplice = true;
+          }
+        }
+
+        if (shouldSplice) {
+          sectionCombinationSliceIndices.push(combinationIdx);
+        }
+      });
+
+      // Must remove each element in reverse to not mess up the resulting splice
+      // everytime the array reshapes.
+      sectionCombinationSliceIndices.reverse().forEach((idx) => {
+        courseCodeSectionCombinationArrayMap[courseCode].splice(idx, 1);
+      });
+    });
+
     // Convert map into an array of arrays, where each array is the combinations
     // determined in courseCodeSectionCombinationArrayMap
     const sectionCombinationJaggedArray =
@@ -183,10 +223,17 @@ class ProgramBuilder {
     // Filter all schedules by whether they present a conflict. Note here we're
     // using splice instead of filter because this array can be huge and copying
     // the contents over again can become costly in terms of memory and time.
+    const spliceScheduleIndices = [];
     schedules.forEach((e, i) => {
       if (e.hasConflict()) {
-        schedules.splice(i, 1); // Remove this element only
+        spliceScheduleIndices.push(i);
       }
+    });
+
+    // Must remove each element in reverse to not mess up the resulting splice
+    // everytime the array reshapes.
+    spliceScheduleIndices.reverse().forEach((spliceIdx) => {
+      schedules.splice(spliceIdx, 1); // Remove this element only
     });
 
     return schedules;
