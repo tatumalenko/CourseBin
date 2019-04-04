@@ -52,20 +52,6 @@ const theme = createMuiTheme({
   },
 });
 
-const sequenceRowFall = [
-  [ 'ENGR 301', 'Engineering Management Principles and Economics', 3.00 ],
-  [ 'SOEN 321', 'Information Systems Security', 3.00 ],
-  [ 'SOEN 490', 'Capstone Software Engineering Design Project', 4.00 ],
-  [ 'COMP 353', 'Databases', 4.00 ],
-].map((row, id) => createRow(id, ...row));
-
-function createRow(id, courseNum, courseTitle, credits) {
-  return {
-    id, courseNum, courseTitle, credits,
-  };
-}
-
-
 class Plan extends Component {
   constructor(props) {
     super(props);
@@ -130,6 +116,7 @@ class Plan extends Component {
       lecture: 'LEC LL 1234, Hall building 937',
       tutorial: 'TUT A, Hall building 435 ',
       fallSchedule: schedules.fall,
+      availableSequences: [],
       activeStep: 0,
     };
     console.log(this.state.fallSchedule);
@@ -152,8 +139,6 @@ class Plan extends Component {
             title: `${section.courseCode} - ${section.code} ${section.kind}`,
             startDate: new Date(beginDateTime.format('MM/DD/YYYY HH:mm:ss')),
             endDate: new Date(finishDateTime.format('MM/DD/YYYY HH:mm:ss')),
-
-
           });
         });
       });
@@ -183,6 +168,13 @@ class Plan extends Component {
     ];
     console.log(appointments);
     console.log(this.state.dataFall2019);
+    for (let i = 0; i < sequences.length; i++) {
+      this.state.availableSequences.push({
+        code: sequences[i].courses[0].code,
+        title: sequences[i].courses[0].title,
+        credits: sequences[i].courses[0].credits,
+      });
+    }
   }
 
   handleNext = () => {
@@ -265,7 +257,7 @@ class Plan extends Component {
                         <Scheduler data={filterDataFall2019}>
                           <ViewState currentDate='09/04/2018' />
                           <WeekView
-                            excludedDays={[ 0, 6 ]}
+                            excludedDays={[0, 6]}
                             cellDuration={60}
                             startDayHour={8}
                             endDayHour={24}
@@ -288,8 +280,8 @@ class Plan extends Component {
                               {theme.direction === 'rtl' ? (
                                 <KeyboardArrowLeft />
                               ) : (
-                                <KeyboardArrowRight />
-                              )}
+                                  <KeyboardArrowRight />
+                                )}
                             </Button>
                           )}
                           backButton={(
@@ -301,8 +293,8 @@ class Plan extends Component {
                               {theme.direction === 'rtl' ? (
                                 <KeyboardArrowRight />
                               ) : (
-                                <KeyboardArrowLeft />
-                              )}
+                                  <KeyboardArrowLeft />
+                                )}
                               Back
                             </Button>
                           )}
@@ -347,10 +339,10 @@ class Plan extends Component {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {sequenceRowFall.map(row => (
+                      {this.state.availableSequences.slice(0, 5).map(row => (
                         <TableRow key={row.id}>
-                          <TableCell>{row.courseNum}</TableCell>
-                          <TableCell align='center'>{row.courseTitle}</TableCell>
+                          <TableCell>{row.code}</TableCell>
+                          <TableCell align='center'>{row.title}</TableCell>
                           <TableCell align='right'>{row.credits}</TableCell>
                         </TableRow>
                       ))}
@@ -374,10 +366,10 @@ class Plan extends Component {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {sequenceRowFall.map(row => (
+                      {this.state.availableSequences.slice(5, 10).map(row => (
                         <TableRow key={row.id}>
-                          <TableCell>{row.courseNum}</TableCell>
-                          <TableCell align='center'>{row.courseTitle}</TableCell>
+                          <TableCell>{row.code}</TableCell>
+                          <TableCell align='center'>{row.title}</TableCell>
                           <TableCell align='right'>{row.credits}</TableCell>
                         </TableRow>
                       ))}
@@ -401,10 +393,10 @@ class Plan extends Component {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {sequenceRowFall.map(row => (
+                      {this.state.availableSequences.slice(10, 15).map(row => (
                         <TableRow key={row.id}>
-                          <TableCell>{row.courseNum}</TableCell>
-                          <TableCell align='center'>{row.courseTitle}</TableCell>
+                          <TableCell>{row.code}</TableCell>
+                          <TableCell align='center'>{row.title}</TableCell>
                           <TableCell align='right'>{row.credits}</TableCell>
                         </TableRow>
                       ))}
