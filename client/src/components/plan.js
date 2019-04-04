@@ -211,8 +211,8 @@ class Plan extends Component {
           <Typography variant='h4'>CourseBin</Typography>
         </div>
         <Grid container spacing={16}>
-          <Grid item xs={2} />
-          <Grid item xs={8} className='schedule-container'>
+          <Grid item xs={12} className='schedule-container'>
+            <Typography id='schedule-header' variant='h4'>Here's what we came up with... </Typography>
             <ExpansionPanel>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography>Fall 2019</Typography>
@@ -414,7 +414,6 @@ class Plan extends Component {
               </ExpansionPanelDetails>
             </ExpansionPanel>
           </Grid>
-          <Grid item xs={2} />
         </Grid>
 
       </div>
