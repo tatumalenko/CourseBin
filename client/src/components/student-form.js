@@ -520,10 +520,10 @@ class StudentForm extends Component {
           <div className='student-form'>
             <form onSubmit={this.handleSubmit}>
               <div className={classes.formContent}>
-              <div className='header-logo'>
-                <h3>CourseBin</h3>
-              </div>
-              <Typography component='h3' variant='h6' id='form-header'>First, we will just need some basic information... </Typography>
+                <div className='header-logo'>
+                  <h3>CourseBin</h3>
+                </div>
+                <Typography component='h3' variant='h6' id='form-header'>First, we will just need some basic information... </Typography>
                 <AppBar position='static' color='default'>
                   <Tabs
                     value={currentView}
@@ -544,66 +544,69 @@ class StudentForm extends Component {
                 >
                   <TabContainer dir={theme.direction}>
                     <Paper className={classes.formPaper}>
-                      <Grid container spacing={24}>
+                      <Grid container spacing={16}>
+                        <Grid item xs={12}>
+                          <FormLabel className='preference-label time'>
+                            What is your Fall time preference?
+                          </FormLabel>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <div className={classes.toggleContainer}>
+                            <ToggleButtonGroup
+                              defaultValue
+                              value={fallTimePreference}
+                              exclusive
+                              onChange={this.handleFallTimeChange}
+                            >
+                              <ToggleButton value={false} variant='outline-info'>
+                                <i className='material-icons toggle'>
+                                  wb_sunny
+                                </i>
+                                Day
+                              </ToggleButton>
+                              <ToggleButton value={true} variant='outline-info'>
+                                <i className='material-icons toggle'>
+                                  school
+                                </i>
+                                Evening
+                              </ToggleButton>
+                            </ToggleButtonGroup>
+                          </div>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <FormLabel className='preference-label'>
+                            How many courses do you prefer to take in the Fall?
+                          </FormLabel>
+                        </Grid>
                         <Grid item xs={12}>
                           <FormControl className='student-form-control'>
-                            <FormLabel>
-                              What is your Fall time preference?
-                            </FormLabel>
                             <div className={classes.toggleContainer}>
                               <ToggleButtonGroup
                                 defaultValue
-                                value={fallTimePreference}
+                                value={fallNumOfCourses}
                                 exclusive
-                                onChange={this.handleFallTimeChange}
+                                onChange={this.handleFallNumCourseChange}
                               >
-                                <ToggleButton value={false} variant='outline-info'>
-                                  <i className='material-icons toggle'>
-                                    wb_sunny
-                                  </i>
-                                  Day
-                                </ToggleButton>
-                                <ToggleButton value={true} variant='outline-info'>
-                                  <i className='material-icons toggle'>
-                                    school
-                                  </i>
-                                  Evening
-                                </ToggleButton>
+                                <ToggleButton value={0} variant='outline-info'>None!</ToggleButton>
+                                <ToggleButton value={1} variant='outline-info'>1</ToggleButton>
+                                <ToggleButton value={2} variant='outline-info'>2</ToggleButton>
+                                <ToggleButton value={3} variant='outline-info'>3</ToggleButton>
+                                <ToggleButton value={4} variant='outline-info'>4</ToggleButton>
+                                <ToggleButton value={5} variant='outline-info'>5</ToggleButton>
+                                <ToggleButton value={6} variant='outline-info'>6</ToggleButton>
                               </ToggleButtonGroup>
                             </div>
                           </FormControl>
                         </Grid>
 
-                        <Grid item xs={12}>
-                        <FormControl className='student-form-control'>
-                          <FormLabel>
-                            How many courses do you prefer to take in the Fall?
-                          </FormLabel>
-                          <div className={classes.toggleContainer}>
-                            <ToggleButtonGroup
-                              defaultValue
-                              value={fallNumOfCourses}
-                              exclusive
-                              onChange={this.handleFallNumCourseChange}
-                            >
-                              <ToggleButton value={0} variant='outline-info'>None!</ToggleButton>
-                              <ToggleButton value={1} variant='outline-info'>1</ToggleButton>
-                              <ToggleButton value={2} variant='outline-info'>2</ToggleButton>
-                              <ToggleButton value={3} variant='outline-info'>3</ToggleButton>
-                              <ToggleButton value={4} variant='outline-info'>4</ToggleButton>
-                              <ToggleButton value={5} variant='outline-info'>5</ToggleButton>
-                              <ToggleButton value={6} variant='outline-info'>6</ToggleButton>
-                            </ToggleButtonGroup>
-                          </div>
-                        </FormControl>
-                        </Grid>
-
                         <div className='selected-courses-container'>
                           {courseMap && fallSelectedFaculty ? (
-                            <Grid container spacing={24}>
-                              <FormLabel className='course-selector-label'>
-                                Choose a department
-                              </FormLabel>
+                            <Grid container spacing={16}>
+                              <Grid item xs={12}>
+                                <FormLabel className='selector-label'>
+                                  Choose a department
+                                </FormLabel>
+                              </Grid>
 
                               <Grid item xs={12}>
                                 <FormControl className='course-selector'>
@@ -624,11 +627,11 @@ class StudentForm extends Component {
                                   </Select>
                                 </FormControl>
                               </Grid>
-
-                              <FormLabel className='course-selector-label'>
-                                Choose your courses
-                              </FormLabel>
-
+                              <Grid item xs={12}>
+                                <FormLabel className='selector-label'>
+                                  Choose your courses
+                                </FormLabel>
+                              </Grid>
                               <Grid item xs={12}>
                                 <FormControl className='course-selector'>
                                   <NativeSelect
@@ -679,66 +682,69 @@ class StudentForm extends Component {
                   </TabContainer>
                   <TabContainer dir={theme.direction}>
                     <Paper className={classes.formPaper}>
-                      <Grid container spacing={24}>
+                      <Grid container spacing={16}>
                         <Grid item xs={12}>
-                        <FormControl className='student-form-control'>
-                            <FormLabel>
-                              What is your Winter time preference?
-                            </FormLabel>
-                            <div className={classes.toggleContainer}>
-                              <ToggleButtonGroup
-                                defaultValue
-                                value={winterTimePreference}
-                                exclusive
-                                onChange={this.handleWinterTimeChange}
-                              >
-                                <ToggleButton value={false} variant='outline-info'>
-                                  <i className='material-icons toggle'>
-                                    wb_sunny
-                                  </i>
-                                  Day
-                                </ToggleButton>
-                                <ToggleButton value={true} variant='outline-info'>
-                                  <i className='material-icons toggle'>
-                                    school
-                                  </i>
-                                  Evening
-                                </ToggleButton>
-                              </ToggleButtonGroup>
-                            </div>
-                        </FormControl>
-                        </Grid>
-
-                        <Grid item xs={12}>
-                        <FormControl className='student-form-control'>
-                          <FormLabel>
-                            How many courses do you prefer to take in the Winter?
+                          <FormLabel className='preference-label time'>
+                            What is your Winter time preference?
                           </FormLabel>
+                        </Grid>
+                        <Grid item xs={12}>
                           <div className={classes.toggleContainer}>
                             <ToggleButtonGroup
                               defaultValue
-                              value={winterNumOfCourses}
+                              value={winterTimePreference}
                               exclusive
-                              onChange={this.handleWinterNumCourseChange}
+                              onChange={this.handleWinterTimeChange}
                             >
-                              <ToggleButton value={0} variant='outline-info'>None!</ToggleButton>
-                              <ToggleButton value={1} variant='outline-info'>1</ToggleButton>
-                              <ToggleButton value={2} variant='outline-info'>2</ToggleButton>
-                              <ToggleButton value={3} variant='outline-info'>3</ToggleButton>
-                              <ToggleButton value={4} variant='outline-info'>4</ToggleButton>
-                              <ToggleButton value={5} variant='outline-info'>5</ToggleButton>
-                              <ToggleButton value={6} variant='outline-info'>6</ToggleButton>
+                              <ToggleButton value={false} variant='outline-info'>
+                                <i className='material-icons toggle'>
+                                  wb_sunny
+                                </i>
+                                Day
+                              </ToggleButton>
+                              <ToggleButton value={true} variant='outline-info'>
+                                <i className='material-icons toggle'>
+                                  school
+                                </i>
+                                Evening
+                              </ToggleButton>
                             </ToggleButtonGroup>
                           </div>
-                        </FormControl>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <FormLabel className='preference-label'>
+                            How many courses do you prefer to take in the Winter?
+                          </FormLabel>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <FormControl className='student-form-control'>
+                            <div className={classes.toggleContainer}>
+                              <ToggleButtonGroup
+                                defaultValue
+                                value={winterNumOfCourses}
+                                exclusive
+                                onChange={this.handleWinterNumCourseChange}
+                              >
+                                <ToggleButton value={0} variant='outline-info'>None!</ToggleButton>
+                                <ToggleButton value={1} variant='outline-info'>1</ToggleButton>
+                                <ToggleButton value={2} variant='outline-info'>2</ToggleButton>
+                                <ToggleButton value={3} variant='outline-info'>3</ToggleButton>
+                                <ToggleButton value={4} variant='outline-info'>4</ToggleButton>
+                                <ToggleButton value={5} variant='outline-info'>5</ToggleButton>
+                                <ToggleButton value={6} variant='outline-info'>6</ToggleButton>
+                              </ToggleButtonGroup>
+                            </div>
+                          </FormControl>
                         </Grid>
 
                         <div className='selected-courses-container'>
                           {courseMap && winterSelectedFaculty ? (
-                            <Grid container spacing={24}>
-                              <FormLabel className='course-selector-label'>
-                                Choose a department
-                              </FormLabel>
+                            <Grid container spacing={16}>
+                              <Grid item xs={12}>
+                                <FormLabel className='selector-label'>
+                                  Choose a department
+                                </FormLabel>
+                              </Grid>
 
                               <Grid item xs={12}>
                                 <FormControl className='course-selector'>
@@ -759,11 +765,11 @@ class StudentForm extends Component {
                                   </Select>
                                 </FormControl>
                               </Grid>
-
-                              <FormLabel className='course-selector-label'>
-                                Choose your courses
-                              </FormLabel>
-
+                              <Grid item xs={12}>
+                                <FormLabel className='selector-label'>
+                                  Choose your courses
+                                </FormLabel>
+                              </Grid>
                               <Grid item xs={12}>
                                 <FormControl className='course-selector'>
                                   <NativeSelect
@@ -814,66 +820,69 @@ class StudentForm extends Component {
                   </TabContainer>
                   <TabContainer dir={theme.direction}>
                     <Paper className={classes.formPaper}>
-                      <Grid container spacing={24}>
+                      <Grid container spacing={16}>
                         <Grid item xs={12}>
-                        <FormControl className='student-form-control'>
-                            <FormLabel>
-                              What is your Summer time preference?
-                            </FormLabel>
-                            <div className={classes.toggleContainer}>
-                              <ToggleButtonGroup
-                                defaultValue
-                                value={summerTimePreference}
-                                exclusive
-                                onChange={this.handleSummerTimeChange}
-                              >
-                                <ToggleButton value={false} variant='outline-info'>
-                                  <i className='material-icons toggle'>
-                                    wb_sunny
-                                  </i>
-                                  Day
-                                </ToggleButton>
-                                <ToggleButton value={true} variant='outline-info'>
-                                  <i className='material-icons toggle'>
-                                    school
-                                  </i>
-                                  Evening
-                                </ToggleButton>
-                              </ToggleButtonGroup>
-                            </div>
-                        </FormControl>
-                        </Grid>
-
-                        <Grid item xs={12}>
-                        <FormControl className='student-form-control'>
-                          <FormLabel>
-                            How many courses do you prefer to take Summer?
+                          <FormLabel className='preference-label time'>
+                            What is your Summer time preference?
                           </FormLabel>
+                        </Grid>
+                        <Grid item xs={12}>
                           <div className={classes.toggleContainer}>
                             <ToggleButtonGroup
                               defaultValue
-                              value={summerNumOfCourses}
+                              value={summerTimePreference}
                               exclusive
-                              onChange={this.handleSummerNumCourseChange}
+                              onChange={this.handleSummerTimeChange}
                             >
-                              <ToggleButton value={0} variant='outline-info'>None!</ToggleButton>
-                              <ToggleButton value={1} variant='outline-info'>1</ToggleButton>
-                              <ToggleButton value={2} variant='outline-info'>2</ToggleButton>
-                              <ToggleButton value={3} variant='outline-info'>3</ToggleButton>
-                              <ToggleButton value={4} variant='outline-info'>4</ToggleButton>
-                              <ToggleButton value={5} variant='outline-info'>5</ToggleButton>
-                              <ToggleButton value={6} variant='outline-info'>6</ToggleButton>
+                              <ToggleButton value={false} variant='outline-info'>
+                                <i className='material-icons toggle'>
+                                  wb_sunny
+                                </i>
+                                Day
+                              </ToggleButton>
+                              <ToggleButton value={true} variant='outline-info'>
+                                <i className='material-icons toggle'>
+                                  school
+                                </i>
+                                Evening
+                              </ToggleButton>
                             </ToggleButtonGroup>
                           </div>
-                        </FormControl>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <FormLabel className='preference-label'>
+                            How many courses do you prefer to take in the Summer?
+                          </FormLabel>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <FormControl className='student-form-control'>
+                            <div className={classes.toggleContainer}>
+                              <ToggleButtonGroup
+                                defaultValue
+                                value={summerNumOfCourses}
+                                exclusive
+                                onChange={this.handleSummerNumCourseChange}
+                              >
+                                <ToggleButton value={0} variant='outline-info'>None!</ToggleButton>
+                                <ToggleButton value={1} variant='outline-info'>1</ToggleButton>
+                                <ToggleButton value={2} variant='outline-info'>2</ToggleButton>
+                                <ToggleButton value={3} variant='outline-info'>3</ToggleButton>
+                                <ToggleButton value={4} variant='outline-info'>4</ToggleButton>
+                                <ToggleButton value={5} variant='outline-info'>5</ToggleButton>
+                                <ToggleButton value={6} variant='outline-info'>6</ToggleButton>
+                              </ToggleButtonGroup>
+                            </div>
+                          </FormControl>
                         </Grid>
 
                         <div className='selected-courses-container'>
                           {courseMap && summerSelectedFaculty ? (
-                            <Grid container spacing={24}>
-                              <FormLabel className='course-selector-label'>
-                                Choose a department
-                              </FormLabel>
+                            <Grid container spacing={16}>
+                              <Grid item xs={12}>
+                                <FormLabel className='selector-label'>
+                                  Choose a department
+                                </FormLabel>
+                              </Grid>
 
                               <Grid item xs={12}>
                                 <FormControl className='course-selector'>
@@ -894,11 +903,11 @@ class StudentForm extends Component {
                                   </Select>
                                 </FormControl>
                               </Grid>
-
-                              <FormLabel className='course-selector-label'>
-                                Choose your courses
-                              </FormLabel>
-
+                              <Grid item xs={12}>
+                                <FormLabel className='selector-label'>
+                                  Choose your courses
+                                </FormLabel>
+                              </Grid>
                               <Grid item xs={12}>
                                 <FormControl className='course-selector'>
                                   <NativeSelect
