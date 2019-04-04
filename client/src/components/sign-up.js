@@ -18,7 +18,6 @@ const custTheme = createMuiTheme({
   },
 });
 
-
 const styles = theme => ({
   textField: {
     marginLeft: theme.spacing.unit,
@@ -37,6 +36,14 @@ class Signup extends Component {
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   handleChange = name => (event) => {
