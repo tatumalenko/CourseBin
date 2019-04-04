@@ -1,3 +1,5 @@
+/* eslint-disable react/forbid-prop-types */
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
 import React, { Component } from 'react';
@@ -21,7 +23,9 @@ const custTheme = createMuiTheme({
       light: cyan,
     },
   },
-
+  typography: {
+    useNextVariants: true,
+  },
 });
 
 const styles = theme => ({
@@ -58,24 +62,24 @@ class Navbar extends Component {
 
     return (
       <MuiThemeProvider theme={custTheme}>
-
         <AppBar position='static'>
           <Toolbar>
-            {loggedIn ? (
-              <span className='navbar-links'>
-                <Typography className={classes.title} variant='h6'>
-                  <Link
-                    to='#'
-                    component={RouterLink}
-                    color='secondary'
-                    onClick={this.logout}
-                  >
-                    Logout
-                  </Link>
-                </Typography>
-              </span>
-            ) : (
-              <span className='navbar-links'>
+            {loggedIn
+              ? (
+                <span className='navbar-links'>
+                  <Typography className={classes.title} variant='h6'>
+                    <Link
+                      to='#'
+                      component={RouterLink}
+                      color='secondary'
+                      onClick={this.logout}
+                    >
+                      Logout
+                    </Link>
+                  </Typography>
+                </span>
+              ) : (
+                <span className='navbar-links'>
                   <Typography className={classes.title} variant='h6'>
                     <Link
                       to='/signup'
@@ -87,7 +91,7 @@ class Navbar extends Component {
                   </Typography>
                   <Typography className={classes.title} variant='h6'>
                     <Link
-                      to='login'
+                      to='/'
                       component={RouterLink}
                       color='secondary'
                     >
@@ -95,7 +99,8 @@ class Navbar extends Component {
                     </Link>
                   </Typography>
                 </span>
-            )}
+              )
+            }
           </Toolbar>
         </AppBar>
       </MuiThemeProvider>

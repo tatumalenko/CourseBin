@@ -1,10 +1,3 @@
-/* eslint-disable react/jsx-boolean-value */
-/* eslint-disable react/jsx-indent-props */
-/* eslint-disable react/jsx-indent */
-/* eslint-disable react/sort-comp */
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable prefer-destructuring */
-/* eslint-disable max-len */
 
 import React, { Component } from 'react';
 import axios from 'axios';
@@ -192,6 +185,34 @@ class StudentForm extends Component {
     });
   }
 
+
+  removeFallCourseSelection = course => () => {
+    this.setState((state) => {
+      const fallSelectedCourses = [ ...state.fallSelectedCourses ];
+      const toDelete = fallSelectedCourses.indexOf(course);
+      fallSelectedCourses.splice(toDelete, 1);
+      return { fallSelectedCourses };
+    });
+  }
+
+  removeWinterCourseSelection = course => () => {
+    this.setState((state) => {
+      const winterSelectedCourses = [ ...state.winterSelectedCourses ];
+      const toDelete = winterSelectedCourses.indexOf(course);
+      winterSelectedCourses.splice(toDelete, 1);
+      return { winterSelectedCourses };
+    });
+  }
+
+  removeSummerCourseSelection = course => () => {
+    this.setState((state) => {
+      const summerSelectedCourses = [ ...state.summerSelectedCourses ];
+      const toDelete = summerSelectedCourses.indexOf(course);
+      summerSelectedCourses.splice(toDelete, 1);
+      return { summerSelectedCourses };
+    });
+  }
+
   handleViewChange = (event, value) => {
     event.preventDefault();
     const view = _.parseInt(value);
@@ -263,7 +284,7 @@ class StudentForm extends Component {
 
     if (!state[property]) {
       this.setState({
-        [property]: [courseCode],
+        [property]: [ courseCode ],
       });
       this.setErrMsg(property, null);
     } else if (state[property].length === state[numCourses]) {
@@ -313,8 +334,11 @@ class StudentForm extends Component {
 
     const state = this.state;
 
-    if (state.fallNumOfCourses === 0 && state.summerNumOfCourses === 0 && state.winterNumOfCourses === 0) {
-      const msg = 'You have selected a preference of no courses for every semester, please try again!';
+    if (state.fallNumOfCourses === 0
+      && state.summerNumOfCourses === 0
+      && state.winterNumOfCourses === 0) {
+      const msg = 'You have selected a preference of no courses for every semester,'
+        + 'please try again!';
       const newState = Object.assign({}, state);
       newState.formErrorMsg.push(msg);
       this.setState(newState);
@@ -322,21 +346,24 @@ class StudentForm extends Component {
     }
 
     if (state.fallSelectedCourses.length !== state.fallNumOfCourses) {
-      const msg = `You indicated a preference of ${state.fallNumOfCourses} courses for Fall, but did not select that amount!`;
+      const msg = `You indicated a preference of ${state.fallNumOfCourses} 
+      courses for Fall, but did not select that amount!`;
       const newState = Object.assign({}, state);
       newState.formErrorMsg.push(msg);
       this.setState(newState);
       return;
     }
     if (state.winterSelectedCourses.length !== state.winterNumOfCourses) {
-      const msg = `You indicated a preference of ${state.winterNumOfCourses} courses for Winter, but did not select that amount!`;
+      const msg = `You indicated a preference of ${state.winterNumOfCourses} 
+      courses for Winter, but did not select that amount!`;
       const newState = Object.assign({}, state);
       newState.formErrorMsg.push(msg);
       this.setState(newState);
       return;
     }
     if (state.summerSelectedCourses.length !== state.summerNumOfCourses) {
-      const msg = `You indicated a preference of ${state.summerNumOfCourses} courses for Summer, but did not select that amount!`;
+      const msg = `You indicated a preference of ${state.summerNumOfCourses} 
+      courses for Summer, but did not select that amount!`;
       const newState = Object.assign({}, state);
       newState.formErrorMsg.push(msg);
       this.setState(newState);
@@ -428,7 +455,7 @@ class StudentForm extends Component {
           }
 
           if (!map[departmentName] && displayName !== '') {
-            map[departmentName] = [displayName];
+            map[departmentName] = [ displayName ];
           } else {
             map[departmentName].push(displayName);
           }
@@ -451,34 +478,6 @@ class StudentForm extends Component {
       summerSelectedFaculty: defaultFaculty,
     });
   }
-
-  removeFallCourseSelection = course => () => {
-    this.setState((state) => {
-      const fallSelectedCourses = [...state.fallSelectedCourses];
-      const toDelete = fallSelectedCourses.indexOf(course);
-      fallSelectedCourses.splice(toDelete, 1);
-      return { fallSelectedCourses };
-    });
-  }
-
-  removeWinterCourseSelection = course => () => {
-    this.setState((state) => {
-      const winterSelectedCourses = [...state.winterSelectedCourses];
-      const toDelete = winterSelectedCourses.indexOf(course);
-      winterSelectedCourses.splice(toDelete, 1);
-      return { winterSelectedCourses };
-    });
-  }
-
-  removeSummerCourseSelection = course => () => {
-    this.setState((state) => {
-      const summerSelectedCourses = [...state.summerSelectedCourses];
-      const toDelete = summerSelectedCourses.indexOf(course);
-      summerSelectedCourses.splice(toDelete, 1);
-      return { summerSelectedCourses };
-    });
-  }
-
 
   render() {
     const { classes, theme } = this.props;
@@ -564,7 +563,7 @@ class StudentForm extends Component {
                                 </i>
                                 Day
                               </ToggleButton>
-                              <ToggleButton value={true} variant='outline-info'>
+                              <ToggleButton value variant='outline-info'>
                                 <i className='material-icons toggle'>
                                   school
                                 </i>
@@ -642,11 +641,14 @@ class StudentForm extends Component {
                                     <option value='' disabled>
                                       Select
                                     </option>
-                                    {courseMap && fallSelectedFaculty && courseMap[fallSelectedFaculty] ? courseMap[fallSelectedFaculty].map(course => (
-                                      <option key={course} value={course}>
-                                        {course}
-                                      </option>
-                                    )) : null
+                                    {courseMap
+                                      && fallSelectedFaculty
+                                      && courseMap[fallSelectedFaculty]
+                                      ? courseMap[fallSelectedFaculty].map(course => (
+                                        <option key={course} value={course}>
+                                          {course}
+                                        </option>
+                                      )) : null
                                     }
                                   </NativeSelect>
                                 </FormControl>
@@ -656,12 +658,16 @@ class StudentForm extends Component {
                             : null
                           }
 
-                          <Grid item xs={12}>
+                          <Grid item xs={12} className='course-chips-wrapper'>
                             <div className='course-err-msg'>{fallErrMsg}</div>
 
-                            <FormLabel className='selected-courses' style={{ display: fallSelectedCourses.length === 0 ? 'none' : 'initial' }}>Selected Courses:</FormLabel>
+                            <FormLabel
+                              className='selected-courses'
+                              style={{ display: fallSelectedCourses.length === 0 ? 'none' : 'initial' }}
+                            >
+                              Selected Courses:
+                            </FormLabel>
                             {fallSelectedCourses.length > 0 ? (
-
                               <div className={classes.chips}>
                                 {fallSelectedCourses.map(course => (
                                   <Chip
@@ -672,7 +678,6 @@ class StudentForm extends Component {
                                     className={classes.chip}
                                   />
                                 ))}
-
                               </div>) : <div />
                             }
                           </Grid>
@@ -702,7 +707,7 @@ class StudentForm extends Component {
                                 </i>
                                 Day
                               </ToggleButton>
-                              <ToggleButton value={true} variant='outline-info'>
+                              <ToggleButton value variant='outline-info'>
                                 <i className='material-icons toggle'>
                                   school
                                 </i>
@@ -780,11 +785,14 @@ class StudentForm extends Component {
                                     <option value='' disabled>
                                       Select
                                     </option>
-                                    {courseMap && winterSelectedFaculty && courseMap[winterSelectedFaculty] ? courseMap[winterSelectedFaculty].map(course => (
-                                      <option key={course} value={course}>
-                                        {course}
-                                      </option>
-                                    )) : null
+                                    {courseMap
+                                      && winterSelectedFaculty
+                                      && courseMap[winterSelectedFaculty]
+                                      ? courseMap[winterSelectedFaculty].map(course => (
+                                        <option key={course} value={course}>
+                                          {course}
+                                        </option>
+                                      )) : null
                                     }
                                   </NativeSelect>
                                 </FormControl>
@@ -794,12 +802,15 @@ class StudentForm extends Component {
                             : null
                           }
 
-                          <Grid item xs={12}>
+                          <Grid item xs={12} className='course-chips-wrapper'>
                             <div className='course-err-msg'>{winterErrMsg}</div>
-
-                            <FormLabel className='selected-courses' style={{ display: winterSelectedCourses.length === 0 ? 'none' : 'initial' }}>Selected Courses:</FormLabel>
+                            <FormLabel
+                              className='selected-courses'
+                              style={{ display: winterSelectedCourses.length === 0 ? 'none' : 'initial' }}
+                            >
+                              Selected Courses:
+                            </FormLabel>
                             {winterSelectedCourses.length > 0 ? (
-
                               <div className={classes.chips}>
                                 {winterSelectedCourses.map(course => (
                                   <Chip
@@ -840,7 +851,7 @@ class StudentForm extends Component {
                                 </i>
                                 Day
                               </ToggleButton>
-                              <ToggleButton value={true} variant='outline-info'>
+                              <ToggleButton value variant='outline-info'>
                                 <i className='material-icons toggle'>
                                   school
                                 </i>
@@ -918,11 +929,14 @@ class StudentForm extends Component {
                                     <option value='' disabled>
                                       Select
                                     </option>
-                                    {courseMap && summerSelectedFaculty && courseMap[summerSelectedFaculty] ? courseMap[summerSelectedFaculty].map(course => (
-                                      <option key={course} value={course}>
-                                        {course}
-                                      </option>
-                                    )) : null
+                                    {courseMap
+                                      && summerSelectedFaculty
+                                      && courseMap[summerSelectedFaculty]
+                                      ? courseMap[summerSelectedFaculty].map(course => (
+                                        <option key={course} value={course}>
+                                          {course}
+                                        </option>
+                                      )) : null
                                     }
                                   </NativeSelect>
                                 </FormControl>
@@ -932,12 +946,16 @@ class StudentForm extends Component {
                             : null
                           }
 
-                          <Grid item xs={12}>
+                          <Grid item xs={12} className='course-chips-wrapper'>
                             <div className='course-err-msg'>{summerErrMsg}</div>
 
-                            <FormLabel className='selected-courses' style={{ display: summerSelectedCourses.length === 0 ? 'none' : 'initial' }}>Selected Courses:</FormLabel>
+                            <FormLabel
+                              className='selected-courses'
+                              style={{ display: summerSelectedCourses.length === 0 ? 'none' : 'initial' }}
+                            >
+                              Selected Courses:
+                            </FormLabel>
                             {summerSelectedCourses.length > 0 ? (
-
                               <div className={classes.chips}>
                                 {summerSelectedCourses.map(course => (
                                   <Chip
@@ -947,8 +965,8 @@ class StudentForm extends Component {
                                     onDelete={this.removeSummerCourseSelection(course)}
                                     className={classes.chip}
                                   />
-                                ))}
-
+                                ))
+                                }
                               </div>) : <div />
                             }
                           </Grid>
@@ -957,7 +975,15 @@ class StudentForm extends Component {
                     </Paper>
                   </TabContainer>
                 </SwipeableViews>
-                <Button id='submit' size='large' variant='outlined' color='primary' type='submit'>Generate My Schedule!</Button>
+                <Button
+                  id='submit'
+                  size='large'
+                  variant='outlined'
+                  color='primary'
+                  type='submit'
+                >
+                  Generate My Schedule!
+                </Button>
                 <Grid container spacing={24}>
                   {formErrorMsg.length > 0 ? formErrorMsg.map(msg => (
                     <FormLabel className='submit-error' color='secondary'>
