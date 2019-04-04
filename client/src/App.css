@@ -4,6 +4,21 @@
   min-width: 400px;
 }
 
+.navbar-links{
+  display: flex;
+  padding: 20px;
+}
+
+.navbar-links a{
+  margin-right: 15px;
+  font-family: 'Londrina Solid', cursive;
+}
+
+.navbar-links a:hover{
+  text-decoration: none;
+ }
+
+
 /* global styles */
 
 .title-wrapper{
@@ -52,15 +67,14 @@
   font-size: 12px;
 }
 
-.header-logo{
+.header-logo h3{
   font-family: 'Londrina Solid', cursive;
     color: #A98638;
     position: relative;
-    bottom: 96px
+    bottom: 62px
 }
 
 .student-form{
-  margin-top: 50px;
   min-width: 400px;
 }
 

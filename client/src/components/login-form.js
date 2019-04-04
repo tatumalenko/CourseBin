@@ -142,14 +142,14 @@ class LoginForm extends Component {
             {loginError
               ? (
                 <Grid item xs={12}>
-                  <FormLabel id='error' className='error-msg'>
+                  <Typography id='error' className='error-msg'>
                     {
                       loginError.data
                         ? loginError.data.message.toString()
                         : 'Sorry, this username/password combination is not valid.'
                         + 'Please try again or try signing up.'
                     }
-                  </FormLabel>
+                  </Typography>
                 </Grid>
               )
               : null

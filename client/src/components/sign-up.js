@@ -120,9 +120,9 @@ class Signup extends Component {
               signupError
                 ? (
                   <Grid item xs={12}>
-                    <FormLabel id='error' className='error-msg'>
+                    <Typography id='error' className='error-msg'>
                       {signupError.data.message.toString()}
-                    </FormLabel>
+                    </Typography>
                   </Grid>
                 )
                 : null
