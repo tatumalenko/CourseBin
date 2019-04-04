@@ -44,47 +44,7 @@ test('subCombinations: Integers - 3 of 5', (t) => {
   ]);
 });
 
-test('timesOverlap: Overlapping timeBlocks', (t) => {
-  const timeArray = [ new TimeBlock({
-    startTime: '11.45.00',
-    endTime: '13.00.00',
-    weekDay: 'Friday',
-  }),
-  new TimeBlock({
-    startTime: '13.00.00',
-    endTime: '15.30.00',
-    weekDay: 'Friday',
-  }),
-  new TimeBlock({
-    startTime: '17.45.00',
-    endTime: '19.30.00',
-    weekDay: 'Friday',
-  }),
-  ];
-  t.true(Util.timesOverlap(timeArray));
-});
-
-test('timesOverlap: No Overlapping timeBlocks', (t) => {
-  const timeArray = [ new TimeBlock({
-    startTime: '11.45.00',
-    endTime: '13.00.00',
-    weekDay: 'Friday',
-  }),
-  new TimeBlock({
-    startTime: '13.30.00',
-    endTime: '15.30.00',
-    weekDay: 'Friday',
-  }),
-  new TimeBlock({
-    startTime: '17.45.00',
-    endTime: '19.30.00',
-    weekDay: 'Friday',
-  }),
-  ];
-  t.false(Util.timesOverlap(timeArray));
-});
-
-test('timesOverlap: single timeBlock in array', (t) => {
+test('timesOverlap: Single TimeBlock in array', (t) => {
   const timeArray = [
     new TimeBlock({
       startTime: '17.45.00',
@@ -93,4 +53,140 @@ test('timesOverlap: single timeBlock in array', (t) => {
     }),
   ];
   t.false(Util.timesOverlap(timeArray));
+});
+
+test('timesOverlap: No TimeBlock in array', (t) => {
+  const timeArray = [];
+  t.false(Util.timesOverlap(timeArray));
+});
+
+test('timesOverlap: Overlapping TimeBlock (sorted)', (t) => {
+  const timeArray = [
+    new TimeBlock({
+      startTime: '11.45.00',
+      endTime: '13.00.00',
+      weekDay: 'Friday',
+    }),
+    new TimeBlock({
+      startTime: '13.00.00',
+      endTime: '15.30.00',
+      weekDay: 'Friday',
+    }),
+    new TimeBlock({
+      startTime: '17.45.00',
+      endTime: '19.30.00',
+      weekDay: 'Friday',
+    }),
+  ];
+  t.true(Util.timesOverlap(timeArray));
+});
+
+test('timesOverlap: No overlapping TimeBlock (sorted)', (t) => {
+  const timeArray = [
+    new TimeBlock({
+      startTime: '11.45.00',
+      endTime: '13.00.00',
+      weekDay: 'Friday',
+    }),
+    new TimeBlock({
+      startTime: '13.30.00',
+      endTime: '15.30.00',
+      weekDay: 'Friday',
+    }),
+    new TimeBlock({
+      startTime: '17.45.00',
+      endTime: '19.30.00',
+      weekDay: 'Friday',
+    }),
+  ];
+  t.false(Util.timesOverlap(timeArray));
+});
+
+test('timesOverlap: Overlapping TimeBlock (unsorted)', (t) => {
+  const timeArray = [
+    new TimeBlock({
+      startTime: '13.00.00',
+      endTime: '15.30.00',
+      weekDay: 'Friday',
+    }),
+    new TimeBlock({
+      startTime: '11.45.00',
+      endTime: '13.05.00',
+      weekDay: 'Friday',
+    }),
+    new TimeBlock({
+      startTime: '08.45.00',
+      endTime: '10.15.00',
+      weekDay: 'Friday',
+    }),
+  ];
+  t.true(Util.timesOverlap(timeArray));
+});
+
+test('timesOverlap: No overlapping TimeBlock (unsorted)', (t) => {
+  const timeArray = [
+    new TimeBlock({
+      startTime: '13.30.00',
+      endTime: '15.30.00',
+      weekDay: 'Friday',
+    }),
+    new TimeBlock({
+      startTime: '11.45.00',
+      endTime: '13.00.00',
+      weekDay: 'Friday',
+    }),
+    new TimeBlock({
+      startTime: '08.45.00',
+      endTime: '10.15.00',
+      weekDay: 'Friday',
+    }),
+  ];
+  t.false(Util.timesOverlap(timeArray));
+});
+
+test('timesOverlap: Overlapping TimeBlock (Monday)', (t) => {
+  const timeArray = [
+    new TimeBlock({
+      startTime: '13.00.00',
+      endTime: '15.30.00',
+      weekDay: 'Friday',
+    }),
+    new TimeBlock({
+      startTime: '11.45.00',
+      endTime: '12:55.00',
+      weekDay: 'Friday',
+    }),
+    new TimeBlock({
+      startTime: '09.45.00',
+      endTime: '10.15.00',
+      weekDay: 'Monday',
+    }),
+    new TimeBlock({
+      startTime: '08.45.00',
+      endTime: '10.05.00',
+      weekDay: 'Monday',
+    }),
+  ];
+  t.true(Util.timesOverlap(timeArray));
+});
+
+test('timesOverlap: Overlapping TimeBlock (Friday - enclosed)', (t) => {
+  const timeArray = [
+    new TimeBlock({
+      startTime: '18.00.00',
+      endTime: '19.30.00',
+      weekDay: 'Friday',
+    }),
+    new TimeBlock({
+      startTime: '11.45.00',
+      endTime: '13.00.00',
+      weekDay: 'Monday',
+    }),
+    new TimeBlock({
+      startTime: '17.45.00',
+      endTime: '20.15.00',
+      weekDay: 'Friday',
+    }),
+  ];
+  t.true(Util.timesOverlap(timeArray));
 });
