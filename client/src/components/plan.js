@@ -21,11 +21,11 @@ import {
   ExpansionPanelDetails,
   Typography,
 } from '@material-ui/core';
-import moment from "moment";
-import MobileStepper from "@material-ui/core/MobileStepper";
-import Button from "@material-ui/core/Button";
-import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
-import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
+import moment from 'moment';
+import MobileStepper from '@material-ui/core/MobileStepper';
+import Button from '@material-ui/core/Button';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import ChildBox from './box-child';
 
 const burgundy = {
@@ -64,9 +64,9 @@ class Plan extends Component {
       return date;
     };
 
-    const createTime = (timeStr) => moment(timeStr, "HH:mm:ss");
+    const createTime = timeStr => moment(timeStr, 'HH:mm:ss');
 
-    const createTime2 = (timeEnd) => moment(timeEnd, "HH:mm:ss");
+    const createTime2 = timeEnd => moment(timeEnd, 'HH:mm:ss');
 
     const createDateTime = (dateStr, timeStr) => {
       const date = createDate(dateStr);
@@ -200,13 +200,6 @@ class Plan extends Component {
     ];
     console.log(appointments);
     console.log(this.state.dataFall2019);
-    for (let i = 0; i < sequences.length; i++) {
-      this.state.availableSequences.push({
-        code: sequences[i].courses[0].code,
-        title: sequences[i].courses[0].title,
-        credits: sequences[i].courses[0].credits,
-      });
-    }
   }
 
   handleNext = () => {
@@ -228,9 +221,7 @@ class Plan extends Component {
 
   render() {
     const { dataFall2019, fallSchedule, activeStep } = this.state;
-    const filterDataFall2019 = dataFall2019.filter((el) => {
-      return el.id == activeStep
-    });
+    const filterDataFall2019 = dataFall2019.filter((el) => el.id == activeStep);
     return (
       <div className='plan-container'>
         <div className='header-logo'>
@@ -291,7 +282,7 @@ class Plan extends Component {
                         <Scheduler data={filterDataFall2019}>
                           <ViewState currentDate='09/04/2018' />
                           <WeekView
-                            excludedDays={[0, 6]}
+                            excludedDays={[ 0, 6 ]}
                             cellDuration={60}
                             startDayHour={8}
                             endDayHour={24}
@@ -306,31 +297,31 @@ class Plan extends Component {
                           activeStep={activeStep}
                           nextButton={(
                             <Button
-                              size="small"
+                              size='small'
                               onClick={this.handleNext}
                               disabled={activeStep === fallSchedule.length - 1}
                             >
                               Next
-                                {theme.direction === "rtl" ? (
-                                <KeyboardArrowLeft />
-                              ) : (
-                                  <KeyboardArrowRight />
+                              {theme.direction === 'rtl' ? (
+                                  <KeyboardArrowLeft />
+                                ) : (
+                                <KeyboardArrowRight />
                                 )}
                             </Button>
                           )}
                           backButton={(
                             <Button
-                              size="small"
+                              size='small'
                               onClick={this.handleBack}
                               disabled={activeStep === 0}
                             >
-                              {theme.direction === "rtl" ? (
+                              {theme.direction === 'rtl' ? (
                                 <KeyboardArrowRight />
                               ) : (
-                                  <KeyboardArrowLeft />
-                                )}
+                                <KeyboardArrowLeft />
+                              )}
                               Back
-                              </Button>
+                            </Button>
                           )}
                         />
                       </Paper>
