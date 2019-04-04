@@ -5,10 +5,11 @@ import {
   WeekView,
   Appointments,
 } from '@devexpress/dx-react-scheduler-material-ui';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {
   MuiThemeProvider,
   createMuiTheme,
+  Button,
+  MobileStepper,
   Paper,
   ExpansionPanel,
   Grid,
@@ -21,11 +22,8 @@ import {
   ExpansionPanelDetails,
   Typography,
 } from '@material-ui/core';
+import { KeyboardArrowLeft, KeyboardArrowRight, ExpandMoreIcon } from '@material-ui/icons';
 import moment from 'moment';
-import MobileStepper from '@material-ui/core/MobileStepper';
-import Button from '@material-ui/core/Button';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import ChildBox from './box-child';
 
 const burgundy = {
@@ -114,26 +112,24 @@ class Plan extends Component {
     ];
     console.log(appointments);
     console.log(this.state.dataFall2019);
-
+    const state = this.state;
 
     // Populating the data for all classes
-    this.state.fallSchedule && this.state.fallSchedule.map((schedule, scheduleIndex) => {
-      this.state.fallSchedule[scheduleIndex].sections.map((section, sectionIndex) => {
-        this.state.fallSchedule[scheduleIndex].sections[sectionIndex].times.map((time) => {
+    state.fallSchedule && state.fallSchedule.map((schedule, scheduleIndex) => {
+      state.fallSchedule[scheduleIndex].sections.map((section, sectionIndex) => {
+        state.fallSchedule[scheduleIndex].sections[sectionIndex].times.map((time) => {
           const dayOfWeek = time.weekDay;
           const dateStr = '04/09/2018';
           const timeStr = time.startTime;
           const timeEnd = time.endTime;
-          const beginDateTime = findWeekDayDate({ dayOfWeek, dateStr, timeStr });
-          const finishDateTime = findWeekDayDate2({ dayOfWeek, dateStr, timeEnd });
+          const beginDateTime = this.findWeekDayDate({ dayOfWeek, dateStr, timeStr });
+          const finishDateTime = this.findWeekDayDate2({ dayOfWeek, dateStr, timeEnd });
 
-          this.state.dataFall2019.push({
+          state.dataFall2019.push({
             id: scheduleIndex,
             title: `${section.courseCode} - ${section.code} ${section.kind}`,
             startDate: new Date(beginDateTime.format('MM/DD/YYYY HH:mm:ss')),
             endDate: new Date(finishDateTime.format('MM/DD/YYYY HH:mm:ss')),
-
-
           });
         });
       });
@@ -171,15 +167,15 @@ class Plan extends Component {
   // next week's weekDay date if startDate occured after weekDay
   // of that week
   findWeekDayDate = ({ dayOfWeek, dateStr, timeStr }) => {
-    const date = createDate(dateStr);
-    const dateOfWeekDayInSameWeek = createDate(dateStr).day(dayOfWeek);
+    const date = this.createDate(dateStr);
+    const dateOfWeekDayInSameWeek = this.createDate(dateStr).day(dayOfWeek);
     // if dateOfWeekDayInSameWeek occurs before the date, then it has
     // passed and the actual date with that day of the week will occur
     // in the next week
     const actualDateOfWeekDay = dateOfWeekDayInSameWeek.isBefore(date)
       ? dateOfWeekDayInSameWeek.add(7, 'day')
       : dateOfWeekDayInSameWeek;
-    const time = createTime(timeStr);
+    const time = this.createTime(timeStr);
     actualDateOfWeekDay.set({
       hour: time.get('hour'),
       minute: time.get('minute'),
@@ -190,15 +186,15 @@ class Plan extends Component {
   };
 
   findWeekDayDate2 = ({ dayOfWeek, dateStr, timeEnd }) => {
-    const date = createDate(dateStr);
-    const dateOfWeekDayInSameWeek = createDate(dateStr).day(dayOfWeek);
+    const date = this.createDate(dateStr);
+    const dateOfWeekDayInSameWeek = this.createDate(dateStr).day(dayOfWeek);
     // if dateOfWeekDayInSameWeek occurs before the date, then it has
     // passed and the actual date with that day of the week will occur
     // in the next week
     const actualDateOfWeekDay = dateOfWeekDayInSameWeek.isBefore(date)
       ? dateOfWeekDayInSameWeek.add(7, 'day')
       : dateOfWeekDayInSameWeek;
-    const time = createTime(timeEnd);
+    const time = this.createTime(timeEnd);
     actualDateOfWeekDay.set({
       hour: time.get('hour'),
       minute: time.get('minute'),
@@ -228,7 +224,7 @@ class Plan extends Component {
     const {
       availableSequences, dataFall2019, fallSchedule, activeStep, course, subject, lecture, tutorial,
     } = this.state;
-    const filterDataFall2019 = dataFall2019.filter(el => el.id == activeStep);
+    const filterDataFall2019 = dataFall2019.filter(el => el.id === activeStep);
     return (
       <div className='plan-container'>
         <div className='header-logo'>
@@ -369,8 +365,8 @@ class Plan extends Component {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {this.state.availableSequences.map((x) => {
-                        x.courses.map(row => (
+                      {availableSequences.map((sequence) => {
+                        sequence.courses.map(row => (
                           <TableRow key={row.id}>
                             <TableCell>{row.code}</TableCell>
                             <TableCell align='center'>{row.title}</TableCell>
@@ -431,7 +427,7 @@ class Plan extends Component {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {this.state.availableSequences.map(row => (
+                      {availableSequences.map(row => (
                         <TableRow key={row.id}>
                           <TableCell>{row.code}</TableCell>
                           <TableCell align='center'>{row.title}</TableCell>
