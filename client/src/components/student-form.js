@@ -74,7 +74,7 @@ const styles = theme => ({
     background: theme.palette.background.pr,
   },
   formContent: {
-    margin: '0 12%',
+    margin: '0 24%',
     minWidth: '330px',
   },
   chips: {
