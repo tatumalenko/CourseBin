@@ -620,7 +620,7 @@ class StudentForm extends Component {
                                     }}
                                   >
                                     {courseMap ? Object.keys(courseMap).map(faculty => (
-                                      <option key={faculty} value={faculty}>
+                                      <option key={courseMap[faculty]} value={faculty}>
                                         {faculty}
                                       </option>
                                     )) : null}
@@ -758,7 +758,7 @@ class StudentForm extends Component {
                                     }}
                                   >
                                     {courseMap ? Object.keys(courseMap).map(faculty => (
-                                      <option key={faculty} value={faculty}>
+                                      <option key={courseMap[faculty]} value={faculty}>
                                         {faculty}
                                       </option>
                                     )) : null}
@@ -896,7 +896,7 @@ class StudentForm extends Component {
                                     }}
                                   >
                                     {courseMap ? Object.keys(courseMap).map(faculty => (
-                                      <option key={faculty} value={faculty}>
+                                      <option key={courseMap[faculty]} value={faculty}>
                                         {faculty}
                                       </option>
                                     )) : null}

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { ViewState } from '@devexpress/dx-react-scheduler';
+import PropTypes from 'prop-types';
 import {
   Scheduler,
   WeekView,
@@ -25,6 +26,8 @@ import {
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@material-ui/icons';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import moment from 'moment';
+import cyan from '@material-ui/core/colors/cyan';
+import { withStyles } from '@material-ui/core/styles';
 import ChildBox from './box-child';
 
 const _ = require('lodash');
@@ -52,6 +55,12 @@ const theme = createMuiTheme({
   },
 });
 
+const styles = theme => ({
+  sequence: {
+    backgroundColor: cyan,
+  },
+});
+
 class Plan extends Component {
   constructor(props) {
     super(props);
@@ -61,7 +70,7 @@ class Plan extends Component {
 
     this.state = {
       // sequences
-      sequenceMap: {},
+      sequenceMap: this.parseSequences(),
 
       // schedules
       dataFall2019: [],
@@ -76,6 +85,8 @@ class Plan extends Component {
       activeStep: 0,
     };
 
+    console.log(this.state);
+
     this.createDate = this.createDate.bind(this);
     this.createTime = this.createTime.bind(this);
     this.findWeekDayDate = this.findWeekDayDate.bind(this);
@@ -87,10 +98,8 @@ class Plan extends Component {
     this.handleStepChange = this.handleStepChange.bind(this);
   }
 
-
   componentDidMount() {
     this.parseSequences();
-    console.log(this.state);
     this.parseSchedules();
   }
 
@@ -121,19 +130,16 @@ class Plan extends Component {
 
   parseSequences = () => {
     const sequences = this.sequences;
-    const sequenceMap = {};
+    const map = {};
     Object.keys(sequences).forEach((i) => {
       const sequence = sequences[i];
       const term = `${_.startCase(_.toLower(sequence.term))} ${sequence.year}`;
       const courses = sequence.courses;
-      if (!sequenceMap[term]) {
-        sequenceMap[term] = courses;
+      if (!map[term]) {
+        map[term] = courses;
       }
     });
-    const newState = Object.assign({}, this.state);
-    newState.sequenceMap = sequenceMap;
-    this.setState(newState);
-    console.log(this.state);
+    return map;
   }
 
   // ******** functions to parse schedules *************
@@ -208,6 +214,7 @@ class Plan extends Component {
 
 
   render() {
+    const { classes } = this.props;
     const {
       sequenceMap, dataFall2019, fallSchedule, activeStep, course, subject, lecture, tutorial,
     } = this.state;
@@ -220,6 +227,8 @@ class Plan extends Component {
         <Grid container spacing={16}>
           <Grid item xs={12} className='schedule-container'>
             <Typography id='schedule-header' variant='h4'>Here's what we came up with... </Typography>
+            <Typography variant='h5'>Schedules</Typography>
+            <br />
             <ExpansionPanel>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography>Fall 2019</Typography>
@@ -320,38 +329,37 @@ class Plan extends Component {
                   </div>
                 </Grid>
               </ExpansionPanelDetails>
-
-
             </ExpansionPanel>
-
-            {sequenceMap ? Object.keys(sequenceMap).forEach(term => (
+            <br />
+            <Typography variant='h5'>Sequences</Typography>
+            <br />
+            {sequenceMap ? Object.keys(sequenceMap).map(term => (
               <ExpansionPanel>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography>{term}</Typography>
                 </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                  <Typography>
-                    <Table>
-                      <TableHead>
+                <ExpansionPanelDetails className={classes.sequence}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Course Code</TableCell>
+                        <TableCell align='center'>Course Title</TableCell>
+                        <TableCell align='right'>Credits</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    {sequenceMap[term].map(course => (
+                      <TableBody key={course.code}>
                         <TableRow>
-                          <TableCell>Course Code</TableCell>
-                          <TableCell align='center'>Course Title</TableCell>
-                          <TableCell align='right'>Credits</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      {sequenceMap[term].map(course => (
-                        <TableBody key={course}>
                           <TableCell>{course.code}</TableCell>
                           <TableCell align='center'>{course.title}</TableCell>
                           <TableCell align='right'>{course.credits}</TableCell>
-                        </TableBody>
-                      ))}
-                    </Table>
-                  </Typography>
+                        </TableRow>
+                      </TableBody>
+                    ))}
+                  </Table>
                 </ExpansionPanelDetails>
               </ExpansionPanel>
-            ))
-              : null
+            )) : null
             }
           </Grid>
         </Grid>
@@ -361,4 +369,9 @@ class Plan extends Component {
   }
 }
 
-export default Plan;
+Plan.propTypes = {
+  classes: PropTypes.object.isRequired,
+  theme: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles, { withTheme: true })(Plan);
