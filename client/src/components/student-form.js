@@ -263,7 +263,7 @@ class StudentForm extends Component {
 
     if (!state[property]) {
       this.setState({
-        [property]: [courseCode],
+        [property]: [ courseCode ],
       });
       this.setErrMsg(property, null);
     } else if (state[property].length === state[numCourses]) {
@@ -428,7 +428,7 @@ class StudentForm extends Component {
           }
 
           if (!map[departmentName] && displayName !== '') {
-            map[departmentName] = [displayName];
+            map[departmentName] = [ displayName ];
           } else {
             map[departmentName].push(displayName);
           }
@@ -454,7 +454,7 @@ class StudentForm extends Component {
 
   removeFallCourseSelection = course => () => {
     this.setState((state) => {
-      const fallSelectedCourses = [...state.fallSelectedCourses];
+      const fallSelectedCourses = [ ...state.fallSelectedCourses ];
       const toDelete = fallSelectedCourses.indexOf(course);
       fallSelectedCourses.splice(toDelete, 1);
       return { fallSelectedCourses };
@@ -463,7 +463,7 @@ class StudentForm extends Component {
 
   removeWinterCourseSelection = course => () => {
     this.setState((state) => {
-      const winterSelectedCourses = [...state.winterSelectedCourses];
+      const winterSelectedCourses = [ ...state.winterSelectedCourses ];
       const toDelete = winterSelectedCourses.indexOf(course);
       winterSelectedCourses.splice(toDelete, 1);
       return { winterSelectedCourses };
@@ -472,7 +472,7 @@ class StudentForm extends Component {
 
   removeSummerCourseSelection = course => () => {
     this.setState((state) => {
-      const summerSelectedCourses = [...state.summerSelectedCourses];
+      const summerSelectedCourses = [ ...state.summerSelectedCourses ];
       const toDelete = summerSelectedCourses.indexOf(course);
       summerSelectedCourses.splice(toDelete, 1);
       return { summerSelectedCourses };
@@ -521,7 +521,7 @@ class StudentForm extends Component {
             <form onSubmit={this.handleSubmit}>
               <div className={classes.formContent}>
                 <div className='header-logo'>
-                  <Typography variant='h3'>CourseBin</Typography>
+                  <Typography variant='h4'>CourseBin</Typography>
                 </div>
                 <Typography component='h3' variant='h6' id='form-header'>First, we will just need some basic information... </Typography>
                 <AppBar position='static' color='default'>

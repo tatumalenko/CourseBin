@@ -67,11 +67,11 @@
   font-size: 12px;
 }
 
-.header-logo h3{
+.header-logo h4{
   font-family: 'Londrina Solid', cursive;
     color: #A98638;
     position: relative;
-    bottom: 62px
+    bottom: 58px
 }
 
 .student-form{
