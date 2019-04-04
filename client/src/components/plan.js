@@ -85,6 +85,8 @@ class Plan extends Component {
       activeStep: 0,
     };
 
+    this.parseSchedules();
+
     console.log(this.state);
 
     this.createDate = this.createDate.bind(this);
@@ -96,11 +98,6 @@ class Plan extends Component {
     this.handleBack = this.handleBack.bind(this);
     this.handleNext = this.handleNext.bind(this);
     this.handleStepChange = this.handleStepChange.bind(this);
-  }
-
-  componentDidMount() {
-    this.parseSequences();
-    this.parseSchedules();
   }
 
   parseSchedules = () => {
@@ -128,21 +125,7 @@ class Plan extends Component {
     });
   }
 
-  parseSequences = () => {
-    const sequences = this.sequences;
-    const map = {};
-    Object.keys(sequences).forEach((i) => {
-      const sequence = sequences[i];
-      const term = `${_.startCase(_.toLower(sequence.term))} ${sequence.year}`;
-      const courses = sequence.courses;
-      if (!map[term]) {
-        map[term] = courses;
-      }
-    });
-    return map;
-  }
-
-  // ******** functions to parse schedules *************
+  // ******** helper functions to parse schedules for UI *************
 
   createDate = (dateStr) => {
     const dateParseFormatStr = 'DD/MM/YYYY';
@@ -192,7 +175,20 @@ class Plan extends Component {
     return actualDateOfWeekDay;
   };
 
-  // ******** functions to parse sequences *************
+  // ******** parse sequences for UI  *************
+  parseSequences = () => {
+    const sequences = this.sequences;
+    const map = {};
+    Object.keys(sequences).forEach((i) => {
+      const sequence = sequences[i];
+      const term = `${_.startCase(_.toLower(sequence.term))} ${sequence.year}`;
+      const courses = sequence.courses;
+      if (!map[term]) {
+        map[term] = courses;
+      }
+    });
+    return map;
+  }
 
 
   // ******** functions to dynamically handle state *************
@@ -281,7 +277,7 @@ class Plan extends Component {
                         <Scheduler data={filterDataFall2019}>
                           <ViewState currentDate='09/04/2018' />
                           <WeekView
-                            excludedDays={[0, 6]}
+                            excludedDays={[ 0, 6 ]}
                             cellDuration={60}
                             startDayHour={8}
                             endDayHour={24}
@@ -304,8 +300,8 @@ class Plan extends Component {
                               {theme.direction === 'rtl' ? (
                                 <KeyboardArrowLeft />
                               ) : (
-                                  <KeyboardArrowRight />
-                                )}
+                                <KeyboardArrowRight />
+                              )}
                             </Button>
                           )}
                           backButton={(
@@ -317,8 +313,8 @@ class Plan extends Component {
                               {theme.direction === 'rtl' ? (
                                 <KeyboardArrowRight />
                               ) : (
-                                  <KeyboardArrowLeft />
-                                )}
+                                <KeyboardArrowLeft />
+                              )}
                               Back
                             </Button>
                           )}
