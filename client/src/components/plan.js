@@ -221,11 +221,11 @@ class Plan extends Component {
     const filterDataFall2019 = dataFall2019.filter(el => el.id === activeStep);
     return (
       <div className='plan-container'>
-        <div className='header-logo'>
-          <Typography variant='h4'>CourseBin</Typography>
-        </div>
         <Grid container spacing={16}>
           <Grid item xs={12} className='schedule-container'>
+            <div className='header-logo plan'>
+              <Typography variant='h4'>CourseBin</Typography>
+            </div>
             <Typography id='schedule-header' variant='h4'>Here's what we came up with... </Typography>
             <Typography variant='h5'>Schedules</Typography>
             <br />
@@ -281,7 +281,7 @@ class Plan extends Component {
                         <Scheduler data={filterDataFall2019}>
                           <ViewState currentDate='09/04/2018' />
                           <WeekView
-                            excludedDays={[ 0, 6 ]}
+                            excludedDays={[0, 6]}
                             cellDuration={60}
                             startDayHour={8}
                             endDayHour={24}
@@ -304,8 +304,8 @@ class Plan extends Component {
                               {theme.direction === 'rtl' ? (
                                 <KeyboardArrowLeft />
                               ) : (
-                                <KeyboardArrowRight />
-                              )}
+                                  <KeyboardArrowRight />
+                                )}
                             </Button>
                           )}
                           backButton={(
@@ -317,8 +317,8 @@ class Plan extends Component {
                               {theme.direction === 'rtl' ? (
                                 <KeyboardArrowRight />
                               ) : (
-                                <KeyboardArrowLeft />
-                              )}
+                                  <KeyboardArrowLeft />
+                                )}
                               Back
                             </Button>
                           )}
