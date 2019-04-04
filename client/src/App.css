@@ -1,7 +1,6 @@
 .App {
   align-items: center;
   text-align: center;
-  min-width: 400px;
 }
 
 .navbar-links{
@@ -35,6 +34,7 @@
 
 .home-bottom{
   background-color: white;
+  margin-top: 35px;
   text-align: center;
 }
 
@@ -72,10 +72,6 @@
     color: #A98638;
     position: relative;
     bottom: 58px
-}
-
-.student-form{
-  min-width: 400px;
 }
 
 .student-form #form-header{

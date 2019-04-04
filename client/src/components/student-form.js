@@ -81,8 +81,7 @@ const styles = theme => ({
     background: theme.palette.background.pr,
   },
   formContent: {
-    margin: '0 25%',
-    minWidth: '400px',
+    margin: '0 12%',
   },
   chips: {
     display: 'flex',
