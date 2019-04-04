@@ -313,35 +313,35 @@ class StudentForm extends Component {
 
     const state = this.state;
 
-    if (state.fallNumOfCourses === 0 && state.summerNumOfCourses === 0 && state.winterNumOfCourses === 0) {
-      const msg = 'You have selected a preference of no courses for every semester, please try again!';
-      const newState = Object.assign({}, state);
-      newState.formErrorMsg.push(msg);
-      this.setState(newState);
-      return;
-    }
+    // if (state.fallNumOfCourses === 0 && state.summerNumOfCourses === 0 && state.winterNumOfCourses === 0) {
+    //   const msg = 'You have selected a preference of no courses for every semester, please try again!';
+    //   const newState = Object.assign({}, state);
+    //   newState.formErrorMsg.push(msg);
+    //   this.setState(newState);
+    //   return;
+    // }
 
-    if (state.fallSelectedCourses.length !== state.fallNumOfCourses) {
-      const msg = `You indicated a preference of ${state.fallNumOfCourses} courses for Fall, but did not select that amount!`;
-      const newState = Object.assign({}, state);
-      newState.formErrorMsg.push(msg);
-      this.setState(newState);
-      return;
-    }
-    if (state.winterSelectedCourses.length !== state.winterNumOfCourses) {
-      const msg = `You indicated a preference of ${state.winterNumOfCourses} courses for Winter, but did not select that amount!`;
-      const newState = Object.assign({}, state);
-      newState.formErrorMsg.push(msg);
-      this.setState(newState);
-      return;
-    }
-    if (state.summerSelectedCourses.length !== state.summerNumOfCourses) {
-      const msg = `You indicated a preference of ${state.summerNumOfCourses} courses for Summer, but did not select that amount!`;
-      const newState = Object.assign({}, state);
-      newState.formErrorMsg.push(msg);
-      this.setState(newState);
-      return;
-    }
+    // if (state.fallSelectedCourses.length !== state.fallNumOfCourses) {
+    //   const msg = `You indicated a preference of ${state.fallNumOfCourses} courses for Fall, but did not select that amount!`;
+    //   const newState = Object.assign({}, state);
+    //   newState.formErrorMsg.push(msg);
+    //   this.setState(newState);
+    //   return;
+    // }
+    // if (state.winterSelectedCourses.length !== state.winterNumOfCourses) {
+    //   const msg = `You indicated a preference of ${state.winterNumOfCourses} courses for Winter, but did not select that amount!`;
+    //   const newState = Object.assign({}, state);
+    //   newState.formErrorMsg.push(msg);
+    //   this.setState(newState);
+    //   return;
+    // }
+    // if (state.summerSelectedCourses.length !== state.summerNumOfCourses) {
+    //   const msg = `You indicated a preference of ${state.summerNumOfCourses} courses for Summer, but did not select that amount!`;
+    //   const newState = Object.assign({}, state);
+    //   newState.formErrorMsg.push(msg);
+    //   this.setState(newState);
+    //   return;
+    // }
 
     const jsonObject = {
       fall: {

@@ -61,7 +61,7 @@ class Plan extends Component {
 
     this.state = {
       // sequences
-      availableSequences: [],
+      sequenceMap: {},
 
       // schedules
       dataFall2019: [],
@@ -90,6 +90,7 @@ class Plan extends Component {
 
   componentDidMount() {
     this.parseSequences();
+    console.log(this.state);
     this.parseSchedules();
   }
 
@@ -121,25 +122,18 @@ class Plan extends Component {
   parseSequences = () => {
     const sequences = this.sequences;
     const sequenceMap = {};
-
-    console.log(sequences);
     Object.keys(sequences).forEach((i) => {
       const sequence = sequences[i];
       const term = `${_.startCase(_.toLower(sequence.term))} ${sequence.year}`;
       const courses = sequence.courses;
-      console.log(term);
-      console.log(courses);
       if (!sequenceMap[term]) {
         sequenceMap[term] = courses;
       }
     });
-    console.log(sequenceMap);
-
     const newState = Object.assign({}, this.state);
-    newState.availableSequences.push({
-
-    });
+    newState.sequenceMap = sequenceMap;
     this.setState(newState);
+    console.log(this.state);
   }
 
   // ******** functions to parse schedules *************
@@ -215,7 +209,7 @@ class Plan extends Component {
 
   render() {
     const {
-      availableSequences, dataFall2019, fallSchedule, activeStep, course, subject, lecture, tutorial,
+      sequenceMap, dataFall2019, fallSchedule, activeStep, course, subject, lecture, tutorial,
     } = this.state;
     const filterDataFall2019 = dataFall2019.filter(el => el.id === activeStep);
     return (
@@ -326,114 +320,39 @@ class Plan extends Component {
                   </div>
                 </Grid>
               </ExpansionPanelDetails>
-            </ExpansionPanel>
-            <ExpansionPanel>
-              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>Winter 2020</Typography>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
-                <Typography>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                  sit amet blandit leo lobortis eget.
-                </Typography>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
-            <ExpansionPanel>
-              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>Summer 2020</Typography>
-              </ExpansionPanelSummary>
-            </ExpansionPanel>
-            <ExpansionPanel>
-              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>Fall 2020</Typography>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
-                <Typography>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Course Code</TableCell>
-                        <TableCell align='center'>Course Title</TableCell>
-                        <TableCell align='right'>Credits</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
 
-                      {/* availableSequences ? availableSequences.map(sequence => (
-                        sequence.courses.map(row => (
-                          <TableRow key={row.id}>
-                            <TableCell>{row.code}</TableCell>
-                            <TableCell align='center'>{row.title}</TableCell>
-                            <TableCell align='right'>{row.credits}</TableCell>
-                          </TableRow>
-                        ))
 
-                        // <TableRow key={row.id}>
-                        //   <TableCell>{row.code}</TableCell>
-                        //   <TableCell align='center'>{row.title}</TableCell>
-                        //   <TableCell align='right'>{row.credits}</TableCell>
-                        // </TableRow>
-                      )) : null
-                        */}
-                    </TableBody>
-                  </Table>
-                </Typography>
-              </ExpansionPanelDetails>
             </ExpansionPanel>
-            <ExpansionPanel>
-              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>Winter 2021</Typography>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
-                <Typography>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Course Code</TableCell>
-                        <TableCell align='center'>Course Title</TableCell>
-                        <TableCell align='right'>Credits</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {/* {availableSequences.map(row => (
-                        <TableRow key={row.id}>
-                          <TableCell>{row.code}</TableCell>
-                          <TableCell align='center'>{row.title}</TableCell>
-                          <TableCell align='right'>{row.credits}</TableCell>
+
+            {sequenceMap ? Object.keys(sequenceMap).forEach(term => (
+              <ExpansionPanel>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography>{term}</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                  <Typography>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Course Code</TableCell>
+                          <TableCell align='center'>Course Title</TableCell>
+                          <TableCell align='right'>Credits</TableCell>
                         </TableRow>
-                      ))} */}
-                    </TableBody>
-                  </Table>
-                </Typography>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
-            <ExpansionPanel>
-              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>Summer 2021</Typography>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
-                <Typography>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Course Code</TableCell>
-                        <TableCell align='center'>Course Title</TableCell>
-                        <TableCell align='right'>Credits</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {/* {availableSequences.map(row => (
-                        <TableRow key={row.id}>
-                          <TableCell>{row.code}</TableCell>
-                          <TableCell align='center'>{row.title}</TableCell>
-                          <TableCell align='right'>{row.credits}</TableCell>
-                        </TableRow>
-                      ))} */}
-                    </TableBody>
-                  </Table>
-                </Typography>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
+                      </TableHead>
+                      {sequenceMap[term].map(course => (
+                        <TableBody key={course}>
+                          <TableCell>{course.code}</TableCell>
+                          <TableCell align='center'>{course.title}</TableCell>
+                          <TableCell align='right'>{course.credits}</TableCell>
+                        </TableBody>
+                      ))}
+                    </Table>
+                  </Typography>
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
+            ))
+              : null
+            }
           </Grid>
         </Grid>
 
