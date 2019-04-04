@@ -3,7 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { Redirect, Link as RouterLink } from 'react-router-dom';
 import {
-  Button, Grid, FormLabel, Link, TextField, MuiThemeProvider, createMuiTheme, Typography,
+  Button, Grid, Link, TextField, MuiThemeProvider, createMuiTheme, Typography,
 } from '@material-ui/core';
 import axios from 'axios';
 import cyan from '@material-ui/core/colors/cyan';
