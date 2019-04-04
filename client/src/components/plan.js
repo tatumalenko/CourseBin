@@ -57,6 +57,9 @@ class Plan extends Component {
     const plan = props.formData;
     const schedules = plan.schedules;
     const sequences = plan.sequences;
+
+    console.log("Available Sequences");
+    console.log(sequences);
     
     const createDate = dateStr => {
       const dateParseFormatStr = "DD/MM/YYYY";
@@ -137,7 +140,7 @@ class Plan extends Component {
 
     this.state = {
       availableSequences: [],
-      data: classes,
+     // data: classes,
       dataFall2019: [],
       class: 'COMP-472',
       subject: 'Artificial Intelligence',
@@ -148,14 +151,36 @@ class Plan extends Component {
     };
     console.log(this.state.fallSchedule);
 
-
     for (var i=0; i < sequences.length; i++){
+      var coursesLength = sequences[i].courses.length;
+      console.log("courses length at: " + i + " is: " + coursesLength);
       this.state.availableSequences.push({
-        'code': sequences[i].courses[0].code,
-        'title': sequences[i].courses[0].title,
-        'credits': sequences[i].courses[0].credits,
-      });
-    } 
+        'term': sequences[i].term,
+         'year': sequences[i].year,
+         'courses': sequences[i].courses
+       });
+    //   for (var x = i; x < coursesLength; x++){
+    //   this.state.availableSequences.push({
+    //   'courses': sequences[i].courses[x]
+    //   });
+    // }
+  }
+  console.log('printin out AvailableSequences')
+  console.log(this.state.availableSequences);
+
+  // var arrayOfYears = []; 
+  // for (var i = 0; i < this.state.availableSequences.length; i++){
+  //     {
+  //       if (arrayOfYears[i-1] != this)
+  //       arrayOfYears.push(
+  //         this.state.availableSequences[i].year
+  //       )
+  //     }
+  // }
+  // console.log("Printing out array of years");
+  // console.log(arrayOfYears);
+
+
     //Populating the data for all classes
     this.state.fallSchedule && this.state.fallSchedule.map( (schedule, scheduleIndex) => {
       this.state.fallSchedule[scheduleIndex].sections.map((section, sectionIndex) => {
@@ -374,13 +399,22 @@ class Plan extends Component {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {this.state.availableSequences.slice(0,5).map(row => (
-                        <TableRow key={row.id}>
-                          <TableCell>{row.code}</TableCell>
-                          <TableCell align='center'>{row.title}</TableCell>
-                          <TableCell align='right'>{row.credits}</TableCell>
-                        </TableRow>
-                      ))}
+                      {this.state.availableSequences.map((x) => {
+                          {debugger;}
+                          x.courses.map((row) => (
+                          <TableRow key={row.id}>
+                            <TableCell>{row.code}</TableCell>
+                            <TableCell align='center'>{row.title}</TableCell>
+                            <TableCell align='right'>{row.credits}</TableCell>
+                          </TableRow>
+                          ))
+                      }
+                        // <TableRow key={row.id}>
+                        //   <TableCell>{row.code}</TableCell>
+                        //   <TableCell align='center'>{row.title}</TableCell>
+                        //   <TableCell align='right'>{row.credits}</TableCell>
+                        // </TableRow>
+                      )}
                     </TableBody>
                   </Table>
                 </Typography>
@@ -401,7 +435,7 @@ class Plan extends Component {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {this.state.availableSequences.slice(5,10).map(row => (
+                      {this.state.availableSequences.map(row => (
                         <TableRow key={row.id}>
                           <TableCell>{row.code}</TableCell>
                           <TableCell align='center'>{row.title}</TableCell>
@@ -428,7 +462,7 @@ class Plan extends Component {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {this.state.availableSequences.slice(10,15).map(row => (
+                      {this.state.availableSequences.map(row => (
                         <TableRow key={row.id}>
                           <TableCell>{row.code}</TableCell>
                           <TableCell align='center'>{row.title}</TableCell>
