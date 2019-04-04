@@ -261,7 +261,7 @@ class ProgramBuilder {
       requiredCourses: required,
     });
     while (_.difference(required, completed).length > 0) {
-      year = getTermYear(year, termCourses.length + termsPassedOffset);
+      year = getTermYear(year, termTracker + termsPassedOffset);
       if (preferences[terms[termTracker % numberOfTerms]].numberOfCourses !== 0) {
         // Of the candidate courses, pick at most the number specified in
         // termPreferences, and add those to the lot of completedCOurses
