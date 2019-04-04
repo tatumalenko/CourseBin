@@ -27,6 +27,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import moment from 'moment';
 import ChildBox from './box-child';
 
+const _ = require('lodash');
+
 const burgundy = {
   50: '#571D2E',
   100: '#571D2E',
@@ -118,21 +120,26 @@ class Plan extends Component {
 
   parseSequences = () => {
     const sequences = this.sequences;
-    console.log(sequences);
+    const sequenceMap = {};
 
-    for (let i = 0; i < this.sequences.length; i++) {
-      const coursesLength = this.sequences[i].courses.length;
-      console.log(`courses length at: ${i} is: ${coursesLength}`);
-      const newState = Object.assign({}, this.state);
-      newState.availableSequences.push({
-        term: this.sequences[i].term,
-        year: this.sequences[i].year,
-        courses: this.sequences[i].courses,
-      });
-      this.setState(newState);
-    }
-    console.log('printin out AvailableSequences');
-    console.log(this.state.availableSequences);
+    console.log(sequences);
+    Object.keys(sequences).forEach((i) => {
+      const sequence = sequences[i];
+      const term = `${_.startCase(_.toLower(sequence.term))} ${sequence.year}`;
+      const courses = sequence.courses;
+      console.log(term);
+      console.log(courses);
+      if (!sequenceMap[term]) {
+        sequenceMap[term] = courses;
+      }
+    });
+    console.log(sequenceMap);
+
+    const newState = Object.assign({}, this.state);
+    newState.availableSequences.push({
+
+    });
+    this.setState(newState);
   }
 
   // ******** functions to parse schedules *************
@@ -351,21 +358,23 @@ class Plan extends Component {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {availableSequences.map((sequence) => {
+
+                      {/* availableSequences ? availableSequences.map(sequence => (
                         sequence.courses.map(row => (
                           <TableRow key={row.id}>
                             <TableCell>{row.code}</TableCell>
                             <TableCell align='center'>{row.title}</TableCell>
                             <TableCell align='right'>{row.credits}</TableCell>
                           </TableRow>
-                        ));
-                      },
+                        ))
+
                         // <TableRow key={row.id}>
                         //   <TableCell>{row.code}</TableCell>
                         //   <TableCell align='center'>{row.title}</TableCell>
                         //   <TableCell align='right'>{row.credits}</TableCell>
                         // </TableRow>
-                      )}
+                      )) : null
+                        */}
                     </TableBody>
                   </Table>
                 </Typography>
@@ -386,13 +395,13 @@ class Plan extends Component {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {availableSequences.map(row => (
+                      {/* {availableSequences.map(row => (
                         <TableRow key={row.id}>
                           <TableCell>{row.code}</TableCell>
                           <TableCell align='center'>{row.title}</TableCell>
                           <TableCell align='right'>{row.credits}</TableCell>
                         </TableRow>
-                      ))}
+                      ))} */}
                     </TableBody>
                   </Table>
                 </Typography>
@@ -413,13 +422,13 @@ class Plan extends Component {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {availableSequences.map(row => (
+                      {/* {availableSequences.map(row => (
                         <TableRow key={row.id}>
                           <TableCell>{row.code}</TableCell>
                           <TableCell align='center'>{row.title}</TableCell>
                           <TableCell align='right'>{row.credits}</TableCell>
                         </TableRow>
-                      ))}
+                      ))} */}
                     </TableBody>
                   </Table>
                 </Typography>
