@@ -53,6 +53,9 @@ const theme = createMuiTheme({
   palette: {
     primary: burgundy, secondary: burgundy, error: burgundy,
   },
+  typography: {
+    useNextVariants: true,
+  },
 });
 
 const styles = theme => ({
@@ -102,18 +105,23 @@ class Plan extends Component {
 
   parseSchedules = () => {
     const state = this.state;
+    const fallSchedule = state.fallSchedule;
 
     // Populating the data for all classes
-    state.fallSchedule && state.fallSchedule.map((schedule, scheduleIndex) => {
-      state.fallSchedule[scheduleIndex].sections.map((section, sectionIndex) => {
-        state.fallSchedule[scheduleIndex].sections[sectionIndex].times.map((time) => {
+    Object.keys(fallSchedule).forEach((scheduleIndex) => {
+      const schedule = state.fallSchedule[scheduleIndex];
+      const scheduleSections = schedule.sections;
+      scheduleSections.map((section, sectionIndex) => {
+        console.log(section);
+        console.log(sectionIndex);
+        const times = scheduleSections[sectionIndex];
+        times.map((time) => {
           const dayOfWeek = time.weekDay;
           const dateStr = '04/09/2018';
           const timeStr = time.startTime;
           const timeEnd = time.endTime;
           const beginDateTime = this.findWeekDayDate({ dayOfWeek, dateStr, timeStr });
           const finishDateTime = this.findWeekDayDate2({ dayOfWeek, dateStr, timeEnd });
-
           state.dataFall2019.push({
             id: scheduleIndex,
             title: `${section.courseCode} - ${section.code} ${section.kind}`,
