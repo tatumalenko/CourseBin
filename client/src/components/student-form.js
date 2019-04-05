@@ -93,8 +93,10 @@ const styles = theme => ({
   },
   chip: {
     margin: theme.spacing.unit / 2,
-    color: '#17a2b8',
-    fontSize: '10px',
+    color: '#571D2E',
+    fontSize: '11px',
+    fontWeight: 'bold',
+    backgroundColor: 'rgba(23, 162, 184, 0.25)',
   },
 });
 
@@ -116,7 +118,7 @@ class StudentForm extends Component {
       courseMap: null,
 
       currentView: 0,
-      terms: ['fall', 'winter', 'summer'],
+      terms: [ 'fall', 'winter', 'summer' ],
 
       fallTimePreference: false,
       fallNumOfCourses: 4,
@@ -234,7 +236,7 @@ class StudentForm extends Component {
 
     if (!state[property]) {
       this.setState({
-        [property]: [courseCode],
+        [property]: [ courseCode ],
       });
       this.setErrMsg(property, null);
     } else if (state[property].length === state[numCourses]) {
@@ -380,7 +382,7 @@ class StudentForm extends Component {
           }
 
           if (!map[departmentName] && displayName !== '') {
-            map[departmentName] = [displayName];
+            map[departmentName] = [ displayName ];
           } else {
             map[departmentName].push(displayName);
           }
@@ -407,7 +409,7 @@ class StudentForm extends Component {
   removeCourseSelection = (course, property) => (event) => {
     event.preventDefault();
     this.setState((state) => {
-      const selectedCourses = [...state[property]];
+      const selectedCourses = [ ...state[property] ];
       const toDelete = selectedCourses.indexOf(course);
       selectedCourses.splice(toDelete, 1);
       return { [property]: selectedCourses };
