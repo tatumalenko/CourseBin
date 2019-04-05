@@ -1,14 +1,15 @@
 const test = require('ava');
-const mongoose = require('mongoose');
 const _ = require('lodash');
 
 const { ProgramBuilder } = require('./ProgramBuilder');
 const { SoftwareEngineeringDegree } = require('./SoftwareEngineeringDegree');
 const { Util } = require('../../util/Util');
 const { Sequence } = require('./Sequence');
-const configs = require('../../../configs/configs');
 
-mongoose.connect(configs.dbMongo.dbPath, { useNewUrlParser: true, useCreateIndex: true });
+const { before, after } = require('./hooks');
+
+test.before(before);
+test.after(after);
 
 const student = {
   id: 40055122,

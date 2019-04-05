@@ -1,11 +1,11 @@
 const test = require('ava');
-const mongoose = require('mongoose');
 
 const { Student } = require('./Student');
-// const { Util } = require('../../util/Util');
-const configs = require('../../../configs/configs');
 
-mongoose.connect(configs.dbMongo.dbPath, { useNewUrlParser: true, useCreateIndex: true });
+const { before, after } = require('./hooks');
+
+test.before(before);
+test.after(after);
 
 // Run tests serially instead of concurrently
 test.serial('Create and delete new student', async (t) => {
