@@ -139,23 +139,21 @@ class StudentForm extends Component {
       summerSelectedCourses: [],
       summerErrMsg: null,
 
-
       formErrorMsg: [],
       showPlan: false,
     };
 
-
-    this.handleFacultyChange = this.handleFacultyChange.bind(this);
     this.handleViewChange = this.handleViewChange.bind(this);
     this.handleChangeIndex = this.handleChangeIndex.bind(this);
     this.handleNumCourseChange = this.handleNumCourseChange.bind(this);
     this.handleTimeChange = this.handleTimeChange.bind(this);
+    this.handleFacultyChange = this.handleFacultyChange.bind(this);
+    this.handleCourseSelection = this.handleCourseSelection.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.removeCourseSelection = this.removeCourseSelection.bind(this);
+    this.setErrMsg = this.setErrMsg.bind(this);
     this.getCourseCatalog = this.getCourseCatalog.bind(this);
     this.parseCourseCatalog = this.parseCourseCatalog.bind(this);
-    this.handleCourseSelection = this.handleCourseSelection.bind(this);
-    this.removeCourseSelection = this.removeCourseSelection.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.setErrMsg = this.setErrMsg.bind(this);
   }
 
   componentDidMount() {
@@ -437,7 +435,13 @@ class StudentForm extends Component {
                 <div className='header-logo'>
                   <Typography variant='h4'>CourseBin</Typography>
                 </div>
-                <Typography component='h3' variant='h6' id='form-header'>First, we will just need some basic information... </Typography>
+                <Typography
+                  component='h3'
+                  variant='h6'
+                  id='form-header'
+                >
+                  First, we will just need some basic information...
+                </Typography>
                 <AppBar position='static' color='default'>
                   <Tabs
                     value={currentView}
@@ -456,7 +460,6 @@ class StudentForm extends Component {
                   index={currentView}
                   onChangeIndex={this.handleChangeIndex}
                 >
-
                   {
                     terms.map(term => (
                       <TabContainer dir={theme.direction}>
@@ -522,7 +525,6 @@ class StudentForm extends Component {
                                 </div>
                               </FormControl>
                             </Grid>
-
                             <div className='selected-courses-container'>
                               {courseMap ? (
                                 <Grid container spacing={16}>
@@ -566,11 +568,14 @@ class StudentForm extends Component {
                                         <option value='' disabled>
                                           Select
                                         </option>
-                                        {courseMap && this.state[`${term}SelectedFaculty`] && courseMap[this.state[`${term}SelectedFaculty`]] ? courseMap[this.state[`${term}SelectedFaculty`]].map(course => (
-                                          <option key={`${term}-${course}`} value={course}>
-                                            {course}
-                                          </option>
-                                        )) : null
+                                        {courseMap
+                                          && this.state[`${term}SelectedFaculty`]
+                                          && courseMap[this.state[`${term}SelectedFaculty`]]
+                                          ? courseMap[this.state[`${term}SelectedFaculty`]].map(course => (
+                                            <option key={`${term}-${course}`} value={course}>
+                                              {course}
+                                            </option>
+                                          )) : null
                                         }
                                       </NativeSelect>
                                     </FormControl>
@@ -579,12 +584,15 @@ class StudentForm extends Component {
                               )
                                 : null
                               }
-
                               <Grid item xs={12}>
                                 <div className='course-err-msg'>{this.state[`${term}ErrMsg`]}</div>
-                                <FormLabel className='selected-courses' style={{ display: this.state[`${term}SelectedCourses`].length === 0 ? 'none' : 'initial' }}>Selected Courses:</FormLabel>
+                                <FormLabel
+                                  className='selected-courses'
+                                  style={{ display: this.state[`${term}SelectedCourses`].length === 0 ? 'none' : 'initial' }}
+                                >
+                                  Selected Courses:
+                                </FormLabel>
                                 {this.state[`${term}SelectedCourses`].length > 0 ? (
-
                                   <div className={classes.chips}>
                                     {this.state[`${term}SelectedCourses`].map(course => (
                                       <Chip
@@ -596,7 +604,6 @@ class StudentForm extends Component {
                                         className={classes.chip}
                                       />
                                     ))}
-
                                   </div>) : <div />
                                 }
                               </Grid>
