@@ -1,7 +1,9 @@
 const express = require('express');
 
+
 const router = express.Router();
 const { Timetable } = require('../database/models/Timetable');
+const { Section } = require('../database/models/Section');
 
 router.get('/', async (request, response) => {
   try {
@@ -11,7 +13,7 @@ router.get('/', async (request, response) => {
         .status(200)
         .json({
           message: 'OK',
-          timetable,
+          timetable: timetable.map(e => new Section(e)),
         });
     } else {
       response

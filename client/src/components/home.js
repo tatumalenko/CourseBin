@@ -1,7 +1,21 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import { Button, ButtonToolbar } from 'react-bootstrap';
+import { Button, MuiThemeProvider, createMuiTheme } from '@material-ui/core';
+import cyan from '@material-ui/core/colors/cyan';
 import StudentForm from './student-form';
+
+const custTheme = createMuiTheme({
+  palette: {
+    primary: cyan,
+    secondary: {
+      main: '#571D2E',
+      light: '#A98638',
+    },
+  },
+  typography: {
+    useNextVariants: true,
+  },
+});
 
 class Home extends Component {
   // eslint-disable-next-line no-useless-constructor
@@ -19,7 +33,6 @@ class Home extends Component {
     });
   }
 
-
   render() {
     const { redirectTo, showForm } = this.state;
     if (redirectTo) {
@@ -27,23 +40,28 @@ class Home extends Component {
     }
 
     return (
-
-      <div>
-
+      <MuiThemeProvider theme={custTheme}>
         {showForm
           ? <StudentForm />
           : (
             <div>
               <div className='title-wrapper'>
-                <h1>Coursebin</h1>
+                <h1>CourseBin</h1>
               </div>
-              <Button size='lg' variant='outline-info' onClick={this.handleClick}>Let's Get Started</Button>
+              <Button
+                id='submit'
+                size='large'
+                variant='outlined'
+                color='primary'
+                type='submit'
+                onClick={this.handleClick}
+              >
+                Let&apos;s Get Started!
+              </Button>
             </div>
           )
         }
-      </div>
-
-
+      </MuiThemeProvider>
     );
   }
 }

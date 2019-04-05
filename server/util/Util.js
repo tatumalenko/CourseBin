@@ -1,13 +1,56 @@
 const _ = require('lodash');
 
 class Util {
+  // Determines if there is a TimeBlock overlap for an array of TimeBlock. The
+  // array can contain TimeBlock elements of mixed days of the week, but only
+  // those overlap from element of the same week day will be considered when
+  // return true.
   static timesOverlap(timeBlocks) {
-    // Given an array of TimeBlock objects all for the same weekDay, determine
-    // whether or not there contains any overlapping times. For example,
-    // if one element contains a startTime of 13:00:00 and endTime of 14:30:00,
-    // then if another element contains startTime 14:00:00, this would indeed
-    //  indicate a overlap in time across two different TimeBlock elements.
-    return !!timeBlocks; // Returns boolean
+    // Declare the map to store the arrays for each day of the week.
+    const weekDayTimeBlocksMap = {};
+
+    // Place the appropriate TimeBlock elements in their respective map fields.
+    timeBlocks.forEach((timeBlock) => {
+      if (Object.keys(weekDayTimeBlocksMap).includes(timeBlock.weekDay)) {
+        weekDayTimeBlocksMap[timeBlock.weekDay].push(timeBlock);
+      } else {
+        weekDayTimeBlocksMap[timeBlock.weekDay] = [ timeBlock ];
+      }
+    });
+
+    // Determines if there is a TimeBlock overlap for an array of TimeBlock all
+    // of the same week day.
+    const weekDayTimeBlocksOverlap = (weekDayTimeBlocks) => {
+      const nBlocks = weekDayTimeBlocks.length;
+
+      if (nBlocks <= 1) {
+        return false;
+      }
+
+      // Sort array based on start times.
+      weekDayTimeBlocks.sort((a, b) => (
+      // eslint-disable-next-line no-nested-ternary
+        (a.startTime > b.startTime)
+          ? 1
+          : (
+            (b.startTime > a.startTime)
+              ? -1
+              : 0)));
+
+      for (let i = 0; i < nBlocks - 1; i += 1) {
+        if (weekDayTimeBlocks[i + 1].startTime <= weekDayTimeBlocks[i].endTime) {
+          return true; // Found an overlap
+        }
+      }
+
+      return false; // No overlap found
+    };
+
+    // For each field of the map (i.e. for each week day), if any of the arrays
+    // passed for that week day returns true, then return true to the caller.
+    return Object.keys(weekDayTimeBlocksMap).some(
+      weekDay => weekDayTimeBlocksOverlap(weekDayTimeBlocksMap[weekDay]),
+    );
   }
 
   static objectFromMap(map) {

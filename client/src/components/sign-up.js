@@ -1,7 +1,30 @@
 import React, { Component } from 'react';
-import { Redirect, Link } from 'react-router-dom';
-import { Form, Button, Col } from 'react-bootstrap';
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
+import { Redirect, Link as RouterLink } from 'react-router-dom';
+import {
+  Button, Grid, Link, TextField, MuiThemeProvider, createMuiTheme, Typography,
+} from '@material-ui/core';
 import axios from 'axios';
+import cyan from '@material-ui/core/colors/cyan';
+
+const custTheme = createMuiTheme({
+  palette: {
+    primary: cyan,
+    secondary: {
+      main: '#571D2E',
+      light: '#A98638',
+    },
+  },
+});
+
+
+const styles = theme => ({
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+  },
+});
 
 class Signup extends Component {
   constructor() {
@@ -10,16 +33,27 @@ class Signup extends Component {
       username: '',
       password: '',
       redirectTo: null,
-      displayError: false,
+      signupError: false,
     };
+    this._isMounted = false;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(event) {
-    this.setState({
-      [event.target.name]: event.target.value,
-    });
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
+  handleChange = name => (event) => {
+    if (this._isMounted) {
+      this.setState({
+        [name]: event.target.value,
+      });
+    }
   }
 
   handleSubmit(event) {
@@ -45,92 +79,95 @@ class Signup extends Component {
         this.setState({
           username: '',
           password: '',
-          displayError: true,
+          signupError: error.response,
         });
       });
   }
 
   render() {
+    const { classes } = this.props;
     const {
-      username, password, redirectTo, displayError,
+      redirectTo, signupError,
     } = this.state;
     if (redirectTo) {
       return <Redirect to={{ pathname: redirectTo }} />;
     }
     return (
-
-      <div>
-
+      <MuiThemeProvider theme={custTheme}>
         <div className='title-wrapper'>
-          <h1>Coursebin</h1>
+          <h1>CourseBin</h1>
         </div>
-
-        <Form>
-          <Form.Row>
-            <Col xs={5} />
-            <Col xs={2}>
-              <Form.Control
-                type='text'
-                id='username'
-                name='username'
-                placeholder='Username'
-                value={username}
-                onChange={this.handleChange}
+        <form onSubmit={this.handleSubmit}>
+          <Grid container spacing={0}>
+            <Grid item xs={12}>
+              <TextField
+                label='Choose Username'
+                className={classes.textField}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                margin='normal'
+                variant='outlined'
+                onChange={this.handleChange('username')}
               />
-            </Col>
-          </Form.Row>
-
-          <Form.Row>
-            <Col xs={5} />
-            <Col xs={2}>
-              <Form.Control
-                placeholder='password'
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label='Choose Password'
+                className={classes.textField}
                 type='password'
-                name='password'
-                value={password}
-                onChange={this.handleChange}
+                autoComplete='password'
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                margin='normal'
+                variant='outlined'
+                onChange={this.handleChange('password')}
               />
-            </Col>
-            <Col xs={5} />
-            <Col xs={5} />
-
-            {displayError
-              ? (
-                <Col xs={2}>
-                  <Form.Label id='error' className='error-msg'>
-                    The signup process did not work! Please try again.
-                  </Form.Label>
-                </Col>
-              )
-              : null
+            </Grid>
+            {
+              signupError
+                ? (
+                  <Grid item xs={12}>
+                    <Typography id='error' className='error-msg'>
+                      {signupError.data.message.toString()}
+                    </Typography>
+                  </Grid>
+                )
+                : null
             }
-          </Form.Row>
+          </Grid>
           <br />
-          <Form.Row>
-            <Col xs={12}>
+          <Grid container spacing={16}>
+            <Grid item xs={12}>
               <Button
-                onClick={this.handleSubmit}
+                id='submit'
+                size='large'
+                variant='outlined'
+                color='primary'
                 type='submit'
-                variant='outline-info'
-                size='lg'
               >
                 Sign up
-
               </Button>
-            </Col>
-            <Col xs={12}>
-              <Form.Label className='label-info'>
-                <Link to='/'>
-                  Already a user? Login here!
-                </Link>
-              </Form.Label>
-            </Col>
-          </Form.Row>
-        </Form>
-      </div>
-
+            </Grid>
+            <Grid item xs={12}>
+              <Link
+                to='/'
+                component={RouterLink}
+                color='primary'
+              >
+                Already a user? Login here!
+              </Link>
+            </Grid>
+          </Grid>
+        </form>
+      </MuiThemeProvider>
     );
   }
 }
 
-export default Signup;
+Signup.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(Signup);

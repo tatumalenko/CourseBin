@@ -7,10 +7,6 @@ import App from './App';
 // style
 import './index.css';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min';
-import 'react-bootstrap/dist/react-bootstrap.min.js';
-
 ReactDOM.render(
   <BrowserRouter>
     <App />

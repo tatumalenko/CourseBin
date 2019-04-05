@@ -1,7 +1,30 @@
 import React, { Component } from 'react';
-import { Redirect, Link } from 'react-router-dom';
-import { Form, Button, Col } from 'react-bootstrap';
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
+import { Redirect, Link as RouterLink } from 'react-router-dom';
+import {
+  Button, Grid, Link, TextField, MuiThemeProvider, createMuiTheme, Typography,
+} from '@material-ui/core';
 import axios from 'axios';
+import cyan from '@material-ui/core/colors/cyan';
+
+const custTheme = createMuiTheme({
+  palette: {
+    primary: cyan,
+    secondary: {
+      main: '#571D2E',
+      light: '#A98638',
+    },
+  },
+});
+
+const styles = theme => ({
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+  },
+});
+
 
 class LoginForm extends Component {
   constructor() {
@@ -10,17 +33,27 @@ class LoginForm extends Component {
       username: '',
       password: '',
       redirectTo: null,
-      invalid: false,
-      err: false,
+      loginError: false,
     };
+    this._isMounted = false;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(event) {
-    this.setState({
-      [event.target.name]: event.target.value,
-    });
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
+  handleChange = name => (event) => {
+    if (this._isMounted) {
+      this.setState({
+        [name]: event.target.value,
+      });
+    }
   }
 
   handleSubmit(event) {
@@ -29,7 +62,6 @@ class LoginForm extends Component {
     const { username, password } = this.state;
     const { updateUser } = this.props;
 
-    this.setState({ invalid: false });
     axios
       .post('/user/login', {
         username,
@@ -44,105 +76,117 @@ class LoginForm extends Component {
             username: response.data.username,
           });
           // update the state to redirect to home
-          this.setState({
-            redirectTo: '/',
-          });
+          if (this._isMounted) {
+            this.setState({
+              redirectTo: '/',
+            });
+          }
         }
       }).catch((error) => {
-        this.setState({
-          username: '',
-          password: '',
-          redirectTo: null,
-        });
+        if (this._isMounted) {
+          this.setState({
+            username: '',
+            password: '',
+            redirectTo: null,
+            loginError: error,
+          });
+        }
         console.error('Login error: ', error);
-        this.setState({ err: true });
       });
   }
 
   render() {
+    const { classes } = this.props;
     const {
-      redirectTo, username, password, err,
+      redirectTo, loginError,
     } = this.state;
     if (redirectTo) {
       return <Redirect to={{ pathname: redirectTo }} />;
     }
 
     return (
-
-
-      <div>
+      <MuiThemeProvider theme={custTheme}>
 
         <div className='title-wrapper'>
-          <h1>Coursebin</h1>
+          <h1>CourseBin</h1>
         </div>
 
-        <Form>
-          <Form.Row>
-            <Col xs={5} />
-            <Col xs={2}>
-              <Form.Control
-                type='text'
-                id='username'
-                name='username'
-                placeholder='Username'
-                value={username}
-                onChange={this.handleChange}
+        <form onSubmit={this.handleSubmit}>
+          <Grid container spacing={0}>
+            <Grid item xs={12}>
+              <TextField
+                label='Username'
+                className={classes.textField}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                margin='normal'
+                variant='outlined'
+                onChange={this.handleChange('username')}
               />
-            </Col>
-          </Form.Row>
-          <Form.Row>
-            <Col xs={5} />
-            <Col xs={2}>
-              <Form.Control
-                placeholder='password'
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label='Password'
+                className={classes.textField}
                 type='password'
-                name='password'
-                value={password}
-                onChange={this.handleChange}
+                autoComplete='password'
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                margin='normal'
+                variant='outlined'
+                onChange={this.handleChange('password')}
               />
-            </Col>
-            <Col xs={5} />
-            <Col xs={5} />
-            {err
+            </Grid>
+            {loginError
               ? (
-                <Col xs={2}>
-                  <Form.Label id='error' className='error-msg'>
-                    Sorry, this username/password combination is not valid. Please try again or try signing up.
-                  </Form.Label>
-                </Col>
+                <Grid item xs={12}>
+                  <Typography id='error' className='error-msg'>
+                    {
+                      loginError.data
+                        ? loginError.data.message.toString()
+                        : 'Sorry, this username/password combination is not valid.'
+                        + 'Please try again or try signing up.'
+                    }
+                  </Typography>
+                </Grid>
               )
               : null
             }
-          </Form.Row>
+          </Grid>
           <br />
-          <Form.Row>
-            <Col xs={12}>
+          <Grid container spacing={16}>
+            <Grid item xs={12}>
               <Button
-                onClick={this.handleSubmit}
+                id='submit'
+                size='large'
+                variant='outlined'
+                color='primary'
                 type='submit'
-                variant='outline-info'
-                size='lg'
               >
                 Login
-
               </Button>
-            </Col>
-            <Col xs={12}>
+            </Grid>
+            <Grid item xs={12}>
+              <Link
+                to='/signup'
+                component={RouterLink}
+                color='primary'
+              >
+                Not a user? Signup here!
+              </Link>
+            </Grid>
+          </Grid>
+        </form>
 
-              <Form.Label className='label-info'>
-                <Link to='/signup'>Not a user? Signup here!</Link>
-              </Form.Label>
-
-            </Col>
-
-          </Form.Row>
-
-
-        </Form>
-      </div>
-
+      </MuiThemeProvider>
     );
   }
 }
 
-export default LoginForm;
+LoginForm.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(LoginForm);

@@ -1,3 +1,5 @@
+const _ = require('lodash');
+
 const rawTimetable = require('../raw/timetable');
 const { SoftwareEngineeringDegree } = require('../../models/SoftwareEngineeringDegree');
 
@@ -26,6 +28,7 @@ const getTimetableCourses = async () => {
         },
         kind: rawCourse.componentCode,
         times: parseTimeBlocks(rawCourse),
+        dates: parseDates(rawCourse),
       };
       offerings.push(section);
     }
@@ -98,17 +101,59 @@ function parseTimeBlocks(course) {
     'saturdays',
     'sundays' ];
 
-  days.forEach((day) => {
-    if (course[day] !== 'N') { // Somehow sometimes null means 'Y'?!
-      timeBlocks.push({
-        startTime: course.classStartTime,
-        endTime: course.classEndTime,
-        weekDay: day === 'modays' ? 'MONDAY' : day.toUpperCase().slice(0, day.length - 1),
-      });
+  const courseDayOfWeekCtr = _.countBy(days.map(day => course[day]), e => e);
+
+  // eslint-disable-next-line
+  for (const day of days) {
+    if (course[day] === 'N') {
+      // eslint-disable-next-line
+      continue;
     }
-  });
+
+    if (course.componentCode === 'LEC' &&
+       ((course[day] === null && courseDayOfWeekCtr.Y === 2) ||
+        (course[day] === null && courseDayOfWeekCtr.Y === 1 &&
+          parseTimeDifferenceMinutes(course) > 120)
+       )
+    ) {
+      // eslint-disable-next-line
+      continue;
+    } else if ((course.componentCode === 'TUT' || course.componentCode === 'LAB') &&
+      (course[day] === null && courseDayOfWeekCtr.Y)
+    ) {
+      // eslint-disable-next-line
+      continue;
+    }
+
+    timeBlocks.push({
+      startTime: course.classStartTime,
+      endTime: course.classEndTime,
+      weekDay: day === 'modays' ? 'MONDAY' : day.toUpperCase().slice(0, day.length - 1),
+    });
+  }
 
   return timeBlocks;
+}
+
+function parseTimeDifferenceMinutes(course) {
+  const timePattern = /(\d{2})\.(\d{2})\.(\d{2})/;
+  const regexStartTime = course.classStartTime.match(timePattern);
+  const regexEndTime = course.classEndTime.match(timePattern);
+
+  const timeDifferenceMinutes = (
+    new Date(`2018-01-01T${regexEndTime[1]}${regexEndTime[2]}${regexEndTime[3]}`) -
+    new Date(`2018-01-01T${regexStartTime[1]}${regexStartTime[2]}${regexStartTime[3]}`)
+  ) / 1000 / 60 / 60;
+
+  return timeDifferenceMinutes;
+}
+
+function parseDates(course) {
+  const datePattern = /(\d{2})\/(\d{2})\/(\d{4})/;
+  const regexStartDate = course.classStartDate.match(datePattern);
+  const regexEndDate = course.classEndDate.match(datePattern);
+
+  return [ course.classStartDate, course.classEndDate ];
 }
 
 module.exports = {
