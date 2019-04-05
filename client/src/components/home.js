@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import { Button, MuiThemeProvider, createMuiTheme } from '@material-ui/core';
+import {
+ Button, MuiThemeProvider, createMuiTheme, Typography 
+} from '@material-ui/core';
 import cyan from '@material-ui/core/colors/cyan';
 import StudentForm from './student-form';
 
@@ -46,7 +48,7 @@ class Home extends Component {
           : (
             <div>
               <div className='title-wrapper'>
-                <h1>CourseBin</h1>
+                <Typography variant='h1'>CourseBin</Typography>
               </div>
               <Button
                 id='submit'
