@@ -344,15 +344,6 @@ class ProgramBuilder {
       preferences,
     });
 
-    // Given the TermPreference in preferences for each term, sort the schedules
-    // array such that the Schedule elements with a 'higher priority' appears as
-    // the front of the array in a priority queue like fashion. Note the sorting
-    // here is done in place for the same reason as when we used splice inside
-    // findCandidateTermSchedules(...).
-    Plan.sortSchedules({ schedules: candidateSchedules.fall, termPreference: preferences.fall });
-    Plan.sortSchedules({ schedules: candidateSchedules.winter, termPreference: preferences.winter });
-    Plan.sortSchedules({ schedules: candidateSchedules.summer, termPreference: preferences.summer });
-
     // Add all courses includes in the schedules obtained since they will need to
     // be assumed to be completed when assessing the sequences for subsequent terms
     const updatedCompletedCourses = [
@@ -372,10 +363,19 @@ class ProgramBuilder {
       preferences,
     });
 
-    return new Plan({
+    // Given the TermPreference in preferences for each term, sort the schedules
+    // array such that the Schedule elements with a 'higher priority' appears as
+    // the front of the array in a priority queue like fashion. Note the sorting
+    // here is done in place for the same reason as when we used splice inside
+    // findCandidateTermSchedules(...).
+    const plan = new Plan({
       schedules: candidateSchedules,
       sequences: candidateSequences,
     });
+
+    plan.sortSchedules({ preferences });
+
+    return plan;
   }
 }
 
