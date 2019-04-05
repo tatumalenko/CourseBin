@@ -644,6 +644,7 @@ class StudentForm extends Component {
                                   </div>) : <div />
                                 }
                               </Grid>
+                            </div>
                           </Grid>
                         </Paper>
                       </TabContainer>
