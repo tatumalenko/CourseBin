@@ -116,7 +116,7 @@ class StudentForm extends Component {
       courseMap: null,
 
       currentView: 0,
-      terms: [ 'fall', 'winter', 'summer' ],
+      terms: ['fall', 'winter', 'summer'],
 
       fallTimePreference: false,
       fallNumOfCourses: 4,
@@ -153,9 +153,7 @@ class StudentForm extends Component {
     this.getCourseCatalog = this.getCourseCatalog.bind(this);
     this.parseCourseCatalog = this.parseCourseCatalog.bind(this);
     this.handleCourseSelection = this.handleCourseSelection.bind(this);
-    this.removeFallCourseSelection = this.removeFallCourseSelection.bind(this);
-    this.removeWinterCourseSelection = this.removeWinterCourseSelection.bind(this);
-    this.removeSummerCourseSelection = this.removeSummerCourseSelection.bind(this);
+    this.removeCourseSelection = this.removeCourseSelection.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.setErrMsg = this.setErrMsg.bind(this);
   }
@@ -206,17 +204,13 @@ class StudentForm extends Component {
     this.setState(
       { [name]: timePreference },
     );
-    console.log(this.state);
   }
 
   handleNumCourseChange = name => (event, numCourses) => {
     event.preventDefault();
-    console.log(name);
-    console.log(numCourses);
     this.setState(
       { [name]: numCourses },
     );
-    console.log(this.state);
   }
 
   handleCourseSelection = name => (event) => {
@@ -242,7 +236,7 @@ class StudentForm extends Component {
 
     if (!state[property]) {
       this.setState({
-        [property]: [ courseCode ],
+        [property]: [courseCode],
       });
       this.setErrMsg(property, null);
     } else if (state[property].length === state[numCourses]) {
@@ -266,7 +260,6 @@ class StudentForm extends Component {
     this.setState(
       { [name]: faculty },
     );
-    console.log(this.state);
   }
 
   handleSubmit(event) {
@@ -389,7 +382,7 @@ class StudentForm extends Component {
           }
 
           if (!map[departmentName] && displayName !== '') {
-            map[departmentName] = [ displayName ];
+            map[departmentName] = [displayName];
           } else {
             map[departmentName].push(displayName);
           }
@@ -413,48 +406,23 @@ class StudentForm extends Component {
     });
   }
 
-  removeFallCourseSelection = course => () => {
+  removeCourseSelection = (course, property) => (event) => {
+    event.preventDefault();
     this.setState((state) => {
-      const fallSelectedCourses = [ ...state.fallSelectedCourses ];
-      const toDelete = fallSelectedCourses.indexOf(course);
-      fallSelectedCourses.splice(toDelete, 1);
-      return { fallSelectedCourses };
+      const selectedCourses = [...state[property]];
+      const toDelete = selectedCourses.indexOf(course);
+      selectedCourses.splice(toDelete, 1);
+      return { [property]: selectedCourses };
     });
   }
-
-  removeWinterCourseSelection = course => () => {
-    this.setState((state) => {
-      const winterSelectedCourses = [ ...state.winterSelectedCourses ];
-      const toDelete = winterSelectedCourses.indexOf(course);
-      winterSelectedCourses.splice(toDelete, 1);
-      return { winterSelectedCourses };
-    });
-  }
-
-  removeSummerCourseSelection = course => () => {
-    this.setState((state) => {
-      const summerSelectedCourses = [ ...state.summerSelectedCourses ];
-      const toDelete = summerSelectedCourses.indexOf(course);
-      summerSelectedCourses.splice(toDelete, 1);
-      return { summerSelectedCourses };
-    });
-  }
-
 
   render() {
     const { classes, theme } = this.props;
 
     const {
       courseMap,
-
       currentView,
       terms,
-
-      fallSelectedCourse,
-      fallSelectedFaculty,
-      fallSelectedCourses,
-      fallErrMsg,
-
       formErrorMsg,
       showPlan,
     } = this.state;
@@ -613,8 +581,7 @@ class StudentForm extends Component {
                               }
 
                               <Grid item xs={12}>
-                                <div className='course-err-msg'>{fallErrMsg}</div>
-
+                                <div className='course-err-msg'>{this.state[`${term}ErrMsg`]}</div>
                                 <FormLabel className='selected-courses' style={{ display: this.state[`${term}SelectedCourses`].length === 0 ? 'none' : 'initial' }}>Selected Courses:</FormLabel>
                                 {this.state[`${term}SelectedCourses`].length > 0 ? (
 
@@ -624,7 +591,8 @@ class StudentForm extends Component {
                                         key={`${term}-${course}`}
                                         variant='outlined'
                                         label={course}
-                                        onDelete={this.removeFallCourseSelection(course)}
+                                        name={`${term}SelectedCourses`}
+                                        onDelete={this.removeCourseSelection(course, `${term}SelectedCourses`)}
                                         className={classes.chip}
                                       />
                                     ))}
