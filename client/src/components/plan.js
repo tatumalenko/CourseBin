@@ -115,7 +115,7 @@ class Plan extends Component {
         console.log(section);
         console.log(sectionIndex);
         const times = scheduleSections[sectionIndex];
-        times.map((time) => {
+        Object.keys(times).map((time) => {
           const dayOfWeek = time.weekDay;
           const dateStr = '04/09/2018';
           const timeStr = time.startTime;
