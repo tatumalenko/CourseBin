@@ -75,19 +75,7 @@ class Plan extends Component {
     this.winterStartDate = '01/07/2019';
     this.summerStartDate = '05/06/2019';
 
-    const appointments = [
-      {
-        title: 'Install New Router in Dev Room',
-        startDate: '2019-01-07 14:30',
-        endDate: '2019-01-07 15:30',
-        id: 2,
-        location: 'Room 2',
-      },
-    ];
-
-
     this.state = {
-      data: appointments,
       // sequences
       sequenceMap: this.parseSequences(),
 
@@ -147,8 +135,6 @@ class Plan extends Component {
             const timeEnd = time.endTime;
             const beginDateTime = this.findWeekDayDate({ dayOfWeek, dateStr, timeStr });
             const finishDateTime = this.findWeekDayDate2({ dayOfWeek, dateStr, timeEnd });
-            console.log(beginDateTime);
-            console.log(beginDateTime.format('YYYY-MM-DD HH:mm'));
 
             this.state[`${term}Schedule`].push({
               title: `${section.courseCode} - ${section.code} ${section.kind}`,
@@ -164,7 +150,6 @@ class Plan extends Component {
     this.state.terms.forEach((term) => {
       this.state[`${term}SchedulerData`] = this.state[`${term}Schedule`].filter(el => el.id === this.state[`${term}ActiveStep`]);
     });
-    console.log(this.state);
   }
 
   // ******** helper functions to parse schedules for UI *************
@@ -236,13 +221,11 @@ class Plan extends Component {
   // ******** functions to dynamically handle state of carousel *************
   handleNext = (termStep, term) => (event) => {
     event.preventDefault();
-    console.log('next');
     const data = this.state[`${term}Schedule`].filter(el => el.id === this.state[`${term}ActiveStep`] + 1);
     this.setState(prevState => ({
       [termStep]: prevState[termStep] + 1,
       [`${term}SchedulerData`]: data,
     }));
-    console.log(this.state.winterSchedulerData);
   };
 
   handleBack = (termStep, term) => (event) => {
@@ -252,7 +235,6 @@ class Plan extends Component {
       [termStep]: prevState[termStep] - 1,
       [`${term}SchedulerData`]: data,
     }));
-    console.log(this.state.winterSchedulerData);
   };
 
   handleStepChange = (activeStep) => {
@@ -295,7 +277,7 @@ class Plan extends Component {
                   </ExpansionPanelSummary>
 
                   <ExpansionPanelDetails>
-                    {/* <Grid item xs={3}>
+                    <Grid item xs={3}>
                     <ChildBox
                       titleClass={course}
                       subject={subject}
@@ -330,7 +312,7 @@ class Plan extends Component {
                       lecture={lecture}
                       tutorial={tutorial}
                     />
-                  </Grid> */}
+                  </Grid>
                     <Grid item xs={9}>
                       <div className='schedule'>
                         <MuiThemeProvider theme={theme}>
