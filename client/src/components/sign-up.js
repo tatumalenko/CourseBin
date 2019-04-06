@@ -16,6 +16,9 @@ const custTheme = createMuiTheme({
       light: '#A98638',
     },
   },
+  typography: {
+    useNextVariants: true,
+  },
 });
 
 
@@ -35,8 +38,17 @@ class Signup extends Component {
       redirectTo: null,
       signupError: false,
     };
+    this._isMounted = false;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   handleChange = name => (event) => {
@@ -86,7 +98,7 @@ class Signup extends Component {
     return (
       <MuiThemeProvider theme={custTheme}>
         <div className='title-wrapper'>
-          <h1>CourseBin</h1>
+          <Typography variant='h1'>CourseBin</Typography>
         </div>
         <form onSubmit={this.handleSubmit}>
           <Grid container spacing={0}>

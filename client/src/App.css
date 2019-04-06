@@ -23,13 +23,12 @@
 .title-wrapper{
   margin-top: 100px;
   margin-bottom: 50px;
-  font-family: 'Londrina Solid', cursive;
 }
+
 .title-wrapper h1{
+  font-family: 'Londrina Solid', cursive;
   color: #571D2E;
-  font-size: 80px;
   text-align: center;
-  min-width: 400px;
 }
 
 .home-bottom{
@@ -69,9 +68,9 @@
 
 .header-logo h4{
   font-family: 'Londrina Solid', cursive;
-    color: #A98638;
-    position: relative;
-    bottom: 58px
+  color: #A98638;
+  position: relative;
+  bottom: 58px
 }
 
 .header-logo.plan h4{
@@ -138,8 +137,9 @@
   color: red;
   margin-left: 0;
   width: 100%;
+  margin-top: -30px;
   margin-bottom: 15px;
-  margin-left: 14px;
+  margin-left: 30px;
   font-size: 12px;
 }
 
@@ -157,6 +157,10 @@
 
 .student-form #submit{
   margin-bottom: 20px;
+}
+
+.student-form .course-chips-wrapper{
+  min-height: 150px;
 }
 
 #schedule-header{

@@ -16,6 +16,9 @@ const custTheme = createMuiTheme({
       light: '#A98638',
     },
   },
+  typography: {
+    useNextVariants: true,
+  },
 });
 
 const styles = theme => ({
@@ -108,7 +111,7 @@ class LoginForm extends Component {
       <MuiThemeProvider theme={custTheme}>
 
         <div className='title-wrapper'>
-          <h1>CourseBin</h1>
+          <Typography variant='h1'>CourseBin</Typography>
         </div>
 
         <form onSubmit={this.handleSubmit}>
