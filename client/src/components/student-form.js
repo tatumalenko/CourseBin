@@ -280,7 +280,6 @@ class StudentForm extends Component {
       this.setState(newState);
       this.setErrMsg(property, null);
     }
-    console.log(this.state);
   }
 
   handleFacultyChange = name => (event) => {
