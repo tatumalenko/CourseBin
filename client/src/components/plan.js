@@ -102,6 +102,8 @@ class Plan extends Component {
       summerCourseInfo: [],
       summerActiveStep: 0,
 
+      stopCarousel: false,
+
       // dummy info for the description box component
       // TODO real implementation
       course: 'COMP-472',
@@ -130,8 +132,6 @@ class Plan extends Component {
 
     Object.keys(schedules).forEach((term) => {
       const scheduleCollection = schedules[term];
-      console.log(scheduleCollection);
-
       scheduleCollection.forEach((schedule, scheduleIndex) => {
         const sections = schedule.sections;
         sections.forEach((section, sectionIndex) => {
@@ -158,15 +158,27 @@ class Plan extends Component {
       });
     });
 
+    console.log(this.state.fallSchedule);
+    console.log(this.state.winterSchedule);
+    console.log(this.state.summerSchedule);
 
-    this.state.terms.forEach((term) => {
-      this.state[`${term}SchedulerData`] = this.state[`${term}Schedule`].filter(el => el.id === this.state[`${term}ActiveStep`]);
+
+    this.state.terms.forEach((term, index) => {
+
+      const schedules = this.state[`${term}Schedule`].filter(el => el.id === this.state[`${term}ActiveStep`]);
+
+      this.state[`${term}SchedulerData`] = schedules;
+      
       const step = this.state[`${term}ActiveStep`];
 
       //description box for each course
       this.parseScheduleDetails(term, step);
       this.setScheduleDetailsState(term);
     });
+
+    console.log(this.state.fallSchedulerData);
+    console.log(this.state.winterSchedulerData);
+    console.log(this.state.summerSchedulerData);
   }
 
   // ******** helper functions to parse schedules for UI *************
@@ -273,7 +285,6 @@ class Plan extends Component {
     Object.keys(map).forEach((key)=>{
         this.state[`${term}CourseInfo`].push(map[key]);
     });
-    console.log(this.state[`${term}CourseInfo`]);
   }
 
   // ******** parse sequences for UI  *************
@@ -296,23 +307,30 @@ class Plan extends Component {
   handleNext = (termStep, term) => (event) => {
     event.preventDefault();
     const data = this.state[`${term}Schedule`].filter(el => el.id === this.state[`${term}ActiveStep`] + 1);
-    
-    this.setState(prevState => ({
-      [termStep]: prevState[termStep] + 1,
-      [`${term}SchedulerData`]: data,
-    }));
+    if(data && data.length){
+      this.setState(prevState => ({
+        [termStep]: prevState[termStep] + 1,
+        [`${term}SchedulerData`]: data,
+        stopCarousel: false,
+      }));
 
-    this.parseScheduleDetails(term, this.state[`${term}ActiveStep`] + 1);
-    this.setScheduleDetailsState(term);
+      this.parseScheduleDetails(term, this.state[`${term}ActiveStep`] + 1);
+      this.setScheduleDetailsState(term);
+    }else{
+      this.setState({
+        stopCarousel: true,
+      });
+    }
   };
 
   handleBack = (termStep, term) => (event) => {
     event.preventDefault();
-    const data = this.state[`${term}Schedule`].filter(el => el.id === this.state[`${term}ActiveStep`] + 1);
+    const data = this.state[`${term}Schedule`].filter(el => el.id === this.state[`${term}ActiveStep`] - 1);
 
     this.setState(prevState => ({
       [termStep]: prevState[termStep] - 1,
       [`${term}SchedulerData`]: data,
+      stopCarousel: false,
     }));
     this.parseScheduleDetails(term, this.state[`${term}ActiveStep`] - 1);
     this.setScheduleDetailsState(term);
@@ -330,6 +348,7 @@ class Plan extends Component {
       sequenceMap,
       // schedules
       terms,
+      stopCarousel,
     } = this.state;
 
     return (
@@ -385,7 +404,7 @@ class Plan extends Component {
                                 <Button
                                   size='small'
                                   onClick={this.handleNext(`${term}ActiveStep`, `${term}`)}
-                                  disabled={this.state[`${term}ActiveStep`] === this.state[`${term}Schedule`].length - 1}
+                                  disabled={stopCarousel}
                                 >
                                   Next
                                   {theme.direction === 'rtl' ? (
