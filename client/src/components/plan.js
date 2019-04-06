@@ -73,6 +73,9 @@ class Plan extends Component {
     this.fallStartDate = '09/04/2018';
     this.winterStartDate = '01/07/2019';
     this.summerStartDate = '05/06/2019';
+    this.fallDetailMap = {};
+    this.winterDetailMap = {};
+    this.summerDetailMap = {};
 
     this.state = {
       // sequences
@@ -84,17 +87,14 @@ class Plan extends Component {
       fallSchedule: [],
       fallSchedulerData: null,
       fallActiveStep: 0,
-      fallDetailMap: {},
 
       winterSchedule: [],
       winterSchedulerData: null,
       winterActiveStep: 0,
-      winterDetailMap: {},
 
       summerSchedule: [],
       summerSchedulerData: null,
       summerActiveStep: 0,
-      summerDetailMap: {},
 
       // dummy info for the description box component
       // TODO real implementation
@@ -122,45 +122,13 @@ class Plan extends Component {
 
     Object.keys(schedules).forEach((term) => {
       const scheduleCollection = schedules[term];
+      console.log(scheduleCollection);
 
       scheduleCollection.forEach((schedule, scheduleIndex) => {
         const sections = schedule.sections;
         sections.forEach((section, sectionIndex) => {
           if (!_.includes(this.state.terms, term)) {
             this.state.terms.push(_.lowerCase(term));
-          }
-          if (!this.state[`${term}DetailMap`][section]) {
-            const location = section.location;
-            const kind = section.kind;
-            if (kind === 'LEC') {
-              this.state[`${term}DetailMap`][section] = {
-                course: section.courseCode,
-                subject: section.title,
-                lecture: `${kind} ${section.code} ${location.building} building ${location.room}`,
-              };
-            } else if (kind === 'TUT') {
-              this.state[`${term}DetailMap`][section] = {
-                course: section.courseCode,
-                subject: section.title,
-                tutorial: `${kind} ${section.code} ${location.building} building ${location.room}`,
-              };
-            } else if (kind === 'LAB') {
-              this.state[`${term}DetailMap`][section] = {
-                course: section.courseCode,
-                subject: section.title,
-                lab: `${kind} ${section.code} ${location.building} building ${location.room}`,
-              };
-            }
-          } else {
-            const location = section.location;
-            const kind = section.kind;
-            if (kind === 'LEC') {
-              this.state[`${term}DetailMap`][section].lecture = `${kind} ${section.code} ${location.building} building ${location.room}`;
-            } else if (kind === 'TUT') {
-              this.state[`${term}DetailMap`][section].tutorial = `${kind} ${section.code} ${location.building} building ${location.room}`;
-            } else if (kind === 'LAB') {
-              this.state[`${term}DetailMap`][section].lab = `${kind} ${section.code} ${location.building} building ${location.room}`;
-            }
           }
           sections[sectionIndex].times.forEach((time) => {
             const dayOfWeek = time.weekDay;
@@ -177,18 +145,55 @@ class Plan extends Component {
               id: scheduleIndex,
             });
 
-            this.state[`${term}detailMap`].id = scheduleIndex;
+            if (section && !this[`${term}DetailMap`][section]) {
+              const location = section.location;
+              const kind = section.kind;
+              const description = `${kind} ${section.code} ${location.building} building Room: ${location.room}`;
+              if (kind === 'LEC') {
+                this[`${term}DetailMap`][section] = {
+                  course: section.courseCode,
+                  subject: section.title,
+                  lecture: description,
+                  id: scheduleIndex,
+                };
+              } else if (kind === 'TUT') {
+                this[`${term}DetailMap`][section] = {
+                  course: section.courseCode,
+                  subject: section.title,
+                  tutorial: description,
+                  id: scheduleIndex,
+                };
+              } else if (kind === 'LAB') {
+                this[`${term}DetailMap`][section] = {
+                  course: section.courseCode,
+                  subject: section.title,
+                  lab: description,
+                  id: scheduleIndex,
+                };
+              }
+            } else {
+              const location = section.location;
+              const kind = section.kind;
+              const description = `${kind} ${section.code}, ${location.building} Building, Room ${location.room}`;
+              if (kind === 'LEC') {
+                this[`${term}DetailMap`][section].lecture = description;
+              } else if (kind === 'TUT') {
+                this[`${term}DetailMap`][section].tutorial = description;
+              } else if (kind === 'LAB') {
+                this[`${term}DetailMap`][section].lab = description;
+              }
+            }
           });
         });
       });
 
-      console.log(this.state[`${term}DetailMap`]);
+      console.log(this[`${term}DetailMap`]);
     });
 
 
     this.state.terms.forEach((term) => {
       this.state[`${term}SchedulerData`] = this.state[`${term}Schedule`].filter(el => el.id === this.state[`${term}ActiveStep`]);
-      this.state[`${term}detailMapDisplay`] = this.state[`${term}detailMap`].filter(el => el.id === this.state[`${term}ActiveStep`]);
+      // this.state[`${term}detailMapDisplay`] = this.state[`${term}detailMap`].filter(el => el.id === this.state[`${term}ActiveStep`]);
     });
   }
 
@@ -359,7 +364,7 @@ class Plan extends Component {
                             <Scheduler data={this.state[`${term}SchedulerData`]}>
                               <ViewState currentDate={this[`${term}StartDate`]} />
                               <WeekView
-                                excludedDays={[ 0, 6 ]}
+                                excludedDays={[0, 6]}
                                 cellDuration={60}
                                 startDayHour={8}
                                 endDayHour={24}
@@ -381,8 +386,8 @@ class Plan extends Component {
                                   {theme.direction === 'rtl' ? (
                                     <KeyboardArrowLeft />
                                   ) : (
-                                    <KeyboardArrowRight />
-                                  )}
+                                      <KeyboardArrowRight />
+                                    )}
                                 </Button>
                               )}
                               backButton={(
@@ -394,8 +399,8 @@ class Plan extends Component {
                                   {theme.direction === 'rtl' ? (
                                     <KeyboardArrowRight />
                                   ) : (
-                                    <KeyboardArrowLeft />
-                                  )}
+                                      <KeyboardArrowLeft />
+                                    )}
                                   Back
                                 </Button>
                               )}
