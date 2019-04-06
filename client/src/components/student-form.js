@@ -180,11 +180,8 @@ class StudentForm extends Component {
   getCourseCatalog() {
     axios.get('/catalog').then((response) => {
       if (response.data) {
-        console.log('Get Catalog: Catalog found ');
         this.catalog = response.data;
         this.parseCourseCatalog();
-      } else {
-        console.log('Get Catalog: no data found');
       }
     }).catch((error) => {
       console.error(error);
@@ -456,7 +453,6 @@ class StudentForm extends Component {
     });
 
     const defaultFaculty = 'Software Engineering';
-    console.log(map);
 
     this.setState({
       courseMap: map,

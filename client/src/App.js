@@ -33,10 +33,7 @@ class App extends Component {
 
   getUser() {
     axios.get('/user').then((response) => {
-      console.log('Get user response: ');
-      console.log(response.data);
       if (response.data.user) {
-        console.log('Get User: There is a user saved in the server session: ');
 
         if (this._isMounted) {
           this.setState({
@@ -45,7 +42,6 @@ class App extends Component {
           });
         }
       } else {
-        console.log('Get user: no user');
         if (this._isMounted) {
           this.setState({
             loggedIn: false,
@@ -54,9 +50,7 @@ class App extends Component {
         }
       }
 
-      console.log('SHOULD RELOAD PAGE HERE');
     }).catch((error) => {
-      console.log('Get user: no user');
       console.error(error);
       if (this._isMounted) {
         this.setState({

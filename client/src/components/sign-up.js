@@ -61,7 +61,6 @@ class Signup extends Component {
 
   handleSubmit(event) {
     const { username, password } = this.state;
-    console.log(`sign-up handleSubmit, username: ${username}`);
     event.preventDefault();
 
     // request to server to add a new username/password
@@ -71,14 +70,11 @@ class Signup extends Component {
     })
       .then((response) => {
         if (!response.data.errmsg) {
-          console.log('successful signup');
           this.setState({
             redirectTo: '/',
           });
         }
       }).catch((error) => {
-        console.log('signup error: ');
-        console.log(error.response); // Error response with error message
         this.setState({
           username: '',
           password: '',

@@ -62,9 +62,6 @@ const styles = theme => ({
   sequence: {
     backgroundColor: 'rgba(0, 188, 212, 0.2)',
   },
-  detailBox: {
-    marginBottom: '25px',
-  },
 });
 
 class Plan extends Component {
@@ -113,8 +110,6 @@ class Plan extends Component {
       tutorial: 'TUT A, Hall building 435 ',
     };
 
-    this.parseSchedules();
-
     this.createDate = this.createDate.bind(this);
     this.createTime = this.createTime.bind(this);
     this.findWeekDayDate = this.findWeekDayDate.bind(this);
@@ -126,6 +121,10 @@ class Plan extends Component {
     this.handleBack = this.handleBack.bind(this);
     this.handleNext = this.handleNext.bind(this);
     this.handleStepChange = this.handleStepChange.bind(this);
+  }
+
+  componentDidMount(){
+    this.parseSchedules();
   }
 
   parseSchedules = () => {
@@ -173,16 +172,14 @@ class Plan extends Component {
 
       //initial schedule view
       const initialView = this.state[`${term}SchedulerArr`][0];
-      this.state[`${term}SchedulerData`] = initialView;
+    
 
       //description box for each course
-      this.parseScheduleDetails(term, step);
-      const info = this.setScheduleDestailsState(term);
+      const info = this.parseScheduleDetails(initialView, term, step);
 
-
-      //initial state
       this.setState({
-        [`${term}CourseDetails`]: info,
+        [`${term}SchedulerData`]: initialView,
+        [`${term}CourseInfo`]: info,
       });
 
     });
@@ -238,10 +235,11 @@ class Plan extends Component {
     return actualDateOfWeekDay;
   };
 
-  parseScheduleDetails = (term, activeStep) => {
+  parseScheduleDetails = (data, term, activeStep) => {
     this[`${term}DetailMap`] = {}; //clear the map each time we go to next schedule
+    console.log(data);
       
-      this.state[`${term}SchedulerData`].forEach((schedule) => {
+      data.forEach((schedule) => {
         const section = schedule.section;
         const courseCode = section.courseCode;
         if (courseCode && !this[`${term}DetailMap`][`${courseCode}-${activeStep}`]) {
@@ -284,6 +282,13 @@ class Plan extends Component {
           }
         }
       });
+      const map = this[`${term}DetailMap`];
+    const courseDetails = [];
+    //push the details into array for UI
+    Object.keys(map).forEach((key)=>{
+        courseDetails.push(map[key]);
+    });
+    return courseDetails;
   }
 
   setScheduleDetailsState = (term) => {
@@ -293,7 +298,6 @@ class Plan extends Component {
     Object.keys(map).forEach((key)=>{
         courseDetails.push(map[key]);
     });
-    console.log(courseDetails);
     return courseDetails;
   }
 
@@ -320,9 +324,7 @@ class Plan extends Component {
     const scheduler = this.state[`${term}SchedulerArr`];
     const i = this.state[`${term}ActiveStep`] + 1;
     const data = scheduler[i];
-
-    this.parseScheduleDetails(term, i);
-    const info = this.setScheduleDetailsState(term);
+    const info =  this.parseScheduleDetails(data, term, i);
 
     this.setState(prevState => ({
       [termStep]: prevState[termStep] + 1,
@@ -336,12 +338,13 @@ class Plan extends Component {
     const scheduler = this.state[`${term}SchedulerArr`];
     const i = this.state[`${term}ActiveStep`] - 1;
     const data = scheduler[i];
+    const info =  this.parseScheduleDetails(data, term, i);
+
     this.setState(prevState => ({
       [termStep]: prevState[termStep] - 1,
       [`${term}SchedulerData`]: data,
+      [`${term}CourseInfo`]: info,
     }));
-    this.parseScheduleDetails(term, i);
-    this.setScheduleDetailsState(term);
   };
 
   handleStepChange = (activeStep) => {
@@ -378,14 +381,14 @@ class Plan extends Component {
 
                   <ExpansionPanelDetails>
                     <Grid item xs={3}>
-                      {this.state[`${term}CourseInfo`] ? this.state[`${term}CourseInfo`].map((courseDetails) => (
-                      <ChildBox className={classes.detailBox}
+                      {this.state[`${term}CourseInfo`].map((courseDetails) => (
+                      <ChildBox
                         titleClass={courseDetails.course}
                         subject={courseDetails.subject}
                         lecture={courseDetails.lecture}
                         tutorial={courseDetails.tutorial}
                       />
-                      )): null}
+                      ))}
                     </Grid>
                     <Grid item xs={9}>
                       <div className='schedule'>

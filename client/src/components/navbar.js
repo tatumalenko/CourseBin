@@ -40,9 +40,7 @@ class Navbar extends Component {
   logout(event) {
     const { updateUser } = this.props;
     event.preventDefault();
-    console.log('logging out');
     axios.post('/user/logout').then((response) => {
-      console.log(response.data);
       if (response.status === 200) {
         updateUser({
           loggedIn: false,
@@ -56,9 +54,6 @@ class Navbar extends Component {
 
   render() {
     const { loggedIn, classes } = this.props;
-
-    console.log('navbar render, props: ');
-    console.log(this.props);
 
     return (
       <MuiThemeProvider theme={custTheme}>
