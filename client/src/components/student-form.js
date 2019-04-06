@@ -20,6 +20,7 @@ import {
   AppBar,
   Button,
   Chip,
+  CircularProgress,
   FormLabel,
   FormControl,
   Grid,
@@ -144,6 +145,7 @@ class StudentForm extends Component {
 
       formErrorMsg: [],
       showPlan: false,
+      showSpinner: false,
     };
 
     this.handleViewChange = this.handleViewChange.bind(this);
@@ -293,6 +295,9 @@ class StudentForm extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    this.setState({
+      showSpinner: true,
+    });
 
     // const state = this.state;
 
@@ -480,6 +485,7 @@ class StudentForm extends Component {
       terms,
       formErrorMsg,
       showPlan,
+      showSpinner,
     } = this.state;
 
     return showPlan
@@ -671,6 +677,7 @@ class StudentForm extends Component {
                     ))
                   }
                 </SwipeableViews>
+                {!showSpinner ? (
                 <Button
                   id='submit'
                   size='large'
@@ -680,6 +687,13 @@ class StudentForm extends Component {
                 >
                   Generate My Schedule!
                 </Button>
+                ): null}
+                { showSpinner ? (
+                  <div className='progress'>
+                    <CircularProgress className={classes.progress} />
+                  </div>
+                ) : null
+                }
                 <Grid container spacing={24}>
                   {formErrorMsg.length > 0 ? formErrorMsg.map(msg => (
                     <FormLabel className='submit-error' color='secondary'>

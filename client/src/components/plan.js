@@ -120,14 +120,14 @@ class Plan extends Component {
     Object.keys(schedules).forEach((term) => {
       const scheduleCollection = schedules[term];
 
-      scheduleCollection.map((schedule, scheduleIndex) => {
+      scheduleCollection.forEach((schedule, scheduleIndex) => {
         const sections = schedule.sections;
-        sections.map((section, sectionIndex) => {
+        sections.forEach((section, sectionIndex) => {
           if (!_.includes(this.state.terms, term)) {
             this.state.terms.push(_.lowerCase(term));
           }
 
-          sections[sectionIndex].times.map((time) => {
+          sections[sectionIndex].times.forEach((time) => {
             const dayOfWeek = time.weekDay;
             const dateStr = this[`${term}StartDate`];
             const timeStr = time.startTime;
