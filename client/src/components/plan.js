@@ -86,14 +86,17 @@ class Plan extends Component {
 
       fallSchedule: [],
       fallSchedulerData: null,
+      fallCourseInfo: [],
       fallActiveStep: 0,
 
       winterSchedule: [],
       winterSchedulerData: null,
+      winterCourseInfo: [],
       winterActiveStep: 0,
 
       summerSchedule: [],
       summerSchedulerData: null,
+      summerCourseInfo: [],
       summerActiveStep: 0,
 
       // dummy info for the description box component
@@ -155,10 +158,14 @@ class Plan extends Component {
     this.state.terms.forEach((term) => {
       this.state[`${term}SchedulerData`] = this.state[`${term}Schedule`].filter(el => el.id === this.state[`${term}ActiveStep`]);
       const step = this.state[`${term}ActiveStep`];
-      console.log('At step ' + step);
-      console.log(this.state[`${term}SchedulerData`]);
       this.parseScheduleDetails(term, step);
-      console.log(this[`${term}DetailMap`]);
+      const map = this[`${term}DetailMap`];
+      this.state[`${term}CourseInfo`] = [];
+      //push the details into array for UI
+      Object.keys(map).forEach((key)=>{
+          this.state[`${term}CourseInfo`].push(map[key]);
+      });
+      console.log(this.state[`${term}CourseInfo`]);
     });
   }
 
@@ -213,6 +220,7 @@ class Plan extends Component {
   };
 
   parseScheduleDetails = (term, activeStep) => {
+    this[`${term}DetailMap`] = {}; //clear the map each time we go to next schedule
     this.state[`${term}SchedulerData`].forEach((schedule) => {
       const section = schedule.section;
       const courseCode = section.courseCode;
@@ -340,40 +348,14 @@ class Plan extends Component {
 
                   <ExpansionPanelDetails>
                     <Grid item xs={3}>
+                      { this.state[`${term}CourseInfo`].map((courseDetails) => (
                       <ChildBox
-                        titleClass={course}
-                        subject={subject}
-                        lecture={lecture}
-                        tutorial={tutorial}
+                        titleClass={courseDetails.course}
+                        subject={courseDetails.subject}
+                        lecture={courseDetails.lecture}
+                        tutorial={courseDetails.tutorial}
                       />
-                      <br />
-                      <ChildBox
-                        titleClass={course}
-                        subject={subject}
-                        lecture={lecture}
-                        tutorial={tutorial}
-                      />
-                      <br />
-                      <ChildBox
-                        titleClass={course}
-                        subject={subject}
-                        lecture={lecture}
-                        tutorial={tutorial}
-                      />
-                      <br />
-                      <ChildBox
-                        titleClass={course}
-                        subject={subject}
-                        lecture={lecture}
-                        tutorial={tutorial}
-                      />
-                      <br />
-                      <ChildBox
-                        titleClass={course}
-                        subject={subject}
-                        lecture={lecture}
-                        tutorial={tutorial}
-                      />
+                      ))}
                     </Grid>
                     <Grid item xs={9}>
                       <div className='schedule'>
