@@ -123,7 +123,6 @@ class Plan extends Component {
       const scheduleCollection = schedules[term];
 
       scheduleCollection.map((schedule, scheduleIndex) => {
-
         const sections = scheduleCollection[scheduleIndex].sections;
         sections.map((section, sectionIndex) => {
           if (!_.includes(this.state.terms, term)) {
@@ -131,14 +130,13 @@ class Plan extends Component {
           }
 
           sections[sectionIndex].times.map((time) => {
-
             const dayOfWeek = time.weekDay;
             const dateStr = this[`${term}StartDate`];
             const timeStr = time.startTime;
             const timeEnd = time.endTime;
             const beginDateTime = this.findWeekDayDate({ dayOfWeek, dateStr, timeStr });
             const finishDateTime = this.findWeekDayDate2({ dayOfWeek, dateStr, timeEnd });
-   
+
             this.state[`${term}Schedule`].push({
               id: scheduleIndex,
               title: `${section.courseCode} - ${section.code} ${section.kind}`,
@@ -148,7 +146,11 @@ class Plan extends Component {
           });
         });
       });
-    });    
+    });
+
+    this.terms.forEach((term) => {
+      this.state[`${term}SchedulerData`] = this.state[`${term}Schedule`].filter(el => el.id === this.state[`${term}ActiveStep`]);
+    });
     console.log(this.state);
   }
 
@@ -249,7 +251,7 @@ class Plan extends Component {
     const { classes } = this.props;
     const {
       // sequences
-      sequenceMap,  
+      sequenceMap,
       // schedules
       terms,
 
@@ -266,18 +268,20 @@ class Plan extends Component {
             <div className='header-logo plan'>
               <Typography variant='h4'>CourseBin</Typography>
             </div>
-            <Typography id='schedule-header' variant='h4'>Here's what we came up with... </Typography>
+            <Typography id='schedule-header' variant='h4'>
+              Here's what we came up with...
+            </Typography>
             <Typography variant='h5'>Schedules</Typography>
             <br />
             {terms
               ? terms.map(term => (
-              <ExpansionPanel>
-                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography>{_.startCase(term)} 2019   {}</Typography>
-                </ExpansionPanelSummary>
+                <ExpansionPanel>
+                  <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography>{_.startCase(term)}</Typography>
+                  </ExpansionPanelSummary>
 
-                <ExpansionPanelDetails>
-                  {/* <Grid item xs={3}>
+                  <ExpansionPanelDetails>
+                    {/* <Grid item xs={3}>
                     <ChildBox
                       titleClass={course}
                       subject={subject}
@@ -313,59 +317,59 @@ class Plan extends Component {
                       tutorial={tutorial}
                     />
                   </Grid> */}
-                  <Grid item xs={9}>
-                    <div className='schedule'>
-                      <MuiThemeProvider theme={theme}>
-                        <Paper>
-                          <Scheduler data={this.state[`${term}SchedulerData`]}>
-                            <WeekView
-                              excludedDays={[ 0, 6 ]}
-                              cellDuration={60}
-                              startDayHour={8}
-                              endDayHour={24}
+                    <Grid item xs={9}>
+                      <div className='schedule'>
+                        <MuiThemeProvider theme={theme}>
+                          <Paper>
+                            <Scheduler data={this.state[`${term}SchedulerData`]}>
+                              <WeekView
+                                excludedDays={[ 0, 6 ]}
+                                cellDuration={60}
+                                startDayHour={8}
+                                endDayHour={24}
+                              />
+                              <Appointments />
+                            </Scheduler>
+                            <MobileStepper
+                              variant='progress'
+                              steps={this.state[`${term}Schedule`].length}
+                              position='static'
+                              activeStep={this.state[`${term}ActiveStep`]}
+                              nextButton={(
+                                <Button
+                                  size='small'
+                                  onClick={this.handleNext(`${term}ActiveStep`, `${term}`)}
+                                  disabled={this.state[`${term}ActiveStep`] === this.state[`${term}Schedule`].length - 1}
+                                >
+                                  Next
+                                  {theme.direction === 'rtl' ? (
+                                    <KeyboardArrowLeft />
+                                  ) : (
+                                    <KeyboardArrowRight />
+                                  )}
+                                </Button>
+                              )}
+                              backButton={(
+                                <Button
+                                  size='small'
+                                  onClick={this.handleBack(`${term}ActiveStep`, `${term}`)}
+                                  disabled={this.state[`${term}ActiveStep`] === 0}
+                                >
+                                  {theme.direction === 'rtl' ? (
+                                    <KeyboardArrowRight />
+                                  ) : (
+                                    <KeyboardArrowLeft />
+                                  )}
+                                  Back
+                                </Button>
+                              )}
                             />
-                            <Appointments />
-                          </Scheduler>
-                          <MobileStepper
-                            variant='progress'
-                            steps={this.state[`${term}Schedule`].length}
-                            position='static'
-                            activeStep={this.state[`${term}ActiveStep`]}
-                            nextButton={(
-                              <Button
-                                size='small'
-                                onClick={this.handleNext(`${term}ActiveStep`, `${term}`)}
-                                disabled={this.state[`${term}ActiveStep`] === this.state[`${term}Schedule`].length - 1}
-                              >
-                              Next
-                                {theme.direction === 'rtl' ? (
-                                  <KeyboardArrowLeft />
-                                ) : (
-                                  <KeyboardArrowRight />
-                                )}
-                              </Button>
-                          )}
-                            backButton={(
-                              <Button
-                                size='small'
-                                onClick={this.handleBack(`${term}ActiveStep`, `${term}`)}
-                                disabled={this.state[`${term}ActiveStep`] === 0}
-                              >
-                                {theme.direction === 'rtl' ? (
-                                  <KeyboardArrowRight />
-                                ) : (
-                                  <KeyboardArrowLeft />
-                                )}
-                                Back
-                              </Button>
-                            )}
-                          />
-                        </Paper>
-                      </MuiThemeProvider>
-                    </div>
-                  </Grid>
-                </ExpansionPanelDetails>
-              </ExpansionPanel>
+                          </Paper>
+                        </MuiThemeProvider>
+                      </div>
+                    </Grid>
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
               )) : null
             }
             <br />
