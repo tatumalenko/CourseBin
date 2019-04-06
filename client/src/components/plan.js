@@ -55,7 +55,7 @@ const theme = createMuiTheme({
   },
   typography: {
     useNextVariants: true,
-  }
+  },
 });
 
 const styles = theme => ({
@@ -119,7 +119,6 @@ class Plan extends Component {
 
   parseSchedules = () => {
     const schedules = this.schedules;
-    const detailMap = {};
 
     Object.keys(schedules).forEach((term) => {
       const scheduleCollection = schedules[term];
@@ -130,40 +129,37 @@ class Plan extends Component {
           if (!_.includes(this.state.terms, term)) {
             this.state.terms.push(_.lowerCase(term));
           }
-          if(!detailMap[section]){
+          if (!this.state[`${term}DetailMap`][section]) {
             const location = section.location;
             const kind = section.kind;
-            if(kind === 'LEC')
-            detailMap[section] = {
-              course: section.courseCode,
-              subject: section.title,
-              lecture: `${kind} ${section.code} ${location.building} building ${location.room}`,
-            }
-            else if (kind === 'TUT'){
-              detailMap[section] = {
+            if (kind === 'LEC') {
+              this.state[`${term}DetailMap`][section] = {
+                course: section.courseCode,
+                subject: section.title,
+                lecture: `${kind} ${section.code} ${location.building} building ${location.room}`,
+              };
+            } else if (kind === 'TUT') {
+              this.state[`${term}DetailMap`][section] = {
                 course: section.courseCode,
                 subject: section.title,
                 tutorial: `${kind} ${section.code} ${location.building} building ${location.room}`,
-              }
-            }
-            else if (kind === 'LAB'){
-              detailMap[section] = {
+              };
+            } else if (kind === 'LAB') {
+              this.state[`${term}DetailMap`][section] = {
                 course: section.courseCode,
                 subject: section.title,
                 lab: `${kind} ${section.code} ${location.building} building ${location.room}`,
-              }
+              };
             }
-          }else{
+          } else {
             const location = section.location;
             const kind = section.kind;
-            if(kind === 'LEC')
-            detailMap[section].lecture = `${kind} ${section.code} ${location.building} building ${location.room}`;
-        
-            else if (kind === 'TUT'){
-              detailMap[section].tutorial = `${kind} ${section.code} ${location.building} building ${location.room}`;
-            }
-            else if (kind === 'LAB'){
-              detailMap[section].lab = `${kind} ${section.code} ${location.building} building ${location.room}`;
+            if (kind === 'LEC') {
+              this.state[`${term}DetailMap`][section].lecture = `${kind} ${section.code} ${location.building} building ${location.room}`;
+            } else if (kind === 'TUT') {
+              this.state[`${term}DetailMap`][section].tutorial = `${kind} ${section.code} ${location.building} building ${location.room}`;
+            } else if (kind === 'LAB') {
+              this.state[`${term}DetailMap`][section].lab = `${kind} ${section.code} ${location.building} building ${location.room}`;
             }
           }
           sections[sectionIndex].times.forEach((time) => {
@@ -180,13 +176,19 @@ class Plan extends Component {
               endDate: finishDateTime.format('YYYY-MM-DD HH:mm'),
               id: scheduleIndex,
             });
+
+            this.state[`${term}detailMap`].id = scheduleIndex;
           });
         });
       });
+
+      console.log(this.state[`${term}DetailMap`]);
     });
+
 
     this.state.terms.forEach((term) => {
       this.state[`${term}SchedulerData`] = this.state[`${term}Schedule`].filter(el => el.id === this.state[`${term}ActiveStep`]);
+      this.state[`${term}detailMapDisplay`] = this.state[`${term}detailMap`].filter(el => el.id === this.state[`${term}ActiveStep`]);
     });
   }
 
@@ -315,41 +317,41 @@ class Plan extends Component {
 
                   <ExpansionPanelDetails>
                     <Grid item xs={3}>
-                    <ChildBox
-                      titleClass={course}
-                      subject={subject}
-                      lecture={lecture}
-                      tutorial={tutorial}
-                    />
-                    <br />
-                    <ChildBox
-                      titleClass={course}
-                      subject={subject}
-                      lecture={lecture}
-                      tutorial={tutorial}
-                    />
-                    <br />
-                    <ChildBox
-                      titleClass={course}
-                      subject={subject}
-                      lecture={lecture}
-                      tutorial={tutorial}
-                    />
-                    <br />
-                    <ChildBox
-                      titleClass={course}
-                      subject={subject}
-                      lecture={lecture}
-                      tutorial={tutorial}
-                    />
-                    <br />
-                    <ChildBox
-                      titleClass={course}
-                      subject={subject}
-                      lecture={lecture}
-                      tutorial={tutorial}
-                    />
-                  </Grid>
+                      <ChildBox
+                        titleClass={course}
+                        subject={subject}
+                        lecture={lecture}
+                        tutorial={tutorial}
+                      />
+                      <br />
+                      <ChildBox
+                        titleClass={course}
+                        subject={subject}
+                        lecture={lecture}
+                        tutorial={tutorial}
+                      />
+                      <br />
+                      <ChildBox
+                        titleClass={course}
+                        subject={subject}
+                        lecture={lecture}
+                        tutorial={tutorial}
+                      />
+                      <br />
+                      <ChildBox
+                        titleClass={course}
+                        subject={subject}
+                        lecture={lecture}
+                        tutorial={tutorial}
+                      />
+                      <br />
+                      <ChildBox
+                        titleClass={course}
+                        subject={subject}
+                        lecture={lecture}
+                        tutorial={tutorial}
+                      />
+                    </Grid>
                     <Grid item xs={9}>
                       <div className='schedule'>
                         <MuiThemeProvider theme={theme}>
