@@ -62,6 +62,9 @@ const styles = theme => ({
   sequence: {
     backgroundColor: 'rgba(0, 188, 212, 0.2)',
   },
+  detailBox: {
+    marginBottom: '25px',
+  },
 });
 
 class Plan extends Component {
@@ -115,6 +118,7 @@ class Plan extends Component {
     this.findWeekDayDate2 = this.findWeekDayDate2.bind(this);
     this.parseSchedules = this.parseSchedules.bind(this);
     this.parseScheduleDetails = this.parseScheduleDetails.bind(this);
+    this.setScheduleDetailsState = this.setScheduleDetailsState.bind(this);
     this.parseSequences = this.parseSequences.bind(this);
     this.handleBack = this.handleBack.bind(this);
     this.handleNext = this.handleNext.bind(this);
@@ -158,14 +162,10 @@ class Plan extends Component {
     this.state.terms.forEach((term) => {
       this.state[`${term}SchedulerData`] = this.state[`${term}Schedule`].filter(el => el.id === this.state[`${term}ActiveStep`]);
       const step = this.state[`${term}ActiveStep`];
+
+      //description box for each course
       this.parseScheduleDetails(term, step);
-      const map = this[`${term}DetailMap`];
-      this.state[`${term}CourseInfo`] = [];
-      //push the details into array for UI
-      Object.keys(map).forEach((key)=>{
-          this.state[`${term}CourseInfo`].push(map[key]);
-      });
-      console.log(this.state[`${term}CourseInfo`]);
+      this.setScheduleDetailsState(term);
     });
   }
 
@@ -266,6 +266,16 @@ class Plan extends Component {
     });
   }
 
+  setScheduleDetailsState = (term) => {
+    const map = this[`${term}DetailMap`];
+    this.state[`${term}CourseInfo`] = [];
+    //push the details into array for UI
+    Object.keys(map).forEach((key)=>{
+        this.state[`${term}CourseInfo`].push(map[key]);
+    });
+    console.log(this.state[`${term}CourseInfo`]);
+  }
+
   // ******** parse sequences for UI  *************
   parseSequences = () => {
     const sequences = this.sequences;
@@ -293,7 +303,7 @@ class Plan extends Component {
     }));
 
     this.parseScheduleDetails(term, this.state[`${term}ActiveStep`] + 1);
-    console.log(this.fallDetailMap);
+    this.setScheduleDetailsState(term);
   };
 
   handleBack = (termStep, term) => (event) => {
@@ -305,7 +315,7 @@ class Plan extends Component {
       [`${term}SchedulerData`]: data,
     }));
     this.parseScheduleDetails(term, this.state[`${term}ActiveStep`] - 1);
-    console.log(this.fallDetailMap);
+    this.setScheduleDetailsState(term);
   };
 
   handleStepChange = (activeStep) => {
@@ -320,13 +330,7 @@ class Plan extends Component {
       sequenceMap,
       // schedules
       terms,
-
-      course,
-      subject,
-      lecture,
-      tutorial,
     } = this.state;
-
 
     return (
       <div className='plan-container'>
@@ -341,6 +345,7 @@ class Plan extends Component {
             <Typography variant='h5'>Agenda Views</Typography>
             {terms
               ? terms.map((term, index) => (
+                this.state[`${term}SchedulerData`]? (
                 <ExpansionPanel defaultExpanded={index === 0}>
                   <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography>{_.startCase(term)}</Typography>
@@ -348,14 +353,14 @@ class Plan extends Component {
 
                   <ExpansionPanelDetails>
                     <Grid item xs={3}>
-                      { this.state[`${term}CourseInfo`].map((courseDetails) => (
-                      <ChildBox
+                      {this.state[`${term}CourseInfo`] ? this.state[`${term}CourseInfo`].map((courseDetails) => (
+                      <ChildBox className={classes.detailBox}
                         titleClass={courseDetails.course}
                         subject={courseDetails.subject}
                         lecture={courseDetails.lecture}
                         tutorial={courseDetails.tutorial}
                       />
-                      ))}
+                      )): null}
                     </Grid>
                     <Grid item xs={9}>
                       <div className='schedule'>
@@ -411,6 +416,7 @@ class Plan extends Component {
                     </Grid>
                   </ExpansionPanelDetails>
                 </ExpansionPanel>
+                ): null
               )) : null
             }
             <Typography className='plan-header' variant='h5'>Course Sequences</Typography>
