@@ -113,10 +113,9 @@ class Plan extends Component {
 
     Object.keys(schedules).forEach((term) => {
       const schedule = schedules[term];
-      const uiSchedule = [];
 
       if (schedule && schedule.length > 0) {
-        schedule.map((sections, index) => {
+        schedule.map((sections) => {
 
           if (!_.includes(this.terms, term)) {
             this.terms.push(_.lowerCase(term));
@@ -125,23 +124,30 @@ class Plan extends Component {
           Object.keys(sections).forEach((current) => {
             const section = sections[current];
             if (section) {
-              const dayOfWeek = section.weekDay;
-              const dateStr = '04/09/2018';
-              const timeStr = section.startTime;
-              const timeEnd = section.endTime;
-              const beginDateTime = this.findWeekDayDate({ dayOfWeek, dateStr, timeStr });
-              const finishDateTime = this.findWeekDayDate2({ dayOfWeek, dateStr, timeEnd });
-              uiSchedule.push({
-                id: index,
-                title: `${section.courseCode} - ${section.code} ${section.kind}`,
-                startDate: new Date(beginDateTime.format('MM/DD/YYYY HH:mm:ss')),
-                endDate: new Date(finishDateTime.format('MM/DD/YYYY HH:mm:ss')),
+              Object.keys(section).forEach((index) => {
+                const course = section[index];
+                const times = course.times;
+                if (times) {
+                  Object.keys(times).forEach((time) => {
+                    const dayOfWeek = time.weekDay;
+                    const dateStr = '04/09/2018';
+                    const timeStr = time.startTime;
+                    const timeEnd = time.endTime;
+                    const beginDateTime = this.findWeekDayDate({ dayOfWeek, dateStr, timeStr });
+                    const finishDateTime = this.findWeekDayDate2({ dayOfWeek, dateStr, timeEnd });
+                    this[`${term}Schedule`].push({
+                      id: index,
+                      title: `${course.courseCode} - ${course.code} ${course.kind}`,
+                      startDate: new Date(beginDateTime.format('MM/DD/YYYY HH:mm:ss')),
+                      endDate: new Date(finishDateTime.format('MM/DD/YYYY HH:mm:ss')),
+                    });
+                  });
+                }
               });
             }
           });
         });
       }
-      this[`${term}Schedule`] = uiSchedule;
       console.log(this[`${term}Schedule`]);
     });
 
