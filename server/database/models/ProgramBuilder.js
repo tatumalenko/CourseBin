@@ -129,6 +129,11 @@ class ProgramBuilder {
       term: termPreference.term,
     });
 
+    // Return immediately since no possible schedule to generate.
+    if (sectionQueueMap.size === 0) {
+      return [];
+    }
+
     // Convert map to primitive object because I can't deal with remembering what
     // is a primitive object and what is a Map object
     const courseCodeSectionArrayMap = Util.objectFromMap(sectionQueueMap);
@@ -374,6 +379,11 @@ class ProgramBuilder {
     });
 
     plan.sortSchedules({ preferences });
+
+    // Limit the number of schedules for each term to 50.
+    plan.schedules.fall.splice(50);
+    plan.schedules.winter.splice(50);
+    plan.schedules.summer.splice(50);
 
     return plan;
   }
