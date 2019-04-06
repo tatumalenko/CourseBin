@@ -84,14 +84,17 @@ class Plan extends Component {
       fallSchedule: [],
       fallSchedulerData: null,
       fallActiveStep: 0,
+      fallDetailMap: {},
 
       winterSchedule: [],
       winterSchedulerData: null,
       winterActiveStep: 0,
+      winterDetailMap: {},
 
       summerSchedule: [],
       summerSchedulerData: null,
       summerActiveStep: 0,
+      summerDetailMap: {},
 
       // dummy info for the description box component
       // TODO real implementation
@@ -116,6 +119,7 @@ class Plan extends Component {
 
   parseSchedules = () => {
     const schedules = this.schedules;
+    const detailMap = {};
 
     Object.keys(schedules).forEach((term) => {
       const scheduleCollection = schedules[term];
@@ -126,7 +130,42 @@ class Plan extends Component {
           if (!_.includes(this.state.terms, term)) {
             this.state.terms.push(_.lowerCase(term));
           }
-
+          if(!detailMap[section]){
+            const location = section.location;
+            const kind = section.kind;
+            if(kind === 'LEC')
+            detailMap[section] = {
+              course: section.courseCode,
+              subject: section.title,
+              lecture: `${kind} ${section.code} ${location.building} building ${location.room}`,
+            }
+            else if (kind === 'TUT'){
+              detailMap[section] = {
+                course: section.courseCode,
+                subject: section.title,
+                tutorial: `${kind} ${section.code} ${location.building} building ${location.room}`,
+              }
+            }
+            else if (kind === 'LAB'){
+              detailMap[section] = {
+                course: section.courseCode,
+                subject: section.title,
+                lab: `${kind} ${section.code} ${location.building} building ${location.room}`,
+              }
+            }
+          }else{
+            const location = section.location;
+            const kind = section.kind;
+            if(kind === 'LEC')
+            detailMap[section].lecture = `${kind} ${section.code} ${location.building} building ${location.room}`;
+        
+            else if (kind === 'TUT'){
+              detailMap[section].tutorial = `${kind} ${section.code} ${location.building} building ${location.room}`;
+            }
+            else if (kind === 'LAB'){
+              detailMap[section].lab = `${kind} ${section.code} ${location.building} building ${location.room}`;
+            }
+          }
           sections[sectionIndex].times.forEach((time) => {
             const dayOfWeek = time.weekDay;
             const dateStr = this[`${term}StartDate`];

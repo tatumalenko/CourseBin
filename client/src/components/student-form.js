@@ -380,7 +380,7 @@ class StudentForm extends Component {
     axios.post('/user/plan', jsonObject)
       .then((response) => {
         this.generatedPlan = response.data.plan;
-        // go to schedule page
+        // go to plan page
         this.setState({
           showPlan: true,
         });
