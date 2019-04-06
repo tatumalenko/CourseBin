@@ -71,6 +71,10 @@ class Plan extends Component {
     const plan = props.formData;
     this.schedules = plan.schedules;
     this.sequences = plan.sequences;
+    this.fallStartDate = '04/09/2018';
+    this.winterStartDate = '07/01/2019';
+    this.summerStartDate = '06/05/2019';
+
 
     this.state = {
       // sequences
@@ -80,15 +84,15 @@ class Plan extends Component {
       terms: [],
 
       fallSchedule: [],
-      fallTermSchedulerData: null,
+      fallSchedulerData: null,
       fallActiveStep: 0,
 
       winterSchedule: [],
-      winterTermSchedulerData: null,
+      winterSchedulerData: null,
       winterActiveStep: 0,
 
       summerSchedule: [],
-      summerTermSchedulerData: null,
+      summerSchedulerData: null,
       summerActiveStep: 0,
 
       // dummy info for the description box component
@@ -98,6 +102,8 @@ class Plan extends Component {
       lecture: 'LEC LL 1234, Hall building 937',
       tutorial: 'TUT A, Hall building 435 ',
     };
+
+    this.parseSchedules();
 
     this.createDate = this.createDate.bind(this);
     this.createTime = this.createTime.bind(this);
@@ -110,10 +116,6 @@ class Plan extends Component {
     this.handleStepChange = this.handleStepChange.bind(this);
   }
 
-  componentDidMount() {
-    this.parseSchedules();
-  }
-
   parseSchedules = () => {
     const schedules = this.schedules;
 
@@ -122,16 +124,16 @@ class Plan extends Component {
 
       scheduleCollection.map((schedule, scheduleIndex) => {
 
-        const sections = schedule.sections;
-        sections.map((section) => {
+        const sections = scheduleCollection[scheduleIndex].sections;
+        sections.map((section, sectionIndex) => {
           if (!_.includes(this.state.terms, term)) {
             this.state.terms.push(_.lowerCase(term));
           }
 
-          section.times.map((time, timeIndex) => {
+          sections[sectionIndex].times.map((time) => {
 
             const dayOfWeek = time.weekDay;
-            const dateStr = "04/09/2018";
+            const dateStr = this[`${term}StartDate`];
             const timeStr = time.startTime;
             const timeEnd = time.endTime;
             const beginDateTime = this.findWeekDayDate({ dayOfWeek, dateStr, timeStr });
@@ -139,19 +141,14 @@ class Plan extends Component {
    
             this.state[`${term}Schedule`].push({
               id: scheduleIndex,
-              title: section.courseCode + ' - ' + section.code + ' '+ section.kind,
-              startDate: new Date(beginDateTime.format("MM/DD/YYYY HH:mm:ss")),
-              endDate: new Date(finishDateTime.format("MM/DD/YYYY HH:mm:ss"))
+              title: `${section.courseCode} - ${section.code} ${section.kind}`,
+              startDate: new Date(beginDateTime.format('MM/DD/YYYY HH:mm:ss')),
+              endDate: new Date(finishDateTime.format('MM/DD/YYYY HH:mm:ss')),
             });
           });
         });
       });
-    });
-
-    this.state.terms.forEach((term) => {
-      this.state[`${term}SchedulerData`] = this.state[`${term}Schedule`].filter(el => el.id === this.state[`${term}ActiveStep`]);
-    });
-    
+    });    
     console.log(this.state);
   }
 
@@ -222,16 +219,25 @@ class Plan extends Component {
 
 
   // ******** functions to dynamically handle state *************
-  handleNext = () => {
+  handleNext = (termStep, term) => (event) => {
+    event.preventDefault();
+    console.log('next');
+    const data = this.state[`${term}Schedule`].filter(el => el.id === this.state[`${term}ActiveStep`] + 1);
     this.setState(prevState => ({
-      activeStep: prevState.activeStep + 1,
+      [termStep]: prevState[termStep] + 1,
+      [`${term}SchedulerData`]: data,
     }));
+    console.log(this.state.winterSchedulerData);
   };
 
-  handleBack = () => {
+  handleBack = (termStep, term) => (event) => {
+    event.preventDefault();
+    const data = this.state[`${term}Schedule`].filter(el => el.id === this.state[`${term}ActiveStep`] + 1);
     this.setState(prevState => ({
-      activeStep: prevState.activeStep - 1,
+      [termStep]: prevState[termStep] - 1,
+      [`${term}SchedulerData`]: data,
     }));
+    console.log(this.state.winterSchedulerData);
   };
 
   handleStepChange = (activeStep) => {
@@ -252,6 +258,9 @@ class Plan extends Component {
       lecture,
       tutorial,
     } = this.state;
+    
+    const winterData = this.state.winterSchedule.filter(el => el.id === this.state.winterActiveStep);
+
     return (
       <div className='plan-container'>
         <Grid container spacing={16}>
@@ -262,9 +271,10 @@ class Plan extends Component {
             <Typography id='schedule-header' variant='h4'>Here's what we came up with... </Typography>
             <Typography variant='h5'>Schedules</Typography>
             <br />
+            { terms.map(term => (
             <ExpansionPanel>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>Fall 2019</Typography>
+                <Typography>{_.startCase(term)} 2019   {}</Typography>
               </ExpansionPanelSummary>
 
               <ExpansionPanelDetails>
@@ -307,58 +317,58 @@ class Plan extends Component {
                 <Grid item xs={9}>
                   <div className='schedule'>
                     <MuiThemeProvider theme={theme}>
-                      { terms.map(term => (
-                        <Paper>
-                          <Scheduler data={this.state[`${term}SchedulerData`]}>
-                            <WeekView
-                              excludedDays={[ 0, 6 ]}
-                              cellDuration={60}
-                              startDayHour={8}
-                              endDayHour={24}
-                            />
-                            <Appointments />
-                          </Scheduler>
-                          <MobileStepper
-                            variant='progress'
-                            steps={this.state[`${term}Schedule`].length}
-                            position='static'
-                            activeStep={this.state[`${term}ActiveStep`]}
-                            nextButton={(
-                              <Button
-                                size='small'
-                                onClick={this.handleNext}
-                                disabled={this.state[`${term}ActiveStep`] === this.state[`${term}Schedule`].length - 1}
-                              >
-                              Next
-                                {theme.direction === 'rtl' ? (
-                                  <KeyboardArrowLeft />
-                                ) : (
-                                  <KeyboardArrowRight />
-                                )}
-                              </Button>
-                          )}
-                            backButton={(
-                              <Button
-                                size='small'
-                                onClick={this.handleBack}
-                                disabled={this.state[`${term}ActiveStep`] === 0}
-                              >
-                                {theme.direction === 'rtl' ? (
-                                  <KeyboardArrowRight />
-                                ) : (
-                                  <KeyboardArrowLeft />
-                                )}
-                                Back
-                              </Button>
-                            )}
+                      <Paper>
+                        <Scheduler data={winterData}>
+                          <WeekView
+                            excludedDays={[ 0, 6 ]}
+                            cellDuration={60}
+                            startDayHour={8}
+                            endDayHour={24}
                           />
-                        </Paper>
-                      ))}
+                          <Appointments />
+                        </Scheduler>
+                        <MobileStepper
+                          variant='progress'
+                          steps={this.state[`${term}Schedule`].length}
+                          position='static'
+                          activeStep={this.state[`${term}ActiveStep`]}
+                          nextButton={(
+                            <Button
+                              size='small'
+                              onClick={this.handleNext(`${term}ActiveStep`, `${term}`)}
+                              disabled={this.state[`${term}ActiveStep`] === this.state[`${term}Schedule`].length - 1}
+                            >
+                            Next
+                              {theme.direction === 'rtl' ? (
+                                <KeyboardArrowLeft />
+                              ) : (
+                                <KeyboardArrowRight />
+                              )}
+                            </Button>
+                        )}
+                          backButton={(
+                            <Button
+                              size='small'
+                              onClick={this.handleBack(`${term}ActiveStep`, `${term}`)}
+                              disabled={this.state[`${term}ActiveStep`] === 0}
+                            >
+                              {theme.direction === 'rtl' ? (
+                                <KeyboardArrowRight />
+                              ) : (
+                                <KeyboardArrowLeft />
+                              )}
+                              Back
+                            </Button>
+                          )}
+                        />
+                      </Paper>
                     </MuiThemeProvider>
                   </div>
                 </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel>
+            ))
+            }
             <br />
             <Typography variant='h5'>Sequences</Typography>
             <br />
