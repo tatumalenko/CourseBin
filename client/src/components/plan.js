@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import { ViewState } from '@devexpress/dx-react-scheduler';
 import PropTypes from 'prop-types';
@@ -70,24 +71,23 @@ class Plan extends Component {
     const plan = props.formData;
     this.schedules = plan.schedules;
     this.sequences = plan.sequences;
-    // ===== for parsing schedule data for each term ====
-    this.terms = [];
-    this.fallSchedule = [];
-    this.winterSchedule = [];
-    this.summerSchedule = [];
-
 
     this.state = {
       // sequences
       sequenceMap: this.parseSequences(),
 
-      // schedules
+      // ===== for parsing schedule data for each term ====
+      terms: [],
+
+      fallSchedule: [],
       fallTermSchedulerData: null,
       fallActiveStep: 0,
 
+      winterSchedule: [],
       winterTermSchedulerData: null,
       winterActiveStep: 0,
 
+      summerSchedule: [],
       summerTermSchedulerData: null,
       summerActiveStep: 0,
 
@@ -116,7 +116,6 @@ class Plan extends Component {
 
   parseSchedules = () => {
     const schedules = this.schedules;
-    console.log(schedules);
 
     Object.keys(schedules).forEach((term) => {
       const scheduleCollection = schedules[term];
@@ -125,8 +124,8 @@ class Plan extends Component {
 
         const sections = schedule.sections;
         sections.map((section) => {
-          if (!_.includes(this.terms, term)) {
-            this.terms.push(_.lowerCase(term));
+          if (!_.includes(this.state.terms, term)) {
+            this.state.terms.push(_.lowerCase(term));
           }
 
           section.times.map((time, timeIndex) => {
@@ -138,7 +137,7 @@ class Plan extends Component {
             const beginDateTime = this.findWeekDayDate({ dayOfWeek, dateStr, timeStr });
             const finishDateTime = this.findWeekDayDate2({ dayOfWeek, dateStr, timeEnd });
    
-            this[`${term}Schedule`].push({
+            this.state[`${term}Schedule`].push({
               id: scheduleIndex,
               title: section.courseCode + ' - ' + section.code + ' '+ section.kind,
               startDate: new Date(beginDateTime.format("MM/DD/YYYY HH:mm:ss")),
@@ -147,14 +146,13 @@ class Plan extends Component {
           });
         });
       });
-      console.log(this[`${term}Schedule`]);
     });
 
-    this.terms.forEach((term) => {
-      this.state[`${term}SchedulerData`] = this[`${term}Schedule`].filter(el => el.id === this.state[`${term}ActiveStep`]);
+    this.state.terms.forEach((term) => {
+      this.state[`${term}SchedulerData`] = this.state[`${term}Schedule`].filter(el => el.id === this.state[`${term}ActiveStep`]);
     });
-
-    // Populating the data for all classes
+    
+    console.log(this.state);
   }
 
   // ******** helper functions to parse schedules for UI *************
@@ -244,7 +242,15 @@ class Plan extends Component {
   render() {
     const { classes } = this.props;
     const {
-      sequenceMap, dataFall2019, activeStep, course, subject, lecture, tutorial,
+      // sequences
+      sequenceMap,  
+      // schedules
+      terms,
+
+      course,
+      subject,
+      lecture,
+      tutorial,
     } = this.state;
     return (
       <div className='plan-container'>
@@ -262,8 +268,7 @@ class Plan extends Component {
               </ExpansionPanelSummary>
 
               <ExpansionPanelDetails>
-
-                <Grid item xs={3}>
+                {/* <Grid item xs={3}>
                   <ChildBox
                     titleClass={course}
                     subject={subject}
@@ -298,58 +303,57 @@ class Plan extends Component {
                     lecture={lecture}
                     tutorial={tutorial}
                   />
-                </Grid>
+                </Grid> */}
                 <Grid item xs={9}>
                   <div className='schedule'>
                     <MuiThemeProvider theme={theme}>
-                      <Paper>
-
-                        
-                        <Scheduler data={filterDataFall2019}>
-                          <WeekView
-                            excludedDays={[ 0, 6 ]}
-                            cellDuration={60}
-                            startDayHour={8}
-                            endDayHour={24}
-                          />
-                          <Appointments />
-                        </Scheduler>
-                        <MobileStepper
-                          variant='progress'
-                          steps={fallSchedule.length}
-                          position='static'
-                          activeStep={activeStep}
-                          nextButton={(
-                            <Button
-                              size='small'
-                              onClick={this.handleNext}
-                              disabled={activeStep === fallSchedule.length - 1}
-                            >
+                      { terms.map(term => (
+                        <Paper>
+                          <Scheduler data={this.state[`${term}SchedulerData`]}>
+                            <WeekView
+                              excludedDays={[ 0, 6 ]}
+                              cellDuration={60}
+                              startDayHour={8}
+                              endDayHour={24}
+                            />
+                            <Appointments />
+                          </Scheduler>
+                          <MobileStepper
+                            variant='progress'
+                            steps={this.state[`${term}Schedule`].length}
+                            position='static'
+                            activeStep={this.state[`${term}ActiveStep`]}
+                            nextButton={(
+                              <Button
+                                size='small'
+                                onClick={this.handleNext}
+                                disabled={this.state[`${term}ActiveStep`] === this.state[`${term}Schedule`].length - 1}
+                              >
                               Next
-                              {theme.direction === 'rtl' ? (
-                                <KeyboardArrowLeft />
-                              ) : (
-                                <KeyboardArrowRight />
-                              )}
-                            </Button>
+                                {theme.direction === 'rtl' ? (
+                                  <KeyboardArrowLeft />
+                                ) : (
+                                  <KeyboardArrowRight />
+                                )}
+                              </Button>
                           )}
-                          backButton={(
-                            <Button
-                              size='small'
-                              onClick={this.handleBack}
-                              disabled={activeStep === 0}
-                            >
-                              {theme.direction === 'rtl' ? (
-                                <KeyboardArrowRight />
-                              ) : (
-                                <KeyboardArrowLeft />
-                              )}
-                              Back
-                            </Button>
-                          )}
-                        />
-                      </Paper>
-
+                            backButton={(
+                              <Button
+                                size='small'
+                                onClick={this.handleBack}
+                                disabled={this.state[`${term}ActiveStep`] === 0}
+                              >
+                                {theme.direction === 'rtl' ? (
+                                  <KeyboardArrowRight />
+                                ) : (
+                                  <KeyboardArrowLeft />
+                                )}
+                                Back
+                              </Button>
+                            )}
+                          />
+                        </Paper>
+                      ))}
                     </MuiThemeProvider>
                   </div>
                 </Grid>
