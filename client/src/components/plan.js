@@ -111,6 +111,7 @@ class Plan extends Component {
     this.findWeekDayDate = this.findWeekDayDate.bind(this);
     this.findWeekDayDate2 = this.findWeekDayDate2.bind(this);
     this.parseSchedules = this.parseSchedules.bind(this);
+    this.parseScheduleDetails = this.parseScheduleDetails.bind(this);
     this.parseSequences = this.parseSequences.bind(this);
     this.handleBack = this.handleBack.bind(this);
     this.handleNext = this.handleNext.bind(this);
@@ -143,57 +144,21 @@ class Plan extends Component {
               startDate: beginDateTime.format('YYYY-MM-DD HH:mm'),
               endDate: finishDateTime.format('YYYY-MM-DD HH:mm'),
               id: scheduleIndex,
+              section: section,
             });
-
-            if (section && !this[`${term}DetailMap`][section]) {
-              const location = section.location;
-              const kind = section.kind;
-              const description = `${kind} ${section.code} ${location.building} building Room: ${location.room}`;
-              if (kind === 'LEC') {
-                this[`${term}DetailMap`][section] = {
-                  course: section.courseCode,
-                  subject: section.title,
-                  lecture: description,
-                  id: scheduleIndex,
-                };
-              } else if (kind === 'TUT') {
-                this[`${term}DetailMap`][section] = {
-                  course: section.courseCode,
-                  subject: section.title,
-                  tutorial: description,
-                  id: scheduleIndex,
-                };
-              } else if (kind === 'LAB') {
-                this[`${term}DetailMap`][section] = {
-                  course: section.courseCode,
-                  subject: section.title,
-                  lab: description,
-                  id: scheduleIndex,
-                };
-              }
-            } else {
-              const location = section.location;
-              const kind = section.kind;
-              const description = `${kind} ${section.code}, ${location.building} Building, Room ${location.room}`;
-              if (kind === 'LEC') {
-                this[`${term}DetailMap`][section].lecture = description;
-              } else if (kind === 'TUT') {
-                this[`${term}DetailMap`][section].tutorial = description;
-              } else if (kind === 'LAB') {
-                this[`${term}DetailMap`][section].lab = description;
-              }
-            }
           });
         });
       });
-
-      console.log(this[`${term}DetailMap`]);
     });
 
 
     this.state.terms.forEach((term) => {
       this.state[`${term}SchedulerData`] = this.state[`${term}Schedule`].filter(el => el.id === this.state[`${term}ActiveStep`]);
-      // this.state[`${term}detailMapDisplay`] = this.state[`${term}detailMap`].filter(el => el.id === this.state[`${term}ActiveStep`]);
+      const step = this.state[`${term}ActiveStep`];
+      console.log('At step ' + step);
+      console.log(this.state[`${term}SchedulerData`]);
+      this.parseScheduleDetails(term, step);
+      console.log(this[`${term}DetailMap`]);
     });
   }
 
@@ -247,6 +212,52 @@ class Plan extends Component {
     return actualDateOfWeekDay;
   };
 
+  parseScheduleDetails = (term, activeStep) => {
+    this.state[`${term}SchedulerData`].forEach((schedule) => {
+      const section = schedule.section;
+      const courseCode = section.courseCode;
+      if (courseCode && !this[`${term}DetailMap`][`${courseCode}-${activeStep}`]) {
+        const location = section.location;
+        const kind = section.kind;
+        const description = `${kind} ${section.code} ${location.building} building Room: ${location.room}`;
+        const title = section.title;
+        if (kind === 'LEC') {
+          this[`${term}DetailMap`][`${courseCode}-${activeStep}`] = {
+            course: courseCode,
+            subject: title,
+            lecture: description,
+            id: activeStep,
+          };
+        } else if (kind === 'TUT') {
+          this[`${term}DetailMap`][`${courseCode}-${activeStep}`] = {
+            course: courseCode,
+            subject: title,
+            tutorial: description,
+            id: activeStep,
+          };
+        } else if (kind === 'LAB') {
+          this[`${term}DetailMap`][`${courseCode}-${activeStep}`] = {
+            course: courseCode,
+            subject: title,
+            lab: description,
+            id: activeStep,
+          };
+        }
+      } else {
+        const location = section.location;
+        const kind = section.kind;
+        const description = `${kind} ${section.code}, ${location.building} Building, Room ${location.room}`;
+        if (kind === 'LEC') {
+          this[`${term}DetailMap`][`${courseCode}-${activeStep}`].lecture = description;
+        } else if (kind === 'TUT') {
+          this[`${term}DetailMap`][`${courseCode}-${activeStep}`].tutorial = description;
+        } else if (kind === 'LAB') {
+          this[`${term}DetailMap`][`${courseCode}-${activeStep}`].lab = description;
+        }
+      }
+    });
+  }
+
   // ******** parse sequences for UI  *************
   parseSequences = () => {
     const sequences = this.sequences;
@@ -267,19 +278,26 @@ class Plan extends Component {
   handleNext = (termStep, term) => (event) => {
     event.preventDefault();
     const data = this.state[`${term}Schedule`].filter(el => el.id === this.state[`${term}ActiveStep`] + 1);
+    
     this.setState(prevState => ({
       [termStep]: prevState[termStep] + 1,
       [`${term}SchedulerData`]: data,
     }));
+
+    this.parseScheduleDetails(term, this.state[`${term}ActiveStep`] + 1);
+    console.log(this.fallDetailMap);
   };
 
   handleBack = (termStep, term) => (event) => {
     event.preventDefault();
     const data = this.state[`${term}Schedule`].filter(el => el.id === this.state[`${term}ActiveStep`] + 1);
+
     this.setState(prevState => ({
       [termStep]: prevState[termStep] - 1,
       [`${term}SchedulerData`]: data,
     }));
+    this.parseScheduleDetails(term, this.state[`${term}ActiveStep`] - 1);
+    console.log(this.fallDetailMap);
   };
 
   handleStepChange = (activeStep) => {
