@@ -236,9 +236,7 @@ class Plan extends Component {
   };
 
   parseScheduleDetails = (data, term, activeStep) => {
-    this[`${term}DetailMap`] = {}; //clear the map each time we go to next schedule
-    console.log(data);
-      
+    this[`${term}DetailMap`] = {}; //clear the map each time we go to next schedule      
       data.forEach((schedule) => {
         const section = schedule.section;
         const courseCode = section.courseCode;

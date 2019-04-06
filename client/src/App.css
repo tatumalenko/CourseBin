@@ -182,14 +182,17 @@
   
 }
 
-.plan-container .schedule-container .VerticalViewLayout-container-124{
-  height: 400px;
-  overflow: scroll;
-}
-
 .card-container{
   height: 120px;
   width: 280px;
+}
+
+.box-container {
+  margin-bottom: 15px;
+}
+
+.Appointment-appointment-1160{
+  min-width: 20%;
 }
 
 
