@@ -71,9 +71,9 @@ class Plan extends Component {
     this.schedules = plan.schedules;
     this.sequences = plan.sequences;
     this.terms = [];
-    this.fallSchedule = this.schedules.fall;
-    this.winterSchedule = this.schedules.winter;
-    this.summerScheduler = this.schedules.summer;
+    this.fallSchedule = [];
+    this.winterSchedule = [];
+    this.summerScheduler = [];
 
 
     this.state = {
@@ -109,15 +109,31 @@ class Plan extends Component {
 
   parseSchedules = () => {
     const schedules = this.schedules;
+
     Object.keys(schedules).forEach((term) => {
       const schedule = schedules[term];
+
       if (schedule && schedule.length > 0) {
-        this.terms.push(_.upperCase(term));
-        schedule.forEach((sections) => {
-          if (sections && sections.length > 0) {
-            console.log('here');
-            this[`${term}Schedule`] = sections;
+        schedule.map((sections, index) => {
+          console.log(sections);
+          console.log(index);
+          if (!_.includes(this.terms, term)) {
+            this.terms.push(_.lowerCase(term));
           }
+          Object.keys(sections).forEach((section) => {
+            const dayOfWeek = section.weekDay;
+            const dateStr = '04/09/2018';
+            const timeStr = section.startTime;
+            const timeEnd = section.endTime;
+            // const beginDateTime = this.findWeekDayDate({ dayOfWeek, dateStr, timeStr });
+            // const finishDateTime = this.findWeekDayDate2({ dayOfWeek, dateStr, timeEnd });
+            // state.dataFall2019.push({
+            //   id: scheduleIndex,
+            //   title: `${section.courseCode} - ${section.code} ${section.kind}`,
+            //   startDate: new Date(beginDateTime.format('MM/DD/YYYY HH:mm:ss')),
+            //   endDate: new Date(finishDateTime.format('MM/DD/YYYY HH:mm:ss')),
+            // });
+          });
         });
       }
     });
