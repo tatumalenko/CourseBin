@@ -280,6 +280,7 @@ class StudentForm extends Component {
       this.setState(newState);
       this.setErrMsg(property, null);
     }
+    console.log(this.state);
   }
 
   handleFacultyChange = name => (event) => {
@@ -622,7 +623,7 @@ class StudentForm extends Component {
                                   <Grid item xs={12}>
                                     <FormControl className='course-selector'>
                                       <NativeSelect
-                                        value={`${term}SelectedCourse`}
+                                        value={this.state[`${term}SelectedCourse`]}
                                         onChange={this.handleCourseSelection(`${term}SelectedCourse`)}
                                         name={`${term}SelectedCourse`}
                                       >
