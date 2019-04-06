@@ -89,20 +89,21 @@ class Plan extends Component {
 
       fallSchedule: [],
       fallSchedulerData: null,
+      fallSchedulerArr: [],
       fallCourseInfo: [],
       fallActiveStep: 0,
 
       winterSchedule: [],
       winterSchedulerData: null,
+      winterSchedulerArr: [],
       winterCourseInfo: [],
       winterActiveStep: 0,
 
       summerSchedule: [],
       summerSchedulerData: null,
+      summerSchedulerArr: [],
       summerCourseInfo: [],
       summerActiveStep: 0,
-
-      stopCarousel: false,
 
       // dummy info for the description box component
       // TODO real implementation
@@ -158,27 +159,33 @@ class Plan extends Component {
       });
     });
 
-    console.log(this.state.fallSchedule);
-    console.log(this.state.winterSchedule);
-    console.log(this.state.summerSchedule);
-
-
     this.state.terms.forEach((term, index) => {
 
-      const schedules = this.state[`${term}Schedule`].filter(el => el.id === this.state[`${term}ActiveStep`]);
-
-      this.state[`${term}SchedulerData`] = schedules;
-      
+      const schedules = this.state[`${term}Schedule`];
+      schedules.forEach((schedule, index) =>{
+        const scheduler = schedules.filter(el => el.id === index);
+        if(scheduler && scheduler.length > 0){
+          this.state[`${term}SchedulerArr`].push(scheduler);
+        }
+      });
+            
       const step = this.state[`${term}ActiveStep`];
+
+      //initial schedule view
+      const initialView = this.state[`${term}SchedulerArr`][0];
+      this.state[`${term}SchedulerData`] = initialView;
 
       //description box for each course
       this.parseScheduleDetails(term, step);
-      this.setScheduleDetailsState(term);
-    });
+      const info = this.setScheduleDestailsState(term);
 
-    console.log(this.state.fallSchedulerData);
-    console.log(this.state.winterSchedulerData);
-    console.log(this.state.summerSchedulerData);
+
+      //initial state
+      this.setState({
+        [`${term}CourseDetails`]: info,
+      });
+
+    });
   }
 
   // ******** helper functions to parse schedules for UI *************
@@ -233,58 +240,61 @@ class Plan extends Component {
 
   parseScheduleDetails = (term, activeStep) => {
     this[`${term}DetailMap`] = {}; //clear the map each time we go to next schedule
-    this.state[`${term}SchedulerData`].forEach((schedule) => {
-      const section = schedule.section;
-      const courseCode = section.courseCode;
-      if (courseCode && !this[`${term}DetailMap`][`${courseCode}-${activeStep}`]) {
-        const location = section.location;
-        const kind = section.kind;
-        const description = `${kind} ${section.code} ${location.building} building Room: ${location.room}`;
-        const title = section.title;
-        if (kind === 'LEC') {
-          this[`${term}DetailMap`][`${courseCode}-${activeStep}`] = {
-            course: courseCode,
-            subject: title,
-            lecture: description,
-            id: activeStep,
-          };
-        } else if (kind === 'TUT') {
-          this[`${term}DetailMap`][`${courseCode}-${activeStep}`] = {
-            course: courseCode,
-            subject: title,
-            tutorial: description,
-            id: activeStep,
-          };
-        } else if (kind === 'LAB') {
-          this[`${term}DetailMap`][`${courseCode}-${activeStep}`] = {
-            course: courseCode,
-            subject: title,
-            lab: description,
-            id: activeStep,
-          };
+      
+      this.state[`${term}SchedulerData`].forEach((schedule) => {
+        const section = schedule.section;
+        const courseCode = section.courseCode;
+        if (courseCode && !this[`${term}DetailMap`][`${courseCode}-${activeStep}`]) {
+          const location = section.location;
+          const kind = section.kind;
+          const description = `${kind} ${section.code} ${location.building} building Room: ${location.room}`;
+          const title = section.title;
+          if (kind === 'LEC') {
+            this[`${term}DetailMap`][`${courseCode}-${activeStep}`] = {
+              course: courseCode,
+              subject: title,
+              lecture: description,
+              id: activeStep,
+            };
+          } else if (kind === 'TUT') {
+            this[`${term}DetailMap`][`${courseCode}-${activeStep}`] = {
+              course: courseCode,
+              subject: title,
+              tutorial: description,
+              id: activeStep,
+            };
+          } else if (kind === 'LAB') {
+            this[`${term}DetailMap`][`${courseCode}-${activeStep}`] = {
+              course: courseCode,
+              subject: title,
+              lab: description,
+              id: activeStep,
+            };
+          }
+        } else {
+          const location = section.location;
+          const kind = section.kind;
+          const description = `${kind} ${section.code}, ${location.building} Building, Room ${location.room}`;
+          if (kind === 'LEC') {
+            this[`${term}DetailMap`][`${courseCode}-${activeStep}`].lecture = description;
+          } else if (kind === 'TUT') {
+            this[`${term}DetailMap`][`${courseCode}-${activeStep}`].tutorial = description;
+          } else if (kind === 'LAB') {
+            this[`${term}DetailMap`][`${courseCode}-${activeStep}`].lab = description;
+          }
         }
-      } else {
-        const location = section.location;
-        const kind = section.kind;
-        const description = `${kind} ${section.code}, ${location.building} Building, Room ${location.room}`;
-        if (kind === 'LEC') {
-          this[`${term}DetailMap`][`${courseCode}-${activeStep}`].lecture = description;
-        } else if (kind === 'TUT') {
-          this[`${term}DetailMap`][`${courseCode}-${activeStep}`].tutorial = description;
-        } else if (kind === 'LAB') {
-          this[`${term}DetailMap`][`${courseCode}-${activeStep}`].lab = description;
-        }
-      }
-    });
+      });
   }
 
   setScheduleDetailsState = (term) => {
     const map = this[`${term}DetailMap`];
-    this.state[`${term}CourseInfo`] = [];
+    const courseDetails = [];
     //push the details into array for UI
     Object.keys(map).forEach((key)=>{
-        this.state[`${term}CourseInfo`].push(map[key]);
+        courseDetails.push(map[key]);
     });
+    console.log(courseDetails);
+    return courseDetails;
   }
 
   // ******** parse sequences for UI  *************
@@ -306,33 +316,31 @@ class Plan extends Component {
   // ******** functions to dynamically handle state of carousel *************
   handleNext = (termStep, term) => (event) => {
     event.preventDefault();
-    const data = this.state[`${term}Schedule`].filter(el => el.id === this.state[`${term}ActiveStep`] + 1);
-    if(data && data.length){
-      this.setState(prevState => ({
-        [termStep]: prevState[termStep] + 1,
-        [`${term}SchedulerData`]: data,
-        stopCarousel: false,
-      }));
 
-      this.parseScheduleDetails(term, this.state[`${term}ActiveStep`] + 1);
-      this.setScheduleDetailsState(term);
-    }else{
-      this.setState({
-        stopCarousel: true,
-      });
-    }
+    const scheduler = this.state[`${term}SchedulerArr`];
+    const i = this.state[`${term}ActiveStep`] + 1;
+    const data = scheduler[i];
+
+    this.parseScheduleDetails(term, i);
+    const info = this.setScheduleDetailsState(term);
+
+    this.setState(prevState => ({
+      [termStep]: prevState[termStep] + 1,
+      [`${term}SchedulerData`]: data,
+      [`${term}CourseInfo`]: info,
+    }));
   };
 
   handleBack = (termStep, term) => (event) => {
     event.preventDefault();
-    const data = this.state[`${term}Schedule`].filter(el => el.id === this.state[`${term}ActiveStep`] - 1);
-
+    const scheduler = this.state[`${term}SchedulerArr`];
+    const i = this.state[`${term}ActiveStep`] - 1;
+    const data = scheduler[i];
     this.setState(prevState => ({
       [termStep]: prevState[termStep] - 1,
       [`${term}SchedulerData`]: data,
-      stopCarousel: false,
     }));
-    this.parseScheduleDetails(term, this.state[`${term}ActiveStep`] - 1);
+    this.parseScheduleDetails(term, i);
     this.setScheduleDetailsState(term);
   };
 
@@ -348,7 +356,6 @@ class Plan extends Component {
       sequenceMap,
       // schedules
       terms,
-      stopCarousel,
     } = this.state;
 
     return (
@@ -364,7 +371,6 @@ class Plan extends Component {
             <Typography variant='h5'>Agenda Views</Typography>
             {terms
               ? terms.map((term, index) => (
-                this.state[`${term}SchedulerData`]? (
                 <ExpansionPanel defaultExpanded={index === 0}>
                   <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography>{_.startCase(term)}</Typography>
@@ -397,14 +403,14 @@ class Plan extends Component {
                             </Scheduler>
                             <MobileStepper
                               variant='progress'
-                              steps={this.state[`${term}Schedule`].length}
+                              steps={this.state[`${term}SchedulerArr`].length}
                               position='static'
                               activeStep={this.state[`${term}ActiveStep`]}
                               nextButton={(
                                 <Button
                                   size='small'
                                   onClick={this.handleNext(`${term}ActiveStep`, `${term}`)}
-                                  disabled={stopCarousel}
+                                  disabled={this.state[`${term}ActiveStep`] === this.state[`${term}SchedulerArr`].length - 1}
                                 >
                                   Next
                                   {theme.direction === 'rtl' ? (
@@ -435,7 +441,6 @@ class Plan extends Component {
                     </Grid>
                   </ExpansionPanelDetails>
                 </ExpansionPanel>
-                ): null
               )) : null
             }
             <Typography className='plan-header' variant='h5'>Course Sequences</Typography>
