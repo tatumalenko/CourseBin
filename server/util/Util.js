@@ -37,8 +37,11 @@ class Util {
               ? -1
               : 0)));
 
+      // Don't consider equality in comparison to allow online courses with
+      // startTime and endTime of '00.00.00' to not indicate overlap between
+      // each other.
       for (let i = 0; i < nBlocks - 1; i += 1) {
-        if (weekDayTimeBlocks[i + 1].startTime <= weekDayTimeBlocks[i].endTime) {
+        if (weekDayTimeBlocks[i + 1].startTime < weekDayTimeBlocks[i].endTime) {
           return true; // Found an overlap
         }
       }

@@ -78,7 +78,7 @@ test('timesOverlap: Overlapping TimeBlock (sorted)', (t) => {
       weekDay: 'Friday',
     }),
   ];
-  t.true(Util.timesOverlap(timeArray));
+  t.false(Util.timesOverlap(timeArray));
 });
 
 test('timesOverlap: No overlapping TimeBlock (sorted)', (t) => {
