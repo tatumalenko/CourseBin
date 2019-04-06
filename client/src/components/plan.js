@@ -71,12 +71,23 @@ class Plan extends Component {
     const plan = props.formData;
     this.schedules = plan.schedules;
     this.sequences = plan.sequences;
-    this.fallStartDate = '04/09/2018';
-    this.winterStartDate = '07/01/2019';
-    this.summerStartDate = '06/05/2019';
+    this.fallStartDate = '09/04/2018';
+    this.winterStartDate = '01/07/2019';
+    this.summerStartDate = '05/06/2019';
+
+    const appointments = [
+      {
+        title: 'Install New Router in Dev Room',
+        startDate: '2019-01-07 14:30',
+        endDate: '2019-01-07 15:30',
+        id: 2,
+        location: 'Room 2',
+      },
+    ];
 
 
     this.state = {
+      data: appointments,
       // sequences
       sequenceMap: this.parseSequences(),
 
@@ -136,12 +147,14 @@ class Plan extends Component {
             const timeEnd = time.endTime;
             const beginDateTime = this.findWeekDayDate({ dayOfWeek, dateStr, timeStr });
             const finishDateTime = this.findWeekDayDate2({ dayOfWeek, dateStr, timeEnd });
+            console.log(beginDateTime);
+            console.log(beginDateTime.format('YYYY-MM-DD HH:mm'));
 
             this.state[`${term}Schedule`].push({
-              id: scheduleIndex,
               title: `${section.courseCode} - ${section.code} ${section.kind}`,
-              startDate: new Date(beginDateTime.format('MM/DD/YYYY HH:mm:ss')),
-              endDate: new Date(finishDateTime.format('MM/DD/YYYY HH:mm:ss')),
+              startDate: beginDateTime.format('YYYY-MM-DD HH:mm'),
+              endDate: finishDateTime.format('YYYY-MM-DD HH:mm'),
+              id: scheduleIndex,
             });
           });
         });
@@ -157,12 +170,12 @@ class Plan extends Component {
   // ******** helper functions to parse schedules for UI *************
 
   createDate = (dateStr) => {
-    const dateParseFormatStr = 'DD/MM/YYYY';
+    const dateParseFormatStr = 'MM/DD/YYYY';
     const date = moment(dateStr, dateParseFormatStr);
     return date;
   };
 
-  createTime = timeStr => moment(timeStr, 'HH:mm:ss');
+  createTime = timeStr => moment(timeStr, 'HH:mm');
 
   // find if weekDay is before or after startDate and return
   // next week's weekDay date if startDate occured after weekDay
@@ -173,8 +186,8 @@ class Plan extends Component {
     // if dateOfWeekDayInSameWeek occurs before the date, then it has
     // passed and the actual date with that day of the week will occur
     // in the next week
-    const actualDateOfWeekDay = moment(dateOfWeekDayInSameWeek).isBefore(date)
-      ? moment(dateOfWeekDayInSameWeek).add(7, 'day')
+    const actualDateOfWeekDay = dateOfWeekDayInSameWeek.isBefore(date)
+      ? dateOfWeekDayInSameWeek.add(7, 'day')
       : dateOfWeekDayInSameWeek;
     const time = this.createTime(timeStr);
     actualDateOfWeekDay.set({
@@ -192,8 +205,8 @@ class Plan extends Component {
     // if dateOfWeekDayInSameWeek occurs before the date, then it has
     // passed and the actual date with that day of the week will occur
     // in the next week
-    const actualDateOfWeekDay = moment(dateOfWeekDayInSameWeek).isBefore(date)
-      ? moment(dateOfWeekDayInSameWeek).add(7, 'day')
+    const actualDateOfWeekDay = dateOfWeekDayInSameWeek.isBefore(date)
+      ? dateOfWeekDayInSameWeek.add(7, 'day')
       : dateOfWeekDayInSameWeek;
     const time = this.createTime(timeEnd);
     actualDateOfWeekDay.set({
@@ -260,6 +273,7 @@ class Plan extends Component {
       lecture,
       tutorial,
     } = this.state;
+
 
     return (
       <div className='plan-container'>
