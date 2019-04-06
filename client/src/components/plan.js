@@ -70,6 +70,11 @@ class Plan extends Component {
     const plan = props.formData;
     this.schedules = plan.schedules;
     this.sequences = plan.sequences;
+    this.terms = [];
+    this.fallSchedule = this.schedules.fall;
+    this.winterSchedule = this.schedules.winter;
+    this.summerScheduler = this.schedules.summer;
+
 
     this.state = {
       // sequences
@@ -77,7 +82,6 @@ class Plan extends Component {
 
       // schedules
       dataFall2019: [],
-      fallSchedule: this.schedules.fall,
 
       // dummy info for the description box component
       // TODO real implementation
@@ -87,10 +91,6 @@ class Plan extends Component {
       tutorial: 'TUT A, Hall building 435 ',
       activeStep: 0,
     };
-
-    this.parseSchedules();
-
-    console.log(this.state);
 
     this.createDate = this.createDate.bind(this);
     this.createTime = this.createTime.bind(this);
@@ -103,34 +103,62 @@ class Plan extends Component {
     this.handleStepChange = this.handleStepChange.bind(this);
   }
 
+  componentDidMount() {
+    this.parseSchedules();
+  }
+
   parseSchedules = () => {
-    const state = this.state;
-    const fallSchedule = state.fallSchedule;
+    const schedules = this.schedules;
+    Object.keys(schedules).forEach((term) => {
+      const schedule = schedules[term];
+      if (schedule && schedule.length > 0) {
+        this.terms.push(_.upperCase(term));
+        schedule.forEach((sections) => {
+          if (sections && sections.length > 0) {
+            console.log('here');
+            this[`${term}Schedule`] = sections;
+          }
+        });
+      }
+    });
+
+
+    console.log(this.terms);
+
+    this.terms.forEach((term) => {
+      console.log(term);
+      console.log(this[`${term}Schedule`]);
+
+      // Object.keys(this[`${term}Schedule`]).forEach((scheduleIndex) => {
+      //   const schedule = this[`${term}Schedule`][scheduleIndex];
+      //   const scheduleSections = schedule.sections;
+      //   console.log(schedule);
+      //   console.log(scheduleSections);
+      // scheduleSections.map((section, sectionIndex) => {
+      //   console.log(section);
+      //   console.log(sectionIndex);
+      //   const times = scheduleSections[sectionIndex];
+      //   Object.keys(times).forEach((time) => {
+      //     const dayOfWeek = time.weekDay;
+      //     const dateStr = '04/09/2018';
+      //     const timeStr = time.startTime;
+      //     const timeEnd = time.endTime;
+      //     const beginDateTime = this.findWeekDayDate({ dayOfWeek, dateStr, timeStr });
+      //     const finishDateTime = this.findWeekDayDate2({ dayOfWeek, dateStr, timeEnd });
+      //     state.dataFall2019.push({
+      //       id: scheduleIndex,
+      //       title: `${section.courseCode} - ${section.code} ${section.kind}`,
+      //       startDate: new Date(beginDateTime.format('MM/DD/YYYY HH:mm:ss')),
+      //       endDate: new Date(finishDateTime.format('MM/DD/YYYY HH:mm:ss')),
+      //     });
+      //   });
+      // });
+      // });
+    });
 
     // Populating the data for all classes
-    Object.keys(fallSchedule).forEach((scheduleIndex) => {
-      const schedule = state.fallSchedule[scheduleIndex];
-      const scheduleSections = schedule.sections;
-      scheduleSections.map((section, sectionIndex) => {
-        console.log(section);
-        console.log(sectionIndex);
-        const times = scheduleSections[sectionIndex];
-        Object.keys(times).map((time) => {
-          const dayOfWeek = time.weekDay;
-          const dateStr = '04/09/2018';
-          const timeStr = time.startTime;
-          const timeEnd = time.endTime;
-          const beginDateTime = this.findWeekDayDate({ dayOfWeek, dateStr, timeStr });
-          const finishDateTime = this.findWeekDayDate2({ dayOfWeek, dateStr, timeEnd });
-          state.dataFall2019.push({
-            id: scheduleIndex,
-            title: `${section.courseCode} - ${section.code} ${section.kind}`,
-            startDate: new Date(beginDateTime.format('MM/DD/YYYY HH:mm:ss')),
-            endDate: new Date(finishDateTime.format('MM/DD/YYYY HH:mm:ss')),
-          });
-        });
-      });
-    });
+
+    // const fallSchedulerData = dataFall2019.filter(el => el.id === activeStep);
   }
 
   // ******** helper functions to parse schedules for UI *************
@@ -220,9 +248,8 @@ class Plan extends Component {
   render() {
     const { classes } = this.props;
     const {
-      sequenceMap, dataFall2019, fallSchedule, activeStep, course, subject, lecture, tutorial,
+      sequenceMap, dataFall2019, activeStep, course, subject, lecture, tutorial,
     } = this.state;
-    const filterDataFall2019 = dataFall2019.filter(el => el.id === activeStep);
     return (
       <div className='plan-container'>
         <Grid container spacing={16}>
@@ -281,9 +308,8 @@ class Plan extends Component {
                     <MuiThemeProvider theme={theme}>
                       <Paper>
 
-
+                        {/*
                         <Scheduler data={filterDataFall2019}>
-                          <ViewState currentDate='09/04/2018' />
                           <WeekView
                             excludedDays={[ 0, 6 ]}
                             cellDuration={60}
@@ -291,7 +317,6 @@ class Plan extends Component {
                             endDayHour={24}
                           />
                           <Appointments />
-
                         </Scheduler>
                         <MobileStepper
                           variant='progress'
@@ -326,7 +351,7 @@ class Plan extends Component {
                               Back
                             </Button>
                           )}
-                        />
+                        /> */}
                       </Paper>
 
                     </MuiThemeProvider>
