@@ -109,67 +109,40 @@ class Plan extends Component {
 
   parseSchedules = () => {
     const schedules = this.schedules;
+    console.log(schedules);
 
     Object.keys(schedules).forEach((term) => {
       const schedule = schedules[term];
+      const uiSchedule = [];
 
       if (schedule && schedule.length > 0) {
         schedule.map((sections, index) => {
-          console.log(sections);
-          console.log(index);
+
           if (!_.includes(this.terms, term)) {
             this.terms.push(_.lowerCase(term));
           }
-          Object.keys(sections).forEach((section) => {
-            const dayOfWeek = section.weekDay;
-            const dateStr = '04/09/2018';
-            const timeStr = section.startTime;
-            const timeEnd = section.endTime;
-            // const beginDateTime = this.findWeekDayDate({ dayOfWeek, dateStr, timeStr });
-            // const finishDateTime = this.findWeekDayDate2({ dayOfWeek, dateStr, timeEnd });
-            // state.dataFall2019.push({
-            //   id: scheduleIndex,
-            //   title: `${section.courseCode} - ${section.code} ${section.kind}`,
-            //   startDate: new Date(beginDateTime.format('MM/DD/YYYY HH:mm:ss')),
-            //   endDate: new Date(finishDateTime.format('MM/DD/YYYY HH:mm:ss')),
-            // });
+
+          Object.keys(sections).forEach((current) => {
+            const section = sections[current];
+            if (section) {
+              const dayOfWeek = section.weekDay;
+              const dateStr = '04/09/2018';
+              const timeStr = section.startTime;
+              const timeEnd = section.endTime;
+              const beginDateTime = this.findWeekDayDate({ dayOfWeek, dateStr, timeStr });
+              const finishDateTime = this.findWeekDayDate2({ dayOfWeek, dateStr, timeEnd });
+              uiSchedule.push({
+                id: index,
+                title: `${section.courseCode} - ${section.code} ${section.kind}`,
+                startDate: new Date(beginDateTime.format('MM/DD/YYYY HH:mm:ss')),
+                endDate: new Date(finishDateTime.format('MM/DD/YYYY HH:mm:ss')),
+              });
+            }
           });
         });
       }
-    });
-
-
-    console.log(this.terms);
-
-    this.terms.forEach((term) => {
-      console.log(term);
+      this[`${term}Schedule`] = uiSchedule;
       console.log(this[`${term}Schedule`]);
-
-      // Object.keys(this[`${term}Schedule`]).forEach((scheduleIndex) => {
-      //   const schedule = this[`${term}Schedule`][scheduleIndex];
-      //   const scheduleSections = schedule.sections;
-      //   console.log(schedule);
-      //   console.log(scheduleSections);
-      // scheduleSections.map((section, sectionIndex) => {
-      //   console.log(section);
-      //   console.log(sectionIndex);
-      //   const times = scheduleSections[sectionIndex];
-      //   Object.keys(times).forEach((time) => {
-      //     const dayOfWeek = time.weekDay;
-      //     const dateStr = '04/09/2018';
-      //     const timeStr = time.startTime;
-      //     const timeEnd = time.endTime;
-      //     const beginDateTime = this.findWeekDayDate({ dayOfWeek, dateStr, timeStr });
-      //     const finishDateTime = this.findWeekDayDate2({ dayOfWeek, dateStr, timeEnd });
-      //     state.dataFall2019.push({
-      //       id: scheduleIndex,
-      //       title: `${section.courseCode} - ${section.code} ${section.kind}`,
-      //       startDate: new Date(beginDateTime.format('MM/DD/YYYY HH:mm:ss')),
-      //       endDate: new Date(finishDateTime.format('MM/DD/YYYY HH:mm:ss')),
-      //     });
-      //   });
-      // });
-      // });
     });
 
     // Populating the data for all classes
@@ -196,8 +169,8 @@ class Plan extends Component {
     // if dateOfWeekDayInSameWeek occurs before the date, then it has
     // passed and the actual date with that day of the week will occur
     // in the next week
-    const actualDateOfWeekDay = dateOfWeekDayInSameWeek.isBefore(date)
-      ? dateOfWeekDayInSameWeek.add(7, 'day')
+    const actualDateOfWeekDay = moment(dateOfWeekDayInSameWeek).isBefore(date)
+      ? moment(dateOfWeekDayInSameWeek).add(7, 'day')
       : dateOfWeekDayInSameWeek;
     const time = this.createTime(timeStr);
     actualDateOfWeekDay.set({
@@ -215,8 +188,8 @@ class Plan extends Component {
     // if dateOfWeekDayInSameWeek occurs before the date, then it has
     // passed and the actual date with that day of the week will occur
     // in the next week
-    const actualDateOfWeekDay = dateOfWeekDayInSameWeek.isBefore(date)
-      ? dateOfWeekDayInSameWeek.add(7, 'day')
+    const actualDateOfWeekDay = moment(dateOfWeekDayInSameWeek).isBefore(date)
+      ? moment(dateOfWeekDayInSameWeek).add(7, 'day')
       : dateOfWeekDayInSameWeek;
     const time = this.createTime(timeEnd);
     actualDateOfWeekDay.set({
