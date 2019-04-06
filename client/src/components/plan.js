@@ -27,7 +27,6 @@ import {
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@material-ui/icons';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import moment from 'moment';
-import cyan from '@material-ui/core/colors/cyan';
 import { withStyles } from '@material-ui/core/styles';
 import ChildBox from './box-child';
 
@@ -269,8 +268,8 @@ class Plan extends Component {
             </Typography>
             <Typography variant='h5'>Agenda Views</Typography>
             {terms
-              ? terms.map(term => (
-                <ExpansionPanel>
+              ? terms.map((term, index) => (
+                <ExpansionPanel defaultExpanded={index === 0}>
                   <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography>{_.startCase(term)}</Typography>
                   </ExpansionPanelSummary>
