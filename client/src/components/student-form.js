@@ -354,15 +354,15 @@ class StudentForm extends Component {
 
     const jsonObject = {
       fall: {
-        requestedCourses: [ 'COMP232', 'COMP248', 'ENGR201', 'ENGR213', 'PHYS284' ],
+        requestedCourses: [ 'COMP232', 'COMP248', 'ENGR201', 'ENGR213' ],
         eveningTimePreference: false,
-        numberOfCourses: 5,
+        numberOfCourses: 4,
       },
 
       winter: {
-        requestedCourses: [ 'COMP249', 'SOEN287', 'SOEN228', 'ENGR233', 'ENGR251' ],
+        requestedCourses: [ 'COMP249', 'SOEN287', 'SOEN228', 'ENGR233' ],
         eveningTimePreference: false,
-        numberOfCourses: 5,
+        numberOfCourses: 4,
       },
 
       summer: {

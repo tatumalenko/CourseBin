@@ -258,8 +258,6 @@ class Plan extends Component {
       lecture,
       tutorial,
     } = this.state;
-    
-    const winterData = this.state.winterSchedule.filter(el => el.id === this.state.winterActiveStep);
 
     return (
       <div className='plan-container'>
@@ -271,103 +269,104 @@ class Plan extends Component {
             <Typography id='schedule-header' variant='h4'>Here's what we came up with... </Typography>
             <Typography variant='h5'>Schedules</Typography>
             <br />
-            { terms.map(term => (
-            <ExpansionPanel>
-              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>{_.startCase(term)} 2019   {}</Typography>
-              </ExpansionPanelSummary>
+            {terms
+              ? terms.map(term => (
+              <ExpansionPanel>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography>{_.startCase(term)} 2019   {}</Typography>
+                </ExpansionPanelSummary>
 
-              <ExpansionPanelDetails>
-                {/* <Grid item xs={3}>
-                  <ChildBox
-                    titleClass={course}
-                    subject={subject}
-                    lecture={lecture}
-                    tutorial={tutorial}
-                  />
-                  <br />
-                  <ChildBox
-                    titleClass={course}
-                    subject={subject}
-                    lecture={lecture}
-                    tutorial={tutorial}
-                  />
-                  <br />
-                  <ChildBox
-                    titleClass={course}
-                    subject={subject}
-                    lecture={lecture}
-                    tutorial={tutorial}
-                  />
-                  <br />
-                  <ChildBox
-                    titleClass={course}
-                    subject={subject}
-                    lecture={lecture}
-                    tutorial={tutorial}
-                  />
-                  <br />
-                  <ChildBox
-                    titleClass={course}
-                    subject={subject}
-                    lecture={lecture}
-                    tutorial={tutorial}
-                  />
-                </Grid> */}
-                <Grid item xs={9}>
-                  <div className='schedule'>
-                    <MuiThemeProvider theme={theme}>
-                      <Paper>
-                        <Scheduler data={winterData}>
-                          <WeekView
-                            excludedDays={[ 0, 6 ]}
-                            cellDuration={60}
-                            startDayHour={8}
-                            endDayHour={24}
-                          />
-                          <Appointments />
-                        </Scheduler>
-                        <MobileStepper
-                          variant='progress'
-                          steps={this.state[`${term}Schedule`].length}
-                          position='static'
-                          activeStep={this.state[`${term}ActiveStep`]}
-                          nextButton={(
-                            <Button
-                              size='small'
-                              onClick={this.handleNext(`${term}ActiveStep`, `${term}`)}
-                              disabled={this.state[`${term}ActiveStep`] === this.state[`${term}Schedule`].length - 1}
-                            >
-                            Next
-                              {theme.direction === 'rtl' ? (
-                                <KeyboardArrowLeft />
-                              ) : (
-                                <KeyboardArrowRight />
-                              )}
-                            </Button>
-                        )}
-                          backButton={(
-                            <Button
-                              size='small'
-                              onClick={this.handleBack(`${term}ActiveStep`, `${term}`)}
-                              disabled={this.state[`${term}ActiveStep`] === 0}
-                            >
-                              {theme.direction === 'rtl' ? (
-                                <KeyboardArrowRight />
-                              ) : (
-                                <KeyboardArrowLeft />
-                              )}
-                              Back
-                            </Button>
+                <ExpansionPanelDetails>
+                  {/* <Grid item xs={3}>
+                    <ChildBox
+                      titleClass={course}
+                      subject={subject}
+                      lecture={lecture}
+                      tutorial={tutorial}
+                    />
+                    <br />
+                    <ChildBox
+                      titleClass={course}
+                      subject={subject}
+                      lecture={lecture}
+                      tutorial={tutorial}
+                    />
+                    <br />
+                    <ChildBox
+                      titleClass={course}
+                      subject={subject}
+                      lecture={lecture}
+                      tutorial={tutorial}
+                    />
+                    <br />
+                    <ChildBox
+                      titleClass={course}
+                      subject={subject}
+                      lecture={lecture}
+                      tutorial={tutorial}
+                    />
+                    <br />
+                    <ChildBox
+                      titleClass={course}
+                      subject={subject}
+                      lecture={lecture}
+                      tutorial={tutorial}
+                    />
+                  </Grid> */}
+                  <Grid item xs={9}>
+                    <div className='schedule'>
+                      <MuiThemeProvider theme={theme}>
+                        <Paper>
+                          <Scheduler data={this.state[`${term}SchedulerData`]}>
+                            <WeekView
+                              excludedDays={[ 0, 6 ]}
+                              cellDuration={60}
+                              startDayHour={8}
+                              endDayHour={24}
+                            />
+                            <Appointments />
+                          </Scheduler>
+                          <MobileStepper
+                            variant='progress'
+                            steps={this.state[`${term}Schedule`].length}
+                            position='static'
+                            activeStep={this.state[`${term}ActiveStep`]}
+                            nextButton={(
+                              <Button
+                                size='small'
+                                onClick={this.handleNext(`${term}ActiveStep`, `${term}`)}
+                                disabled={this.state[`${term}ActiveStep`] === this.state[`${term}Schedule`].length - 1}
+                              >
+                              Next
+                                {theme.direction === 'rtl' ? (
+                                  <KeyboardArrowLeft />
+                                ) : (
+                                  <KeyboardArrowRight />
+                                )}
+                              </Button>
                           )}
-                        />
-                      </Paper>
-                    </MuiThemeProvider>
-                  </div>
-                </Grid>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
-            ))
+                            backButton={(
+                              <Button
+                                size='small'
+                                onClick={this.handleBack(`${term}ActiveStep`, `${term}`)}
+                                disabled={this.state[`${term}ActiveStep`] === 0}
+                              >
+                                {theme.direction === 'rtl' ? (
+                                  <KeyboardArrowRight />
+                                ) : (
+                                  <KeyboardArrowLeft />
+                                )}
+                                Back
+                              </Button>
+                            )}
+                          />
+                        </Paper>
+                      </MuiThemeProvider>
+                    </div>
+                  </Grid>
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
+              )) : null
             }
             <br />
             <Typography variant='h5'>Sequences</Typography>
