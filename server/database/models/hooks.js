@@ -7,7 +7,9 @@ exports.before = async (t) => {
   t.log('MongoDB connected');
 };
 
-exports.after = async (t) => {
-  mongoose.disconnect();
-  t.log('MongoDB disconnected');
+exports.after = {
+  always: async (t) => {
+    mongoose.disconnect();
+    t.log('MongoDB disconnected');
+  },
 };
