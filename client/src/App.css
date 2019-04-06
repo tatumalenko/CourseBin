@@ -163,6 +163,10 @@
   min-height: 150px;
 }
 
+.progress{
+  margin: 25%;
+}
+
 #schedule-header{
   margin-top: -30px;
   margin-bottom: 25px;
@@ -179,7 +183,6 @@
 
 .plan-container .schedule-container{
   margin: 3%;
-  
 }
 
 .card-container{
@@ -190,11 +193,6 @@
 .box-container {
   margin-bottom: 15px;
 }
-
-.Appointment-appointment-1160{
-  min-width: 20%;
-}
-
 
 
 

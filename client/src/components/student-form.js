@@ -296,83 +296,84 @@ class StudentForm extends Component {
       showSpinner: true,
     });
 
-    // const state = this.state;
+    const state = this.state;
 
-    // if (state.fallNumOfCourses === 0
-    //   && state.summerNumOfCourses === 0
-    //   && state.winterNumOfCourses === 0) {
-    //   const msg = 'You have selected a preference of no courses for every semester,'
-    //     + 'please try again!';
-    //   const newState = Object.assign({}, state);
-    //   newState.formErrorMsg.push(msg);
-    //   this.setState(newState);
-    //   return;
-    // }
+    if (state.fallNumOfCourses === 0
+      && state.summerNumOfCourses === 0
+      && state.winterNumOfCourses === 0) {
+      const msg = 'You have selected a preference of no courses for every semester,'
+        + 'please try again!';
+      const newState = Object.assign({}, state);
+      newState.formErrorMsg.push(msg);
+      this.setState(newState);
+      return;
+    }
 
-    // if (state.fallSelectedCourses.length !== state.fallNumOfCourses) {
-    //   const msg = `You indicated a preference of ${state.fallNumOfCourses}
-    //   courses for Fall, but did not select that amount!`;
-    //   const newState = Object.assign({}, state);
-    //   newState.formErrorMsg.push(msg);
-    //   this.setState(newState);
-    //   return;
-    // }
-    // if (state.winterSelectedCourses.length !== state.winterNumOfCourses) {
-    //   const msg = `You indicated a preference of ${state.winterNumOfCourses}
-    //   courses for Winter, but did not select that amount!`;
-    //   const newState = Object.assign({}, state);
-    //   newState.formErrorMsg.push(msg);
-    //   this.setState(newState);
-    //   return;
-    // }
-    // if (state.summerSelectedCourses.length !== state.summerNumOfCourses) {
-    //   const msg = `You indicated a preference of ${state.summerNumOfCourses}
-    //   courses for Summer, but did not select that amount!`;
-    //   const newState = Object.assign({}, state);
-    //   newState.formErrorMsg.push(msg);
-    //   this.setState(newState);
-    //   return;
-    // }
-
-    // const jsonObject = {
-    //   fall: {
-    //     requestedCourses: state.fallSelectedCourses.map(e => e.slice(0, 7)),
-    //     eveningTimePreference: state.fallTimePreference,
-    //     numberOfCourses: state.fallNumOfCourses,
-    //   },
-
-    //   winter: {
-    //     requestedCourses: state.winterSelectedCourses.map(e => e.slice(0, 7)),
-    //     eveningTimePreference: state.winterTimePreference,
-    //     numberOfCourses: state.winterNumOfCourses,
-    //   },
-
-    //   summer: {
-    //     requestedCourses: state.summerSelectedCourses.map(e => e.slice(0, 7)),
-    //     eveningTimePreference: state.summerTimePreference,
-    //     numberOfCourses: state.summerNumOfCourses,
-    //   },
-    // };
+    if (state.fallSelectedCourses.length !== state.fallNumOfCourses) {
+      const msg = `You indicated a preference of ${state.fallNumOfCourses}
+      courses for Fall, but did not select that amount!`;
+      const newState = Object.assign({}, state);
+      newState.formErrorMsg.push(msg);
+      this.setState(newState);
+      return;
+    }
+    if (state.winterSelectedCourses.length !== state.winterNumOfCourses) {
+      const msg = `You indicated a preference of ${state.winterNumOfCourses}
+      courses for Winter, but did not select that amount!`;
+      const newState = Object.assign({}, state);
+      newState.formErrorMsg.push(msg);
+      this.setState(newState);
+      return;
+    }
+    if (state.summerSelectedCourses.length !== state.summerNumOfCourses) {
+      const msg = `You indicated a preference of ${state.summerNumOfCourses}
+      courses for Summer, but did not select that amount!`;
+      const newState = Object.assign({}, state);
+      newState.formErrorMsg.push(msg);
+      this.setState(newState);
+      return;
+    }
 
     const jsonObject = {
       fall: {
-        requestedCourses: [ 'COMP232', 'COMP248', 'ENGR201', 'ENGR213' ],
-        eveningTimePreference: false,
-        numberOfCourses: 4,
+        requestedCourses: state.fallSelectedCourses.map(e => e.slice(0, 7)),
+        eveningTimePreference: state.fallTimePreference,
+        numberOfCourses: state.fallNumOfCourses,
       },
 
       winter: {
-        requestedCourses: [ 'COMP249', 'SOEN287', 'SOEN228', 'ENGR233' ],
-        eveningTimePreference: false,
-        numberOfCourses: 4,
+        requestedCourses: state.winterSelectedCourses.map(e => e.slice(0, 7)),
+        eveningTimePreference: state.winterTimePreference,
+        numberOfCourses: state.winterNumOfCourses,
       },
 
       summer: {
-        requestedCourses: [ 'ENCS282', 'ENGR202', 'COMP248', 'COMP352' ],
-        eveningTimePreference: true,
-        numberOfCourses: 4,
+        requestedCourses: state.summerSelectedCourses.map(e => e.slice(0, 7)),
+        eveningTimePreference: state.summerTimePreference,
+        numberOfCourses: state.summerNumOfCourses,
       },
     };
+
+    //TESTER CODE 
+    // const jsonObject = {
+    //   fall: {
+    //     requestedCourses: [ 'COMP232', 'COMP248', 'ENGR201', 'ENGR213' ],
+    //     eveningTimePreference: false,
+    //     numberOfCourses: 4,
+    //   },
+
+    //   winter: {
+    //     requestedCourses: [ 'COMP249', 'SOEN287', 'SOEN228', 'ENGR233' ],
+    //     eveningTimePreference: false,
+    //     numberOfCourses: 4,
+    //   },
+
+    //   summer: {
+    //     requestedCourses: [ 'ENCS282', 'ENGR202', 'COMP248', 'COMP352' ],
+    //     eveningTimePreference: true,
+    //     numberOfCourses: 4,
+    //   },
+    // };
 
     axios.post('/user/plan', jsonObject)
       .then((response) => {
@@ -488,6 +489,7 @@ class StudentForm extends Component {
       ? <Plan formData={this.generatedPlan} />
       : (
         <MuiThemeProvider theme={custTheme}>
+        {!showSpinner ? (
           <div className='student-form'>
             <form onSubmit={this.handleSubmit}>
               <div className={classes.formContent}>
@@ -673,7 +675,6 @@ class StudentForm extends Component {
                     ))
                   }
                 </SwipeableViews>
-                {!showSpinner ? (
                 <Button
                   id='submit'
                   size='large'
@@ -683,13 +684,6 @@ class StudentForm extends Component {
                 >
                   Generate My Schedule!
                 </Button>
-                ): null}
-                { showSpinner ? (
-                  <div className='progress'>
-                    <CircularProgress className={classes.progress} />
-                  </div>
-                ) : null
-                }
                 <Grid container spacing={24}>
                   {formErrorMsg.length > 0 ? formErrorMsg.map(msg => (
                     <FormLabel className='submit-error' color='secondary'>
@@ -700,6 +694,13 @@ class StudentForm extends Component {
               </div>
             </form>
           </div>
+      ):    
+        <div className='progress'>
+          <Typography variant='h5'>Hold on while we gather your information...</Typography>
+          <br/>
+          <CircularProgress className={classes.progress} />
+        </div> 
+      }
         </MuiThemeProvider>
       );
   }
