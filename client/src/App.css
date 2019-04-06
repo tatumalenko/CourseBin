@@ -75,7 +75,7 @@
 
 .header-logo.plan h4{
     position: relative;
-    bottom: 82px;
+    bottom: 96px;
     margin-left: 300px;
     margin-right: 300px;
 }
@@ -165,7 +165,16 @@
 
 #schedule-header{
   margin-top: -30px;
-  margin-bottom: 50px;
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+.plan-container h5{
+  font-family: 'Londrina Solid', cursive;
+  margin-top: 50px;
+  margin-bottom: 10px;
+  text-align: left;
+  color: #571D2E;
 }
 
 .plan-container .schedule-container{

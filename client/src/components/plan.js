@@ -56,12 +56,12 @@ const theme = createMuiTheme({
   },
   typography: {
     useNextVariants: true,
-  },
+  }
 });
 
 const styles = theme => ({
   sequence: {
-    backgroundColor: cyan,
+    backgroundColor: 'rgba(0, 188, 212, 0.2)',
   },
 });
 
@@ -267,8 +267,7 @@ class Plan extends Component {
             <Typography id='schedule-header' variant='h4'>
               Here's what we came up with...
             </Typography>
-            <Typography variant='h5'>Schedules</Typography>
-            <br />
+            <Typography variant='h5'>Agenda Views</Typography>
             {terms
               ? terms.map(term => (
                 <ExpansionPanel>
@@ -369,15 +368,13 @@ class Plan extends Component {
                 </ExpansionPanel>
               )) : null
             }
-            <br />
-            <Typography variant='h5'>Sequences</Typography>
-            <br />
+            <Typography className='plan-header' variant='h5'>Course Sequences</Typography>
             {sequenceMap ? Object.keys(sequenceMap).map(term => (
               <ExpansionPanel>
-                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <ExpansionPanelSummary className={classes.sequence} expandIcon={<ExpandMoreIcon />}>
                   <Typography>{term}</Typography>
                 </ExpansionPanelSummary>
-                <ExpansionPanelDetails className={classes.sequence}>
+                <ExpansionPanelDetails>
                   <Table>
                     <TableHead>
                       <TableRow>
