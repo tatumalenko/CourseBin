@@ -123,7 +123,7 @@ class Plan extends Component {
       const scheduleCollection = schedules[term];
 
       scheduleCollection.map((schedule, scheduleIndex) => {
-        const sections = scheduleCollection[scheduleIndex].sections;
+        const sections = schedule.sections;
         sections.map((section, sectionIndex) => {
           if (!_.includes(this.state.terms, term)) {
             this.state.terms.push(_.lowerCase(term));
@@ -148,7 +148,7 @@ class Plan extends Component {
       });
     });
 
-    this.terms.forEach((term) => {
+    this.state.terms.forEach((term) => {
       this.state[`${term}SchedulerData`] = this.state[`${term}Schedule`].filter(el => el.id === this.state[`${term}ActiveStep`]);
     });
     console.log(this.state);
@@ -220,7 +220,7 @@ class Plan extends Component {
   }
 
 
-  // ******** functions to dynamically handle state *************
+  // ******** functions to dynamically handle state of carousel *************
   handleNext = (termStep, term) => (event) => {
     event.preventDefault();
     console.log('next');
@@ -322,6 +322,7 @@ class Plan extends Component {
                         <MuiThemeProvider theme={theme}>
                           <Paper>
                             <Scheduler data={this.state[`${term}SchedulerData`]}>
+                              <ViewState currentDate={this[`${term}StartDate`]} />
                               <WeekView
                                 excludedDays={[ 0, 6 ]}
                                 cellDuration={60}
