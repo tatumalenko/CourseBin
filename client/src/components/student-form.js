@@ -20,6 +20,7 @@ import {
   AppBar,
   Button,
   Chip,
+  CircularProgress,
   FormLabel,
   FormControl,
   Grid,
@@ -144,6 +145,7 @@ class StudentForm extends Component {
 
       formErrorMsg: [],
       showPlan: false,
+      showSpinner: false,
     };
 
     this.handleViewChange = this.handleViewChange.bind(this);
@@ -178,11 +180,8 @@ class StudentForm extends Component {
   getCourseCatalog() {
     axios.get('/catalog').then((response) => {
       if (response.data) {
-        console.log('Get Catalog: Catalog found ');
         this.catalog = response.data;
         this.parseCourseCatalog();
-      } else {
-        console.log('Get Catalog: no data found');
       }
     }).catch((error) => {
       console.error(error);
@@ -293,6 +292,9 @@ class StudentForm extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    this.setState({
+      showSpinner: true,
+    });
 
     const state = this.state;
 
@@ -308,7 +310,7 @@ class StudentForm extends Component {
     }
 
     if (state.fallSelectedCourses.length !== state.fallNumOfCourses) {
-      const msg = `You indicated a preference of ${state.fallNumOfCourses} 
+      const msg = `You indicated a preference of ${state.fallNumOfCourses}
       courses for Fall, but did not select that amount!`;
       const newState = Object.assign({}, state);
       newState.formErrorMsg.push(msg);
@@ -316,7 +318,7 @@ class StudentForm extends Component {
       return;
     }
     if (state.winterSelectedCourses.length !== state.winterNumOfCourses) {
-      const msg = `You indicated a preference of ${state.winterNumOfCourses} 
+      const msg = `You indicated a preference of ${state.winterNumOfCourses}
       courses for Winter, but did not select that amount!`;
       const newState = Object.assign({}, state);
       newState.formErrorMsg.push(msg);
@@ -324,7 +326,7 @@ class StudentForm extends Component {
       return;
     }
     if (state.summerSelectedCourses.length !== state.summerNumOfCourses) {
-      const msg = `You indicated a preference of ${state.summerNumOfCourses} 
+      const msg = `You indicated a preference of ${state.summerNumOfCourses}
       courses for Summer, but did not select that amount!`;
       const newState = Object.assign({}, state);
       newState.formErrorMsg.push(msg);
@@ -352,11 +354,31 @@ class StudentForm extends Component {
       },
     };
 
+    //TESTER CODE 
+    // const jsonObject = {
+    //   fall: {
+    //     requestedCourses: [ 'COMP232', 'COMP248', 'ENGR201', 'ENGR213' ],
+    //     eveningTimePreference: false,
+    //     numberOfCourses: 4,
+    //   },
+
+    //   winter: {
+    //     requestedCourses: [ 'COMP249', 'SOEN287', 'SOEN228', 'ENGR233' ],
+    //     eveningTimePreference: false,
+    //     numberOfCourses: 4,
+    //   },
+
+    //   summer: {
+    //     requestedCourses: [ 'ENCS282', 'ENGR202', 'COMP248', 'COMP352' ],
+    //     eveningTimePreference: true,
+    //     numberOfCourses: 4,
+    //   },
+    // };
 
     axios.post('/user/plan', jsonObject)
       .then((response) => {
         this.generatedPlan = response.data.plan;
-        // go to schedule page
+        // go to plan page
         this.setState({
           showPlan: true,
         });
@@ -460,12 +482,14 @@ class StudentForm extends Component {
       terms,
       formErrorMsg,
       showPlan,
+      showSpinner,
     } = this.state;
 
     return showPlan
       ? <Plan formData={this.generatedPlan} />
       : (
         <MuiThemeProvider theme={custTheme}>
+        {!showSpinner ? (
           <div className='student-form'>
             <form onSubmit={this.handleSubmit}>
               <div className={classes.formContent}>
@@ -598,7 +622,7 @@ class StudentForm extends Component {
                                   <Grid item xs={12}>
                                     <FormControl className='course-selector'>
                                       <NativeSelect
-                                        value={`${term}SelectedCourse`}
+                                        value={this.state[`${term}SelectedCourse`]}
                                         onChange={this.handleCourseSelection(`${term}SelectedCourse`)}
                                         name={`${term}SelectedCourse`}
                                       >
@@ -670,6 +694,13 @@ class StudentForm extends Component {
               </div>
             </form>
           </div>
+      ):    
+        <div className='progress'>
+          <Typography variant='h5'>Hold on while we gather your information...</Typography>
+          <br/>
+          <CircularProgress className={classes.progress} />
+        </div> 
+      }
         </MuiThemeProvider>
       );
   }

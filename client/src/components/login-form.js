@@ -61,7 +61,6 @@ class LoginForm extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    console.log('handleSubmit');
     const { username, password } = this.state;
     const { updateUser } = this.props;
 
@@ -71,7 +70,6 @@ class LoginForm extends Component {
         password,
       })
       .then((response) => {
-        console.log('Login response: ', response);
         if (response.status === 200) {
           // update App.js state
           updateUser({
@@ -94,7 +92,6 @@ class LoginForm extends Component {
             loginError: error,
           });
         }
-        console.error('Login error: ', error);
       });
   }
 

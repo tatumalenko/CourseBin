@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import { ViewState } from '@devexpress/dx-react-scheduler';
 import PropTypes from 'prop-types';
@@ -26,7 +27,6 @@ import {
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@material-ui/icons';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import moment from 'moment';
-import cyan from '@material-ui/core/colors/cyan';
 import { withStyles } from '@material-ui/core/styles';
 import ChildBox from './box-child';
 
@@ -60,7 +60,7 @@ const theme = createMuiTheme({
 
 const styles = theme => ({
   sequence: {
-    backgroundColor: cyan,
+    backgroundColor: 'rgba(0, 188, 212, 0.2)',
   },
 });
 
@@ -70,14 +70,37 @@ class Plan extends Component {
     const plan = props.formData;
     this.schedules = plan.schedules;
     this.sequences = plan.sequences;
+    this.fallStartDate = '09/04/2018';
+    this.winterStartDate = '01/07/2019';
+    this.summerStartDate = '05/06/2019';
+    this.fallDetailMap = {};
+    this.winterDetailMap = {};
+    this.summerDetailMap = {};
 
     this.state = {
       // sequences
       sequenceMap: this.parseSequences(),
 
-      // schedules
-      dataFall2019: [],
-      fallSchedule: this.schedules.fall,
+      // ===== for parsing schedule data for each term ====
+      terms: [],
+
+      fallSchedule: [],
+      fallSchedulerData: null,
+      fallSchedulerArr: [],
+      fallCourseInfo: [],
+      fallActiveStep: 0,
+
+      winterSchedule: [],
+      winterSchedulerData: null,
+      winterSchedulerArr: [],
+      winterCourseInfo: [],
+      winterActiveStep: 0,
+
+      summerSchedule: [],
+      summerSchedulerData: null,
+      summerSchedulerArr: [],
+      summerCourseInfo: [],
+      summerActiveStep: 0,
 
       // dummy info for the description box component
       // TODO real implementation
@@ -85,63 +108,92 @@ class Plan extends Component {
       subject: 'Artificial Intelligence',
       lecture: 'LEC LL 1234, Hall building 937',
       tutorial: 'TUT A, Hall building 435 ',
-      activeStep: 0,
     };
-
-    this.parseSchedules();
-
-    console.log(this.state);
 
     this.createDate = this.createDate.bind(this);
     this.createTime = this.createTime.bind(this);
     this.findWeekDayDate = this.findWeekDayDate.bind(this);
     this.findWeekDayDate2 = this.findWeekDayDate2.bind(this);
     this.parseSchedules = this.parseSchedules.bind(this);
+    this.parseScheduleDetails = this.parseScheduleDetails.bind(this);
+    this.setScheduleDetailsState = this.setScheduleDetailsState.bind(this);
     this.parseSequences = this.parseSequences.bind(this);
     this.handleBack = this.handleBack.bind(this);
     this.handleNext = this.handleNext.bind(this);
     this.handleStepChange = this.handleStepChange.bind(this);
   }
 
-  parseSchedules = () => {
-    const state = this.state;
-    const fallSchedule = state.fallSchedule;
+  componentDidMount(){
+    this.parseSchedules();
+  }
 
-    // Populating the data for all classes
-    Object.keys(fallSchedule).forEach((scheduleIndex) => {
-      const schedule = state.fallSchedule[scheduleIndex];
-      const scheduleSections = schedule.sections;
-      scheduleSections.map((section, sectionIndex) => {
-        console.log(section);
-        console.log(sectionIndex);
-        const times = scheduleSections[sectionIndex];
-        times.map((time) => {
-          const dayOfWeek = time.weekDay;
-          const dateStr = '04/09/2018';
-          const timeStr = time.startTime;
-          const timeEnd = time.endTime;
-          const beginDateTime = this.findWeekDayDate({ dayOfWeek, dateStr, timeStr });
-          const finishDateTime = this.findWeekDayDate2({ dayOfWeek, dateStr, timeEnd });
-          state.dataFall2019.push({
-            id: scheduleIndex,
-            title: `${section.courseCode} - ${section.code} ${section.kind}`,
-            startDate: new Date(beginDateTime.format('MM/DD/YYYY HH:mm:ss')),
-            endDate: new Date(finishDateTime.format('MM/DD/YYYY HH:mm:ss')),
+  parseSchedules = () => {
+    const schedules = this.schedules;
+
+    Object.keys(schedules).forEach((term) => {
+      const scheduleCollection = schedules[term];
+      scheduleCollection.forEach((schedule, scheduleIndex) => {
+        const sections = schedule.sections;
+        sections.forEach((section, sectionIndex) => {
+          if (!_.includes(this.state.terms, term)) {
+            this.state.terms.push(_.lowerCase(term));
+          }
+          sections[sectionIndex].times.forEach((time) => {
+            const dayOfWeek = time.weekDay;
+            const dateStr = this[`${term}StartDate`];
+            const timeStr = time.startTime;
+            const timeEnd = time.endTime;
+            const beginDateTime = this.findWeekDayDate({ dayOfWeek, dateStr, timeStr });
+            const finishDateTime = this.findWeekDayDate2({ dayOfWeek, dateStr, timeEnd });
+
+            this.state[`${term}Schedule`].push({
+              title: `${section.courseCode} - ${section.code} ${section.kind}`,
+              startDate: beginDateTime.format('YYYY-MM-DD HH:mm'),
+              endDate: finishDateTime.format('YYYY-MM-DD HH:mm'),
+              id: scheduleIndex,
+              section: section,
+            });
           });
         });
       });
+    });
+
+    this.state.terms.forEach((term, index) => {
+
+      const schedules = this.state[`${term}Schedule`];
+      schedules.forEach((schedule, index) =>{
+        const scheduler = schedules.filter(el => el.id === index);
+        if(scheduler && scheduler.length > 0){
+          this.state[`${term}SchedulerArr`].push(scheduler);
+        }
+      });
+            
+      const step = this.state[`${term}ActiveStep`];
+
+      //initial schedule view
+      const initialView = this.state[`${term}SchedulerArr`][0];
+    
+
+      //description box for each course
+      const info = this.parseScheduleDetails(initialView, term, step);
+
+      this.setState({
+        [`${term}SchedulerData`]: initialView,
+        [`${term}CourseInfo`]: info,
+      });
+
     });
   }
 
   // ******** helper functions to parse schedules for UI *************
 
   createDate = (dateStr) => {
-    const dateParseFormatStr = 'DD/MM/YYYY';
+    const dateParseFormatStr = 'MM/DD/YYYY';
     const date = moment(dateStr, dateParseFormatStr);
     return date;
   };
 
-  createTime = timeStr => moment(timeStr, 'HH:mm:ss');
+  createTime = timeStr => moment(timeStr, 'HH:mm');
 
   // find if weekDay is before or after startDate and return
   // next week's weekDay date if startDate occured after weekDay
@@ -183,6 +235,70 @@ class Plan extends Component {
     return actualDateOfWeekDay;
   };
 
+  parseScheduleDetails = (data, term, activeStep) => {
+    this[`${term}DetailMap`] = {}; //clear the map each time we go to next schedule      
+      data.forEach((schedule) => {
+        const section = schedule.section;
+        const courseCode = section.courseCode;
+        if (courseCode && !this[`${term}DetailMap`][`${courseCode}-${activeStep}`]) {
+          const location = section.location;
+          const kind = section.kind;
+          const description = `${kind} ${section.code} ${location.building} building Room: ${location.room}`;
+          const title = section.title;
+          if (kind === 'LEC') {
+            this[`${term}DetailMap`][`${courseCode}-${activeStep}`] = {
+              course: courseCode,
+              subject: title,
+              lecture: description,
+              id: activeStep,
+            };
+          } else if (kind === 'TUT') {
+            this[`${term}DetailMap`][`${courseCode}-${activeStep}`] = {
+              course: courseCode,
+              subject: title,
+              tutorial: description,
+              id: activeStep,
+            };
+          } else if (kind === 'LAB') {
+            this[`${term}DetailMap`][`${courseCode}-${activeStep}`] = {
+              course: courseCode,
+              subject: title,
+              lab: description,
+              id: activeStep,
+            };
+          }
+        } else {
+          const location = section.location;
+          const kind = section.kind;
+          const description = `${kind} ${section.code}, ${location.building} Building, Room ${location.room}`;
+          if (kind === 'LEC') {
+            this[`${term}DetailMap`][`${courseCode}-${activeStep}`].lecture = description;
+          } else if (kind === 'TUT') {
+            this[`${term}DetailMap`][`${courseCode}-${activeStep}`].tutorial = description;
+          } else if (kind === 'LAB') {
+            this[`${term}DetailMap`][`${courseCode}-${activeStep}`].lab = description;
+          }
+        }
+      });
+      const map = this[`${term}DetailMap`];
+    const courseDetails = [];
+    //push the details into array for UI
+    Object.keys(map).forEach((key)=>{
+        courseDetails.push(map[key]);
+    });
+    return courseDetails;
+  }
+
+  setScheduleDetailsState = (term) => {
+    const map = this[`${term}DetailMap`];
+    const courseDetails = [];
+    //push the details into array for UI
+    Object.keys(map).forEach((key)=>{
+        courseDetails.push(map[key]);
+    });
+    return courseDetails;
+  }
+
   // ******** parse sequences for UI  *************
   parseSequences = () => {
     const sequences = this.sequences;
@@ -199,16 +315,33 @@ class Plan extends Component {
   }
 
 
-  // ******** functions to dynamically handle state *************
-  handleNext = () => {
+  // ******** functions to dynamically handle state of carousel *************
+  handleNext = (termStep, term) => (event) => {
+    event.preventDefault();
+
+    const scheduler = this.state[`${term}SchedulerArr`];
+    const i = this.state[`${term}ActiveStep`] + 1;
+    const data = scheduler[i];
+    const info =  this.parseScheduleDetails(data, term, i);
+
     this.setState(prevState => ({
-      activeStep: prevState.activeStep + 1,
+      [termStep]: prevState[termStep] + 1,
+      [`${term}SchedulerData`]: data,
+      [`${term}CourseInfo`]: info,
     }));
   };
 
-  handleBack = () => {
+  handleBack = (termStep, term) => (event) => {
+    event.preventDefault();
+    const scheduler = this.state[`${term}SchedulerArr`];
+    const i = this.state[`${term}ActiveStep`] - 1;
+    const data = scheduler[i];
+    const info =  this.parseScheduleDetails(data, term, i);
+
     this.setState(prevState => ({
-      activeStep: prevState.activeStep - 1,
+      [termStep]: prevState[termStep] - 1,
+      [`${term}SchedulerData`]: data,
+      [`${term}CourseInfo`]: info,
     }));
   };
 
@@ -220,9 +353,12 @@ class Plan extends Component {
   render() {
     const { classes } = this.props;
     const {
-      sequenceMap, dataFall2019, fallSchedule, activeStep, course, subject, lecture, tutorial,
+      // sequences
+      sequenceMap,
+      // schedules
+      terms,
     } = this.state;
-    const filterDataFall2019 = dataFall2019.filter(el => el.id === activeStep);
+
     return (
       <div className='plan-container'>
         <Grid container spacing={16}>
@@ -230,119 +366,91 @@ class Plan extends Component {
             <div className='header-logo plan'>
               <Typography variant='h4'>CourseBin</Typography>
             </div>
-            <Typography id='schedule-header' variant='h4'>Here's what we came up with... </Typography>
-            <Typography variant='h5'>Schedules</Typography>
-            <br />
-            <ExpansionPanel>
-              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>Fall 2019</Typography>
-              </ExpansionPanelSummary>
+            <Typography id='schedule-header' variant='h4'>
+              Here's what we came up with...
+            </Typography>
+            <Typography variant='h5'>Agenda Views</Typography>
+            {terms
+              ? terms.map((term, index) => (
+                <ExpansionPanel defaultExpanded={index === 0}>
+                  <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography>{_.startCase(term)}</Typography>
+                  </ExpansionPanelSummary>
 
-              <ExpansionPanelDetails>
-
-                <Grid item xs={3}>
-                  <ChildBox
-                    titleClass={course}
-                    subject={subject}
-                    lecture={lecture}
-                    tutorial={tutorial}
-                  />
-                  <br />
-                  <ChildBox
-                    titleClass={course}
-                    subject={subject}
-                    lecture={lecture}
-                    tutorial={tutorial}
-                  />
-                  <br />
-                  <ChildBox
-                    titleClass={course}
-                    subject={subject}
-                    lecture={lecture}
-                    tutorial={tutorial}
-                  />
-                  <br />
-                  <ChildBox
-                    titleClass={course}
-                    subject={subject}
-                    lecture={lecture}
-                    tutorial={tutorial}
-                  />
-                  <br />
-                  <ChildBox
-                    titleClass={course}
-                    subject={subject}
-                    lecture={lecture}
-                    tutorial={tutorial}
-                  />
-                </Grid>
-                <Grid item xs={9}>
-                  <div className='schedule'>
-                    <MuiThemeProvider theme={theme}>
-                      <Paper>
-
-
-                        <Scheduler data={filterDataFall2019}>
-                          <ViewState currentDate='09/04/2018' />
-                          <WeekView
-                            excludedDays={[ 0, 6 ]}
-                            cellDuration={60}
-                            startDayHour={8}
-                            endDayHour={24}
-                          />
-                          <Appointments />
-
-                        </Scheduler>
-                        <MobileStepper
-                          variant='progress'
-                          steps={fallSchedule.length}
-                          position='static'
-                          activeStep={activeStep}
-                          nextButton={(
-                            <Button
-                              size='small'
-                              onClick={this.handleNext}
-                              disabled={activeStep === fallSchedule.length - 1}
-                            >
-                              Next
-                              {theme.direction === 'rtl' ? (
-                                <KeyboardArrowLeft />
-                              ) : (
-                                <KeyboardArrowRight />
+                  <ExpansionPanelDetails>
+                    <Grid item xs={3}>
+                      {this.state[`${term}CourseInfo`].map((courseDetails) => (
+                      <ChildBox
+                        titleClass={courseDetails.course}
+                        subject={courseDetails.subject}
+                        lecture={courseDetails.lecture}
+                        tutorial={courseDetails.tutorial}
+                      />
+                      ))}
+                    </Grid>
+                    <Grid item xs={9}>
+                      <div className='schedule'>
+                        <MuiThemeProvider theme={theme}>
+                          <Paper>
+                            <Scheduler data={this.state[`${term}SchedulerData`]}>
+                              <ViewState currentDate={this[`${term}StartDate`]} />
+                              <WeekView
+                                excludedDays={[0, 6]}
+                                cellDuration={60}
+                                startDayHour={8}
+                                endDayHour={24}
+                              />
+                              <Appointments />
+                            </Scheduler>
+                            <MobileStepper
+                              variant='progress'
+                              steps={this.state[`${term}SchedulerArr`].length}
+                              position='static'
+                              activeStep={this.state[`${term}ActiveStep`]}
+                              nextButton={(
+                                <Button
+                                  size='small'
+                                  onClick={this.handleNext(`${term}ActiveStep`, `${term}`)}
+                                  disabled={this.state[`${term}ActiveStep`] === this.state[`${term}SchedulerArr`].length - 1}
+                                >
+                                  Next
+                                  {theme.direction === 'rtl' ? (
+                                    <KeyboardArrowLeft />
+                                  ) : (
+                                      <KeyboardArrowRight />
+                                    )}
+                                </Button>
                               )}
-                            </Button>
-                          )}
-                          backButton={(
-                            <Button
-                              size='small'
-                              onClick={this.handleBack}
-                              disabled={activeStep === 0}
-                            >
-                              {theme.direction === 'rtl' ? (
-                                <KeyboardArrowRight />
-                              ) : (
-                                <KeyboardArrowLeft />
+                              backButton={(
+                                <Button
+                                  size='small'
+                                  onClick={this.handleBack(`${term}ActiveStep`, `${term}`)}
+                                  disabled={this.state[`${term}ActiveStep`] === 0}
+                                >
+                                  {theme.direction === 'rtl' ? (
+                                    <KeyboardArrowRight />
+                                  ) : (
+                                      <KeyboardArrowLeft />
+                                    )}
+                                  Back
+                                </Button>
                               )}
-                              Back
-                            </Button>
-                          )}
-                        />
-                      </Paper>
-
-                    </MuiThemeProvider>
-                  </div>
-                </Grid>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
-            <br />
-            <Typography variant='h5'>Sequences</Typography>
-            <br />
+                            />
+                          </Paper>
+                        </MuiThemeProvider>
+                      </div>
+                    </Grid>
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
+              )) : null
+            }
+            <Typography className='plan-header' variant='h5'>Course Sequences</Typography>
             {sequenceMap ? Object.keys(sequenceMap).map(term => (
               <ExpansionPanel>
-                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <ExpansionPanelSummary className={classes.sequence} expandIcon={<ExpandMoreIcon />}>
                   <Typography>{term}</Typography>
                 </ExpansionPanelSummary>
-                <ExpansionPanelDetails className={classes.sequence}>
+                <ExpansionPanelDetails>
                   <Table>
                     <TableHead>
                       <TableRow>

@@ -163,19 +163,26 @@
   min-height: 150px;
 }
 
+.progress{
+  margin: 25%;
+}
+
 #schedule-header{
   margin-top: -30px;
-  margin-bottom: 50px;
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+.plan-container h5{
+  font-family: 'Londrina Solid', cursive;
+  margin-top: 50px;
+  margin-bottom: 10px;
+  text-align: left;
+  color: #571D2E;
 }
 
 .plan-container .schedule-container{
   margin: 3%;
-  
-}
-
-.plan-container .schedule-container .VerticalViewLayout-container-124{
-  height: 400px;
-  overflow: scroll;
 }
 
 .card-container{
@@ -183,6 +190,9 @@
   width: 280px;
 }
 
+.box-container {
+  margin-bottom: 15px;
+}
 
 
 
