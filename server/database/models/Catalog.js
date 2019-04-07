@@ -536,7 +536,6 @@ class Catalog {
   }
 }
 
-
 const courseSchema = new Schema({
   title: { type: String, unique: false, required: true },
   code: { type: String, unique: true, required: true },
@@ -546,7 +545,6 @@ const courseSchema = new Schema({
   corequisiteCodes: { type: [ [ String ] ], unique: false, required: false },
   equivalentCodes: { type: [ [ String ] ], unique: false, required: false },
 });
-
 
 module.exports = {
   // Catalog: mongoose.model('Catalog',

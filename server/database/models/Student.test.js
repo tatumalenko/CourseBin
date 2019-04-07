@@ -1,16 +1,16 @@
 const test = require('ava');
-const mongoose = require('mongoose');
 
 const { Student } = require('./Student');
-// const { Util } = require('../../util/Util');
-const configs = require('../../../configs/configs');
 
-mongoose.connect(configs.dbMongo.dbPath, { useNewUrlParser: true, useCreateIndex: true });
+const { before, after } = require('./hooks');
+
+test.before(before);
+test.after.always(after.always);
 
 // Run tests serially instead of concurrently
 test.serial('Create and delete new student', async (t) => {
   const student = {
-    id: 40055122,
+    id: 12345678,
     name: {
       first: 'Tatum',
       last: 'Alenko',
@@ -45,7 +45,7 @@ test.serial('Create and delete new student', async (t) => {
 
 test.serial('GPA and Standing: ACCEPTABLE', async (t) => {
   const student = {
-    id: 40055122,
+    id: 12345678,
     name: {
       first: 'Tatum',
       last: 'Alenko',
@@ -79,7 +79,7 @@ test.serial('GPA and Standing: ACCEPTABLE', async (t) => {
 
 test.serial('GPA and Standing: FAILED', async (t) => {
   const student = {
-    id: 40055122,
+    id: 12345678,
     name: {
       first: 'Tatum',
       last: 'Alenko',
@@ -113,7 +113,7 @@ test.serial('GPA and Standing: FAILED', async (t) => {
 
 test.serial('GPA and Standing: CONDITIONAL', async (t) => {
   const student = {
-    id: 40055122,
+    id: 12345678,
     name: {
       first: 'Tatum',
       last: 'Alenko',

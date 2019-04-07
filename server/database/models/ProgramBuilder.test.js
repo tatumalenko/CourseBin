@@ -1,14 +1,17 @@
 const test = require('ava');
-const mongoose = require('mongoose');
 const _ = require('lodash');
 
+const { Student } = require('./Student');
 const { ProgramBuilder } = require('./ProgramBuilder');
 const { SoftwareEngineeringDegree } = require('./SoftwareEngineeringDegree');
 const { Util } = require('../../util/Util');
 const { Sequence } = require('./Sequence');
-const configs = require('../../../configs/configs');
+const { Preferences } = require('./Preferences');
 
-mongoose.connect(configs.dbMongo.dbPath, { useNewUrlParser: true, useCreateIndex: true });
+const { before, after } = require('./hooks');
+
+test.before(before);
+test.after.always(after.always);
 
 const student = {
   id: 40055122,
@@ -315,4 +318,52 @@ test('Schedule generation 5 courses per term', async (t) => {
     schedule => schedule.hasInvalidSectionKindCombination() ||
     schedule.hasConflict(),
   ));
+});
+
+
+test('Ensure expected size of plan schedules (no larger than 50 per term)', async (t) => {
+  const student = await Student.findOne({ id: 40055122 });
+  const preferences = {
+    fall: {
+      requestedCourses: [
+        'COMP232',
+        'COMP248',
+        'ENGR201',
+        'ENGR213',
+        'PHYS284',
+      ],
+      eveningTimePreference: false,
+      numberOfCourses: 5,
+    },
+    winter: {
+      requestedCourses: [
+        'COMP249',
+        'SOEN287',
+        'SOEN228',
+        'ENGR233',
+        'ENGR251',
+      ],
+      eveningTimePreference: false,
+      numberOfCourses: 5,
+    },
+    summer: {
+      requestedCourses: [
+        'ENCS282',
+        'ENGR202',
+        'COMP248',
+        'COMP352',
+      ],
+      eveningTimePreference: false,
+      numberOfCourses: 4,
+    },
+  };
+  const plan = await ProgramBuilder.findCandidatePlan({
+    completedCourses: student.record.completedCourses,
+    requiredCourses: SoftwareEngineeringDegree.requirements(student.record.degree.option),
+    preferences: new Preferences(preferences),
+  });
+
+  t.is(plan.schedules.fall.length, 15);
+  t.is(plan.schedules.winter.length, 50);
+  t.is(plan.schedules.summer.length, 0);
 });
