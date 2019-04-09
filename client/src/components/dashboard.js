@@ -9,18 +9,6 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import cyan from '@material-ui/core/colors/cyan';
 
-
-// const styles = theme => ({
-//   root: {
-//     flexGrow: 1,
-//   },
-//   paper: {
-//     padding: theme.spacing.unit * 2,
-//     textAlign: 'center',
-//     color: theme.palette.text.secondary,
-//   },
-// });
-
 const styles = theme => ({
   root: {
     ...theme.mixins.gutters(),
@@ -45,32 +33,6 @@ const custTheme = createMuiTheme({
     useNextVariants: true,
   },
 });
-
-// const styles = theme => ({
-//   card: {
-//     maxWidth: 400,
-//   },
-//   media: {
-//     height: 0,
-//     paddingTop: '56.25%', // 16:9
-//   },
-//   actions: {
-//     display: 'flex',
-//   },
-//   expand: {
-//     transform: 'rotate(0deg)',
-//     marginLeft: 'auto',
-//     transition: theme.transitions.create('transform', {
-//       duration: theme.transitions.duration.shortest,
-//     }),
-//   },
-//   expandOpen: {
-//     transform: 'rotate(180deg)',
-//   },
-//   avatar: {
-//     backgroundColor: red[500],
-//   },
-// });
 
 // eslint-disable-next-line
 class Dashboard extends Component {

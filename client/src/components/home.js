@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import {
-  Button, MuiThemeProvider, createMuiTheme, Typography,
+  Button, Grid, MuiThemeProvider, createMuiTheme, Typography,
 } from '@material-ui/core';
 import cyan from '@material-ui/core/colors/cyan';
 
@@ -18,9 +20,17 @@ const custTheme = createMuiTheme({
   },
 });
 
+const styles = theme => ({
+  button: {
+    marginBottom: '15px',
+    width: '225px',
+  },
+});
+
 // eslint-disable-next-line
 class Home extends Component {
   render() {
+    const { classes } = this.props;
     return (
       <MuiThemeProvider theme={custTheme}>
         {(
@@ -28,36 +38,46 @@ class Home extends Component {
             <div className='title-wrapper'>
               <Typography variant='h1'>CourseBin</Typography>
             </div>
-            <Button
-              id='submit'
-              size='large'
-              variant='outlined'
-              color='primary'
-              type='submit'
-              component={Link}
-              to='/dashboard'
-            >
-                Head over to your dashboard
-            </Button>
-            <br />
-            <br />
-            <Button
-              id='submit'
-              size='large'
-              variant='outlined'
-              color='primary'
-              type='submit'
-              component={Link}
-              to='/planner'
-            >
-                Head over to the planner
-            </Button>
+            <Grid item xs={12}>
+              <Button
+                className={classes.button}
+                id='submit'
+                size='large'
+                variant='outlined'
+                color='primary'
+                type='submit'
+                component={Link}
+                to='/dashboard'
+              >
+                Head to dashboard
+              </Button>
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                className={classes.button}
+                id='submit'
+                size='large'
+                variant='outlined'
+                color='primary'
+                type='submit'
+                component={Link}
+                to='/planner'
+              >
+                Plan my schedule
+              </Button>
+            </Grid>
           </div>
-          )
+        )
         }
       </MuiThemeProvider>
     );
   }
 }
 
-export default Home;
+
+Home.propTypes = {
+  classes: PropTypes.object.isRequired,
+  theme: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles, { withTheme: true })(Home);

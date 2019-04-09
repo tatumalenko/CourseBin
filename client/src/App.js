@@ -51,11 +51,6 @@ class App extends Component {
         <div className='home-bottom'>
           <img src={concordiaLogo} alt='Concordia University' />
         </div>
-
-        <div>
-          {JSON.stringify(this.props.auth)}
-          {JSON.stringify(this.state)}
-        </div>
       </div>
     );
   }
@@ -65,15 +60,15 @@ const PrivateRoute = ({
   component: Component, auth, ...rest
 }) => (
   <Route
-    {...rest}
-    render={props => (auth.isAuthenticated() ? (
-      <Component {...props} />
-    ) : (
-      <Redirect
-        to={{ pathname: '/login', state: { from: props.location } }}
-      />
-    ))}
-  />
+      {...rest}
+      render={props => (auth.isAuthenticated() ? (
+        <Component {...props} />
+      ) : (
+        <Redirect
+            to={{ pathname: '/login', state: { from: props.location } }}
+          />
+      ))}
+    />
 );
 
 export default App;
