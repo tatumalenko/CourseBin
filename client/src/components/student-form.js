@@ -281,12 +281,13 @@ class StudentForm extends Component {
     }
   }
 
-  handleFacultyChange = name => (event) => {
+  handleFacultyChange = (selectedCourse, name) => (event) => {
     event.preventDefault();
     const faculty = event.target.value;
-    this.setState(
-      { [name]: faculty },
-    );
+    this.setState({
+      [name]: faculty,
+      [selectedCourse]: '',
+    });
   }
 
   handleSubmit(event) {
@@ -599,7 +600,7 @@ class StudentForm extends Component {
                                         <Select
                                           native
                                           value={this.state[`${term}SelectedFaculty`]}
-                                          onChange={this.handleFacultyChange(`${term}SelectedFaculty`)}
+                                          onChange={this.handleFacultyChange(`${term}SelectedCourse`, `${term}SelectedFaculty`)}
                                           inputProps={{
                                             name: `${term}SelectedFaculty`,
                                             id: 'demo-controlled-open-select',
@@ -699,7 +700,8 @@ class StudentForm extends Component {
                 <Typography variant='h5'>Hold on while we gather your information...</Typography>
                 <br />
                 <CircularProgress className={classes.progress} />
-              </div>)
+              </div>
+            )
           }
         </MuiThemeProvider>
       ));

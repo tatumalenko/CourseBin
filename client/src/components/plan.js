@@ -101,13 +101,6 @@ class Plan extends Component {
       summerSchedulerArr: [],
       summerCourseInfo: [],
       summerActiveStep: 0,
-
-      // dummy info for the description box component
-      // TODO real implementation
-      course: 'COMP-472',
-      subject: 'Artificial Intelligence',
-      lecture: 'LEC LL 1234, Hall building 937',
-      tutorial: 'TUT A, Hall building 435 ',
     };
 
     this.createDate = this.createDate.bind(this);
@@ -123,7 +116,7 @@ class Plan extends Component {
     this.handleStepChange = this.handleStepChange.bind(this);
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.parseSchedules();
   }
 
@@ -151,7 +144,7 @@ class Plan extends Component {
               startDate: beginDateTime.format('YYYY-MM-DD HH:mm'),
               endDate: finishDateTime.format('YYYY-MM-DD HH:mm'),
               id: scheduleIndex,
-              section: section,
+              section,
             });
           });
         });
@@ -159,29 +152,27 @@ class Plan extends Component {
     });
 
     this.state.terms.forEach((term, index) => {
-
       const schedules = this.state[`${term}Schedule`];
-      schedules.forEach((schedule, index) =>{
+      schedules.forEach((schedule, index) => {
         const scheduler = schedules.filter(el => el.id === index);
-        if(scheduler && scheduler.length > 0){
+        if (scheduler && scheduler.length > 0) {
           this.state[`${term}SchedulerArr`].push(scheduler);
         }
       });
-            
+
       const step = this.state[`${term}ActiveStep`];
 
-      //initial schedule view
+      // initial schedule view
       const initialView = this.state[`${term}SchedulerArr`][0];
-    
 
-      //description box for each course
+
+      // description box for each course
       const info = this.parseScheduleDetails(initialView, term, step);
 
       this.setState({
         [`${term}SchedulerData`]: initialView,
         [`${term}CourseInfo`]: info,
       });
-
     });
   }
 
@@ -236,55 +227,55 @@ class Plan extends Component {
   };
 
   parseScheduleDetails = (data, term, activeStep) => {
-    this[`${term}DetailMap`] = {}; //clear the map each time we go to next schedule      
-      data.forEach((schedule) => {
-        const section = schedule.section;
-        const courseCode = section.courseCode;
-        if (courseCode && !this[`${term}DetailMap`][`${courseCode}-${activeStep}`]) {
-          const location = section.location;
-          const kind = section.kind;
-          const description = `${kind} ${section.code} ${location.building} building Room: ${location.room}`;
-          const title = section.title;
-          if (kind === 'LEC') {
-            this[`${term}DetailMap`][`${courseCode}-${activeStep}`] = {
-              course: courseCode,
-              subject: title,
-              lecture: description,
-              id: activeStep,
-            };
-          } else if (kind === 'TUT') {
-            this[`${term}DetailMap`][`${courseCode}-${activeStep}`] = {
-              course: courseCode,
-              subject: title,
-              tutorial: description,
-              id: activeStep,
-            };
-          } else if (kind === 'LAB') {
-            this[`${term}DetailMap`][`${courseCode}-${activeStep}`] = {
-              course: courseCode,
-              subject: title,
-              lab: description,
-              id: activeStep,
-            };
-          }
-        } else {
-          const location = section.location;
-          const kind = section.kind;
-          const description = `${kind} ${section.code}, ${location.building} Building, Room ${location.room}`;
-          if (kind === 'LEC') {
-            this[`${term}DetailMap`][`${courseCode}-${activeStep}`].lecture = description;
-          } else if (kind === 'TUT') {
-            this[`${term}DetailMap`][`${courseCode}-${activeStep}`].tutorial = description;
-          } else if (kind === 'LAB') {
-            this[`${term}DetailMap`][`${courseCode}-${activeStep}`].lab = description;
-          }
+    this[`${term}DetailMap`] = {}; // clear the map each time we go to next schedule
+    data.forEach((schedule) => {
+      const section = schedule.section;
+      const courseCode = section.courseCode;
+      if (courseCode && !this[`${term}DetailMap`][`${courseCode}-${activeStep}`]) {
+        const location = section.location;
+        const kind = section.kind;
+        const description = `${kind} ${section.code} ${location.building} ${location.room}`;
+        const title = section.title;
+        if (kind === 'LEC') {
+          this[`${term}DetailMap`][`${courseCode}-${activeStep}`] = {
+            course: courseCode,
+            subject: title,
+            lecture: description,
+            id: activeStep,
+          };
+        } else if (kind === 'TUT') {
+          this[`${term}DetailMap`][`${courseCode}-${activeStep}`] = {
+            course: courseCode,
+            subject: title,
+            tutorial: description,
+            id: activeStep,
+          };
+        } else if (kind === 'LAB') {
+          this[`${term}DetailMap`][`${courseCode}-${activeStep}`] = {
+            course: courseCode,
+            subject: title,
+            lab: description,
+            id: activeStep,
+          };
         }
-      });
-      const map = this[`${term}DetailMap`];
+      } else {
+        const location = section.location;
+        const kind = section.kind;
+        const description = `${kind} ${section.code}, ${location.building} ${location.room}`;
+        if (kind === 'LEC') {
+          this[`${term}DetailMap`][`${courseCode}-${activeStep}`].lecture = description;
+        } else if (kind === 'TUT') {
+          this[`${term}DetailMap`][`${courseCode}-${activeStep}`].tutorial = description;
+        } else if (kind === 'LAB') {
+          this[`${term}DetailMap`][`${courseCode}-${activeStep}`].lab = description;
+        }
+      }
+    });
+    const map = this[`${term}DetailMap`];
     const courseDetails = [];
-    //push the details into array for UI
-    Object.keys(map).forEach((key)=>{
-        courseDetails.push(map[key]);
+    // push the details into array for UI
+    Object.keys(map).forEach((key) => {
+      courseDetails.push(map[key]);
     });
     return courseDetails;
   }
@@ -292,9 +283,9 @@ class Plan extends Component {
   setScheduleDetailsState = (term) => {
     const map = this[`${term}DetailMap`];
     const courseDetails = [];
-    //push the details into array for UI
-    Object.keys(map).forEach((key)=>{
-        courseDetails.push(map[key]);
+    // push the details into array for UI
+    Object.keys(map).forEach((key) => {
+      courseDetails.push(map[key]);
     });
     return courseDetails;
   }
@@ -322,7 +313,7 @@ class Plan extends Component {
     const scheduler = this.state[`${term}SchedulerArr`];
     const i = this.state[`${term}ActiveStep`] + 1;
     const data = scheduler[i];
-    const info =  this.parseScheduleDetails(data, term, i);
+    const info = this.parseScheduleDetails(data, term, i);
 
     this.setState(prevState => ({
       [termStep]: prevState[termStep] + 1,
@@ -336,7 +327,7 @@ class Plan extends Component {
     const scheduler = this.state[`${term}SchedulerArr`];
     const i = this.state[`${term}ActiveStep`] - 1;
     const data = scheduler[i];
-    const info =  this.parseScheduleDetails(data, term, i);
+    const info = this.parseScheduleDetails(data, term, i);
 
     this.setState(prevState => ({
       [termStep]: prevState[termStep] - 1,
@@ -379,13 +370,13 @@ class Plan extends Component {
 
                   <ExpansionPanelDetails>
                     <Grid item xs={3}>
-                      {this.state[`${term}CourseInfo`].map((courseDetails) => (
-                      <ChildBox
-                        titleClass={courseDetails.course}
-                        subject={courseDetails.subject}
-                        lecture={courseDetails.lecture}
-                        tutorial={courseDetails.tutorial}
-                      />
+                      {this.state[`${term}CourseInfo`].map(courseDetails => (
+                        <ChildBox
+                          titleClass={courseDetails.course}
+                          subject={courseDetails.subject}
+                          lecture={courseDetails.lecture}
+                          tutorial={courseDetails.tutorial}
+                        />
                       ))}
                     </Grid>
                     <Grid item xs={9}>
@@ -395,7 +386,7 @@ class Plan extends Component {
                             <Scheduler data={this.state[`${term}SchedulerData`]}>
                               <ViewState currentDate={this[`${term}StartDate`]} />
                               <WeekView
-                                excludedDays={[0, 6]}
+                                excludedDays={[ 0, 6 ]}
                                 cellDuration={60}
                                 startDayHour={8}
                                 endDayHour={24}
@@ -417,8 +408,8 @@ class Plan extends Component {
                                   {theme.direction === 'rtl' ? (
                                     <KeyboardArrowLeft />
                                   ) : (
-                                      <KeyboardArrowRight />
-                                    )}
+                                    <KeyboardArrowRight />
+                                  )}
                                 </Button>
                               )}
                               backButton={(
@@ -430,8 +421,8 @@ class Plan extends Component {
                                   {theme.direction === 'rtl' ? (
                                     <KeyboardArrowRight />
                                   ) : (
-                                      <KeyboardArrowLeft />
-                                    )}
+                                    <KeyboardArrowLeft />
+                                  )}
                                   Back
                                 </Button>
                               )}
