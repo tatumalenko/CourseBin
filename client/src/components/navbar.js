@@ -161,25 +161,44 @@ class Navbar extends Component {
                   </div>
                 </span>
               ) : (
-                <span className='navbar-links'>
-                  <Typography className={classes.title} variant='h6'>
-                    <Link
-                      to='/signup'
-                      component={RouterLink}
-                      color='secondary'
+                <span className={classes.navbar}>
+                  <div className={classes.menuIcon}>
+                    <IconButton
+                      aria-owns={open ? 'menu-appbar' : undefined}
+                      aria-haspopup='true'
+                      onClick={this.handleMenu}
+                      color='inherit'
                     >
-                      Signup
-                    </Link>
-                  </Typography>
-                  <Typography className={classes.title} variant='h6'>
-                    <Link
-                      to='/login'
-                      component={RouterLink}
-                      color='secondary'
+                      <MenuIcon />
+                    </IconButton>
+                    <Menu
+                      id='menu-appbar'
+                      anchorEl={anchorEl}
+                      anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                      }}
+                      transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                      }}
+                      open={open}
+                      onClose={this.handleClose}
                     >
-                      Login
-                    </Link>
-                  </Typography>
+                      <MenuItem
+                        to='/login'
+                        component={RouterLink}
+                      >
+                        Login
+                      </MenuItem>
+                      <MenuItem
+                        to='/signup'
+                        component={RouterLink}
+                      >
+                        Signup
+                      </MenuItem>
+                    </Menu>
+                  </div>
                 </span>
               )
             }
