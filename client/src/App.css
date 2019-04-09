@@ -17,7 +17,6 @@
   text-decoration: none;
  }
 
-
 /* global styles */
 
 .title-wrapper{
@@ -70,14 +69,14 @@
   font-family: 'Londrina Solid', cursive;
   color: #A98638;
   position: relative;
-  bottom: 58px
+  bottom: 52px;
+  margin-left: 250px;
+  margin-right: 250px;
 }
 
 .header-logo.plan h4{
     position: relative;
     bottom: 82px;
-    margin-left: 300px;
-    margin-right: 300px;
 }
 
 .student-form #form-header{

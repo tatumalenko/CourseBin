@@ -36,46 +36,36 @@ const custTheme = createMuiTheme({
 
 // eslint-disable-next-line
 class Dashboard extends Component {
-  state = { expanded: false };
-
-  handleExpandClick = () => {
-    this.setState(state => ({ expanded: !state.expanded }));
-  };
-
   render() {
     const { classes } = this.props;
 
     return (
       <MuiThemeProvider theme={custTheme}>
-
+        <div className='header-logo'>
+          <Typography variant='h4'>CourseBin</Typography>
+        </div>
         <div className={classes.root}>
-
           <Grid container spacing={24}>
-
-
-            <Grid item xs={6} sm={6} />
-            <Paper className={classes.root} elevation={1}>
-              <Typography variant='h5' component='h3'>
-                Profile
-              </Typography>
-              <Typography component='p'>
-                Personal information:
-              </Typography>
-            </Paper>
-
-            <Grid item xs={6} sm={6} />
-            <Paper className={classes.root} elevation={1}>
-              <Typography variant='h5' component='h3'>
-                This is a sheet of paper.
-              </Typography>
-              <Typography component='p'>
-                Paper can be used to build surface or other elements for your
-                application.
-              </Typography>
-            </Paper>
-
+            <Grid item xs={12}>
+              <Paper className={classes.root} elevation={1}>
+                <Typography variant='h5' component='h3'>
+                  Profile
+                </Typography>
+                <Typography component='p'>
+                  Personal information:
+                </Typography>
+              </Paper>
+              <Paper className={classes.root} elevation={1}>
+                <Typography variant='h5' component='h3'>
+                  This is a sheet of paper.
+                </Typography>
+                <Typography component='p'>
+                  Paper can be used to build surface or other elements for your
+                  application.
+                </Typography>
+              </Paper>
+            </Grid>
           </Grid>
-
         </div>
       </MuiThemeProvider>
     );
