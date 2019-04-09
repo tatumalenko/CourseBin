@@ -9,7 +9,6 @@ import { Link as RouterLink } from 'react-router-dom';
 import {
   AppBar, Toolbar, Link, Typography, MuiThemeProvider, createMuiTheme,
 } from '@material-ui/core';
-import axios from 'axios';
 import cyan from '@material-ui/core/colors/cyan';
 import '../App.css';
 
@@ -38,31 +37,46 @@ class Navbar extends Component {
   }
 
   logout(event) {
-    const { updateUser } = this.props;
     event.preventDefault();
-    axios.post('/user/logout').then((response) => {
-      if (response.status === 200) {
-        updateUser({
-          loggedIn: false,
-          username: null,
-        });
-      }
-    }).catch((error) => {
-      console.log('Logout error', error);
+    this.props.auth.logout(() => {
+      this.forceUpdate();
+      this.props.forceAppUpdate();
     });
   }
 
   render() {
-    const { loggedIn, classes } = this.props;
+    const { auth, classes } = this.props;
+    console.log('auth in navbar: ', auth);
 
     return (
       <MuiThemeProvider theme={custTheme}>
         <AppBar position='static'>
           <Toolbar>
-            {loggedIn
+            {auth.isAuthenticated()
               ? (
                 <span className='navbar-links'>
                   <Typography className={classes.title} variant='h6'>
+                    <Link
+                      to='/'
+                      component={RouterLink}
+                      color='secondary'
+                    >
+                      Home
+                    </Link>
+                    <Link
+                      to='/dashboard'
+                      component={RouterLink}
+                      color='secondary'
+                    >
+                      Dashboard
+                    </Link>
+                    <Link
+                      to='/planner'
+                      component={RouterLink}
+                      color='secondary'
+                    >
+                      Planner
+                    </Link>
                     <Link
                       to='#'
                       component={RouterLink}
@@ -86,7 +100,7 @@ class Navbar extends Component {
                   </Typography>
                   <Typography className={classes.title} variant='h6'>
                     <Link
-                      to='/'
+                      to='/login'
                       component={RouterLink}
                       color='secondary'
                     >
