@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import {
   Button, MuiThemeProvider, createMuiTheme, Typography,
 } from '@material-ui/core';
@@ -42,7 +43,14 @@ class Dashboard extends Component {
     return (
       <MuiThemeProvider theme={custTheme}>
         <div className='header-logo'>
-          <Typography variant='h4'>CourseBin</Typography>
+          <Typography
+            to='/'
+            component={RouterLink}
+            variant='h4'
+          >
+            CourseBin
+
+          </Typography>
         </div>
         <div className={classes.root}>
           <Grid container spacing={24}>

@@ -7,7 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-  AppBar, Toolbar, MenuItem, IconButton, Menu, Link, Typography, MuiThemeProvider, createMuiTheme,
+  AppBar, Toolbar, MenuItem, IconButton, Menu, MuiThemeProvider, createMuiTheme,
 } from '@material-ui/core';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -112,12 +112,6 @@ class Navbar extends Component {
                       open={open}
                       onClose={this.handleClose}
                     >
-                      <MenuItem
-                        to='/'
-                        component={RouterLink}
-                      >
-                        Home
-                      </MenuItem>
                       <MenuItem
                         to='/planner'
                         component={RouterLink}

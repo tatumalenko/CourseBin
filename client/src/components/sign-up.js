@@ -139,6 +139,7 @@ class Signup extends Component {
             </Grid>
             <Grid item xs={12}>
               <Link
+                className='links'
                 to='/'
                 component={RouterLink}
                 color='primary'

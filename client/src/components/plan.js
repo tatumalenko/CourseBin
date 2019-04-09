@@ -1,5 +1,6 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import { ViewState } from '@devexpress/dx-react-scheduler';
 import PropTypes from 'prop-types';
 import {
@@ -355,7 +356,13 @@ class Plan extends Component {
         <Grid container spacing={16}>
           <Grid item xs={12} className='schedule-container'>
             <div className='header-logo plan'>
-              <Typography variant='h4'>CourseBin</Typography>
+              <Typography
+                to='/'
+                component={RouterLink}
+                variant='h4'
+              >
+                CourseBin
+              </Typography>
             </div>
             <Typography id='schedule-header' variant='h4'>
               Here's what we came up with...

@@ -9,6 +9,7 @@
 
 
 import React, { Component } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import axios from 'axios';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -120,7 +121,7 @@ class StudentForm extends Component {
       courseMap: null,
 
       currentView: 0,
-      terms: [ 'fall', 'winter', 'summer' ],
+      terms: ['fall', 'winter', 'summer'],
 
       fallTimePreference: false,
       fallNumOfCourses: 4,
@@ -190,7 +191,7 @@ class StudentForm extends Component {
 
   removeFallCourseSelection = course => () => {
     this.setState((state) => {
-      const fallSelectedCourses = [ ...state.fallSelectedCourses ];
+      const fallSelectedCourses = [...state.fallSelectedCourses];
       const toDelete = fallSelectedCourses.indexOf(course);
       fallSelectedCourses.splice(toDelete, 1);
       return { fallSelectedCourses };
@@ -199,7 +200,7 @@ class StudentForm extends Component {
 
   removeWinterCourseSelection = course => () => {
     this.setState((state) => {
-      const winterSelectedCourses = [ ...state.winterSelectedCourses ];
+      const winterSelectedCourses = [...state.winterSelectedCourses];
       const toDelete = winterSelectedCourses.indexOf(course);
       winterSelectedCourses.splice(toDelete, 1);
       return { winterSelectedCourses };
@@ -208,7 +209,7 @@ class StudentForm extends Component {
 
   removeSummerCourseSelection = course => () => {
     this.setState((state) => {
-      const summerSelectedCourses = [ ...state.summerSelectedCourses ];
+      const summerSelectedCourses = [...state.summerSelectedCourses];
       const toDelete = summerSelectedCourses.indexOf(course);
       summerSelectedCourses.splice(toDelete, 1);
       return { summerSelectedCourses };
@@ -263,7 +264,7 @@ class StudentForm extends Component {
 
     if (!state[property]) {
       this.setState({
-        [property]: [ courseCode ],
+        [property]: [courseCode],
       });
       this.setErrMsg(property, null);
     } else if (state[property].length === state[numCourses]) {
@@ -439,7 +440,7 @@ class StudentForm extends Component {
           }
 
           if (!map[departmentName] && displayName !== '') {
-            map[departmentName] = [ displayName ];
+            map[departmentName] = [displayName];
           } else {
             map[departmentName].push(displayName);
           }
@@ -466,7 +467,7 @@ class StudentForm extends Component {
   removeCourseSelection = (course, property) => (event) => {
     event.preventDefault();
     this.setState((state) => {
-      const selectedCourses = [ ...state[property] ];
+      const selectedCourses = [...state[property]];
       const toDelete = selectedCourses.indexOf(course);
       selectedCourses.splice(toDelete, 1);
       return { [property]: selectedCourses };
@@ -494,7 +495,14 @@ class StudentForm extends Component {
               <form onSubmit={this.handleSubmit}>
                 <div className={classes.formContent}>
                   <div className='header-logo'>
-                    <Typography variant='h4'>CourseBin</Typography>
+                    <Typography
+                      to='/'
+                      component={RouterLink}
+                      variant='h4'
+                    >
+                      CourseBin
+
+                    </Typography>
                   </div>
                   <Typography
                     component='h3'
