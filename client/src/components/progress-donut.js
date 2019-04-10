@@ -18,8 +18,8 @@ class ProgressDonut extends Component {
     return (
       <div className={classes.root}>
         <RadialBarChart
-          width={250}
-          height={250}
+          width={175}
+          height={200}
           cx='50%'
           cy='50%'
           outerRadius={100}

@@ -27,8 +27,8 @@ const styles = theme => ({
     ...theme.mixins.gutters(),
     marginTop: '0',
     marginBottom: theme.spacing.unit * 4,
-    marginLeft: '12%',
-    marginRight: '12%',
+    marginLeft: '8%',
+    marginRight: '8%',
     paddingTop: '0',
     paddingBottom: theme.spacing.unit * 2,
   },
@@ -44,7 +44,7 @@ const styles = theme => ({
   leftpaper: {
     ...theme.mixins.gutters(),
     margin: theme.spacing.unit,
-    minWidth: '275px',
+    minWidth: '200px',
     paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 2,
   },
@@ -210,7 +210,9 @@ class Dashboard extends Component {
 
                   {student
                     ? (
-                      <ProgressDonut data={this.calcProgressData()} />
+                      <Grid item xs={12} className='donut'>
+                        <ProgressDonut data={this.calcProgressData()} />
+                      </Grid>
                     )
                     : JSON.stringify(this.calcProgressData())}
 

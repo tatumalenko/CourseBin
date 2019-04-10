@@ -203,5 +203,9 @@
   margin-bottom: 15px;
 }
 
+.donut .recharts-wrapper{
+  width: 100% !important;
+}
+
 
 
