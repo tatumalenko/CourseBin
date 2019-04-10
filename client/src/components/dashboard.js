@@ -21,6 +21,7 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import ProgressDonut from './progress-donut';
+import SnackbarAlert from './snackbar-alerts';
 
 const styles = theme => ({
   root: {
@@ -45,6 +46,7 @@ const styles = theme => ({
     ...theme.mixins.gutters(),
     margin: theme.spacing.unit,
     minWidth: '200px',
+    maxWidth: '500px',
     paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 2,
   },
@@ -128,8 +130,7 @@ class Dashboard extends Component {
 
           </Typography>
         </div>
-        {student ? (
-
+        {student && (
           <div className={classes.root}>
             <div className={classes.dashboardTitle}>
               <Typography variant='h4'>
@@ -145,68 +146,71 @@ class Dashboard extends Component {
                     </Typography>
                   </div>
                   <Divider variant='middle' />
-                  <Grid className={classes.profile} item xs={6}>
-                    <Grid item xs>
-                      <Typography variant='overline'>
-                        Name:
-                      </Typography>
-                    </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
-                        {student && student.name ? `${student.name.first} ${student.name.last}` : ''}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
-                        ID:
-                      </Typography>
-                    </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
-                        {student ? student.id : ''}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
-                        Degree:
-                      </Typography>
-                    </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
-                        {student && student.record ? 'SOEN' : ''}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
-                        Option:
-                      </Typography>
-                    </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
-                        {student && student.record ? student.record.degree.option : ''}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
-                        GPA:
-                      </Typography>
-                    </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
-                        {student ? student.gpa : ''}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
-                        Standing:
-                      </Typography>
-                    </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
-                        {student ? student.standing : ''}
-                      </Typography>
-                    </Grid>
-                  </Grid>
+
+                  <ExpansionPanel>
+                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                      <Typography className={classes.heading}>Summary</Typography>
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails>
+                      <Table className={classes.table}>
+                        <TableBody>
+                          <TableRow key='name'>
+                            <TableCell component='th' scope='row'>
+                            Name:
+                            </TableCell>
+                            <TableCell align='center'>
+                              {student.name ? `${student.name.first} ${student.name.last}` : ''}
+                            </TableCell>
+                          </TableRow>
+
+                          <TableRow key='id'>
+                            <TableCell component='th' scope='row'>
+                            ID:
+                            </TableCell>
+                            <TableCell align='center'>
+                              {student.id}
+                            </TableCell>
+                          </TableRow>
+
+                          <TableRow key='degree'>
+                            <TableCell component='th' scope='row'>
+                          Degree:
+                            </TableCell>
+                            <TableCell align='center'>
+                              {student.record && student.record.degree ? 'SOEN' : ''}
+                            </TableCell>
+                          </TableRow>
+
+                          <TableRow key='option'>
+                            <TableCell component='th' scope='row'>
+                          Option:
+                            </TableCell>
+                            <TableCell align='center'>
+                              {student.record && student.record.degree ? student.record.degree.option : ''}
+                            </TableCell>
+                          </TableRow>
+
+                          <TableRow key='gpa'>
+                            <TableCell component='th' scope='row'>
+                          GPA:
+                            </TableCell>
+                            <TableCell align='center'>
+                              {student ? student.gpa : 'NA'}
+                            </TableCell>
+                          </TableRow>
+
+                          <TableRow key='standing'>
+                            <TableCell component='th' scope='row'>
+                          Standing:
+                            </TableCell>
+                            <TableCell align='center'>
+                              {student ? student.standing : 'NA'}
+                            </TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    </ExpansionPanelDetails>
+                  </ExpansionPanel>
 
                   {student
                     ? (
@@ -265,14 +269,8 @@ class Dashboard extends Component {
                 </Paper>
               </Grid>
             </Grid>
+            {!!student.name || <SnackbarAlert variant='error' message='No student record to show!' />}
           </div>)
-          : (
-            <div className={classes.dashboardTitle}>
-              <Typography variant='h4'>
-                Sorry, no student record to show yet!
-              </Typography>
-            </div>
-          )
         }
       </MuiThemeProvider>
     );
