@@ -2,16 +2,24 @@ import React, { Component } from 'react';
 import {
   RadialBarChart, RadialBar, PolarAngleAxis,
 } from 'recharts';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+
+const styles = theme => ({
+  root: {
+    ...theme.mixins.gutters(),
+  },
+});
 
 // eslint-disable-next-line react/prefer-stateless-function
 class ProgressDonut extends Component {
   render() {
-    const { data } = this.props;
+    const { data, classes } = this.props;
     return (
-      <div>
+      <div className={classes.root}>
         <RadialBarChart
-          width={370}
-          height={400}
+          width={250}
+          height={250}
           cx='50%'
           cy='50%'
           outerRadius={100}
@@ -42,4 +50,8 @@ class ProgressDonut extends Component {
   }
 }
 
-export default ProgressDonut;
+ProgressDonut.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(ProgressDonut);
