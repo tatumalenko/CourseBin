@@ -7,7 +7,7 @@ import Signup from './components/sign-up';
 import LoginForm from './components/login-form';
 import Navbar from './components/navbar';
 import Home from './components/home';
-import Profile from './components/dashboard';
+import Dashboard from './components/dashboard';
 import StudentForm from './components/student-form';
 
 import concordiaLogo from './assets/concordia-logo.jpeg';
@@ -18,7 +18,7 @@ class App extends Component {
     this._isMounted = false;
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.props.auth.getUser(() => { this.forceUpdate(); });
     this._isMounted = true;
   }
@@ -28,12 +28,12 @@ class App extends Component {
   }
 
   render() {
-    const { auth } = this.props;
-    console.log('apprender', auth);
     if (!this._isMounted) {
       // Show nothing while auth makes async calls
       return <div />;
     }
+
+    const { auth } = this.props;
 
     return (
       <div className='App'>
@@ -44,7 +44,7 @@ class App extends Component {
           <Route path='/signup' render={props => <Signup auth={auth} {...props} />} />
           <PrivateRoute exact path='/' auth={auth} component={Home} />
           <PrivateRoute path='/planner' auth={auth} component={StudentForm} />
-          <PrivateRoute path='/dashboard' auth={auth} component={Profile} />
+          <PrivateRoute path='/dashboard' auth={auth} component={Dashboard} />
           <Route path='*' component={() => '404 NOT FOUND'} />
         </Switch>
 
@@ -60,15 +60,15 @@ const PrivateRoute = ({
   component: Component, auth, ...rest
 }) => (
   <Route
-      {...rest}
-      render={props => (auth.isAuthenticated() ? (
-        <Component {...props} />
-      ) : (
-        <Redirect
-            to={{ pathname: '/login', state: { from: props.location } }}
-          />
-      ))}
-    />
+    {...rest}
+    render={props => (auth.isAuthenticated() ? (
+      <Component auth={auth} {...props} />
+    ) : (
+      <Redirect
+        to={{ pathname: '/login', state: { from: props.location } }}
+      />
+    ))}
+  />
 );
 
 export default App;

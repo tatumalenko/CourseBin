@@ -84,6 +84,49 @@ router.get('/', (req, res) => { // this is hijacking all routes in yarn dev
   }
 });
 
+router.get('/student', async (req, res) => {
+  const { user } = req;
+  if (user && (!!Number(user.username) || !!user.studentId)) {
+    let student = await Student.findOne({
+      id: user.studentId ?
+        user.studentId : user.username,
+    });
+    if (student) {
+      const studentId = student.id;
+      student = student.toObject({
+        getters: true,
+        virtuals: true,
+        versionKey: false,
+        transform: (doc, ret) => {
+          [ '_id', 'id' ].forEach((key) => {
+            // eslint-disable-next-line
+            delete ret[key];
+          });
+        },
+      });
+      student = { id: studentId, ...student };
+      console.log(student);
+    }
+    res
+      .status(200)
+      .json({
+        message: 'OK',
+        user,
+        student,
+      });
+  } else {
+    const message = !user ? 'No user logged in' : 'No student associated to user';
+    console.log(message);
+    res
+      .status(404)
+      .json({
+        message,
+        user: null,
+        student: null,
+      });
+  }
+});
+
 router.post('/login', (req, res, next) => {
   console.log('post login');
   console.log('req.body: ', req.body);

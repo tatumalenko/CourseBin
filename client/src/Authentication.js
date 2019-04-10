@@ -5,21 +5,44 @@ export default class Authentication {
 
   username = null;
 
+  user = null;
+
+  student = null;
+
   getUser = (cb) => {
     axios.get('/user').then((response) => {
       if (response.data.user) {
         this.authenticated = true;
         this.username = response.data.user.username;
+        this.user = response.data.user;
       } else {
         this.authenticated = false;
         this.username = null;
+        this.user = null;
       }
     }).catch((error) => {
       console.error(error);
       this.authenticated = false;
       this.username = null;
+      this.user = null;
     }).finally(() => {
       cb();
+    });
+  }
+
+  getStudent = (cb) => {
+    axios.get('/user/student').then((response) => {
+      if (response.data.student) {
+        this.student = response.data.student;
+        cb(response.data.student);
+      } else {
+        this.student = null;
+        cb(new Error('No student found'));
+      }
+    }).catch((error) => {
+      console.error(error);
+      this.student = null;
+      cb(error.response);
     });
   }
 
