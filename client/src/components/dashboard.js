@@ -25,22 +25,27 @@ import ProgressDonut from './progress-donut';
 const styles = theme => ({
   root: {
     ...theme.mixins.gutters(),
-    marginTop: theme.spacing.unit * 4,
+    marginTop: '0',
     marginBottom: theme.spacing.unit * 4,
-    marginLeft: theme.spacing.unit * 4,
-    marginRight: theme.spacing.unit * 4,
-    paddingTop: theme.spacing.unit * 2,
+    marginLeft: '12%',
+    marginRight: '12%',
+    paddingTop: '0',
     paddingBottom: theme.spacing.unit * 2,
   },
-  section0: {
+  dashboardTitle: {
+    textAlign: 'left',
+    marginTop: theme.spacing.unit,
+    marginBottom: theme.spacing.unit * 2,
+  },
+  dashboardHeader: {
     ...theme.mixins.gutters(),
-    margin: theme.spacing.unit * 4,
+    marginTop: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 2,
   },
   leftpaper: {
     ...theme.mixins.gutters(),
-    maxWidth: 360,
-    margin: theme.spacing.unit * 4,
-    padding: theme.spacing.unit * 2,
+    margin: theme.spacing.unit,
+    padding: theme.spacing.unit,
   },
 });
 
@@ -115,159 +120,153 @@ class Dashboard extends Component {
         </div>
 
         <div className={classes.root}>
-          <div className={classes.section0}>
+          <div className={classes.dashboardTitle}>
             <Typography variant='h4'>
-                Dashboard
+              Your Dashboard
             </Typography>
           </div>
-          <div>
-            <Grid container spacing={24} alignContent='space-between' justify='center' alignItems='center'>
-              <Grid item xs={6}>
-
-                <Paper className={classes.leftpaper} elevation={1}>
-
-                  <div className={classes.section0}>
-                    <Typography variant='h5'>
-                Profile
-                    </Typography>
-                  </div>
-
-                  <Divider variant='middle' />
-
-                  <Grid container spacing={8} alignItems='center'>
-                    <Grid item xs>
-                      <Typography variant='overline'>
-                        Name:
-                      </Typography>
-                    </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
-                        {student && student.name ? `${student.name.first} ${student.name.last}` : ''}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-
-                  <Grid container spacing={8} alignItems='center'>
-                    <Grid item xs>
-                      <Typography variant='overline'>
-                        ID:
-                      </Typography>
-                    </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
-                        {student ? student.id : ''}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-
-                  <Grid container spacing={8} alignItems='center'>
-                    <Grid item xs>
-                      <Typography variant='overline'>
-                        Degree:
-                      </Typography>
-                    </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
-                        { student && student.record ? 'SOEN' : '' }
-                      </Typography>
-                    </Grid>
-                  </Grid>
-
-                  <Grid container spacing={8} alignItems='center'>
-                    <Grid item xs>
-                      <Typography variant='overline'>
-                        Option:
-                      </Typography>
-                    </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
-                        { student && student.record ? student.record.degree.option : '' }
-                      </Typography>
-                    </Grid>
-                  </Grid>
-
-                  <Grid container spacing={8} alignItems='center'>
-                    <Grid item xs>
-                      <Typography variant='overline'>
-                        GPA:
-                      </Typography>
-                    </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
-                        { student ? student.gpa : '' }
-                      </Typography>
-                    </Grid>
-                  </Grid>
-
-                  <Grid container spacing={8} alignItems='center'>
-                    <Grid item xs>
-                      <Typography variant='overline'>
-                        Standing:
-                      </Typography>
-                    </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
-                        { student ? student.standing : '' }
-                      </Typography>
-                    </Grid>
-                  </Grid>
-
-                  {student
-                    ? (
-                      <ProgressDonut data={this.calcProgressData()} />
-                    )
-                    : JSON.stringify(this.calcProgressData())}
-
-                  <div className={classes.section0}>
-                    <Typography variant='h5'>
-                  Academics
-                    </Typography>
-                  </div>
-
-                  <Divider variant='middle' />
-
-                  <ExpansionPanel>
-                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                      <Typography className={classes.heading}>Completed Courses</Typography>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
-                      <Table className={classes.table}>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Course Code</TableCell>
-                            <TableCell align='right'>Grade</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {(student && student.record) && (student.record.completedCourses.length > 0 ? student.record.completedCourses : { code: 'NA', grade: 'NA' }).map((course, i) => (
-                            <TableRow key={i}>
-                              <TableCell component='th' scope='row'>
-                                {course.code}
-                              </TableCell>
-                              <TableCell align='center'>
-                                {course.grade}
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </ExpansionPanelDetails>
-                  </ExpansionPanel>
-
-                </Paper>
-              </Grid>
-              <Grid item xs={6}>
-                <Paper className={classes.root} elevation={1}>
+          <Grid container spacing={24} alignContent='space-between' justify='center' alignItems='center'>
+            <Grid item xs={6}>
+              <Paper className={classes.leftpaper} elevation={1}>
+                <div className={classes.dashboardHeader}>
                   <Typography variant='h5'>
-                  Saved Plans
+                    Profile
                   </Typography>
-                  <Typography variant='body1'>
-                  *Insert Static Plan Here*
+                </div>
+                <Divider variant='middle' />
+                <Grid container spacing={8} alignItems='center'>
+                  <Grid item xs>
+                    <Typography variant='overline'>
+                      Name:
+                    </Typography>
+                  </Grid>
+                  <Grid item xs>
+                    <Typography variant='overline'>
+                      {student && student.name ? `${student.name.first} ${student.name.last}` : ''}
+                    </Typography>
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={8} alignItems='center'>
+                  <Grid item xs>
+                    <Typography variant='overline'>
+                      ID:
+                    </Typography>
+                  </Grid>
+                  <Grid item xs>
+                    <Typography variant='overline'>
+                      {student ? student.id : ''}
+                    </Typography>
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={8} alignItems='center'>
+                  <Grid item xs>
+                    <Typography variant='overline'>
+                      Degree:
+                    </Typography>
+                  </Grid>
+                  <Grid item xs>
+                    <Typography variant='overline'>
+                      {student && student.record ? 'SOEN' : ''}
+                    </Typography>
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={8} alignItems='center'>
+                  <Grid item xs>
+                    <Typography variant='overline'>
+                      Option:
+                    </Typography>
+                  </Grid>
+                  <Grid item xs>
+                    <Typography variant='overline'>
+                      {student && student.record ? student.record.degree.option : ''}
+                    </Typography>
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={8} alignItems='center'>
+                  <Grid item xs>
+                    <Typography variant='overline'>
+                      GPA:
+                    </Typography>
+                  </Grid>
+                  <Grid item xs>
+                    <Typography variant='overline'>
+                      {student ? student.gpa : ''}
+                    </Typography>
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={8} alignItems='center'>
+                  <Grid item xs>
+                    <Typography variant='overline'>
+                      Standing:
+                    </Typography>
+                  </Grid>
+                  <Grid item xs>
+                    <Typography variant='overline'>
+                      {student ? student.standing : ''}
+                    </Typography>
+                  </Grid>
+                </Grid>
+
+                {student
+                  ? (
+                    <ProgressDonut data={this.calcProgressData()} />
+                  )
+                  : JSON.stringify(this.calcProgressData())}
+
+                <div className={classes.dashboardHeader}>
+                  <Typography variant='h5'>
+                    Academics
                   </Typography>
-                </Paper>
-              </Grid>
+                </div>
+
+                <Divider variant='middle' />
+
+                <ExpansionPanel>
+                  <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography className={classes.heading}>Completed Courses</Typography>
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails>
+                    <Table className={classes.table}>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Course Code</TableCell>
+                          <TableCell align='right'>Grade</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {(student && student.record) && (student.record.completedCourses.length > 0 ? student.record.completedCourses : { code: 'NA', grade: 'NA' }).map((course, i) => (
+                          <TableRow key={i}>
+                            <TableCell component='th' scope='row'>
+                              {course.code}
+                            </TableCell>
+                            <TableCell align='center'>
+                              {course.grade}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
+
+              </Paper>
             </Grid>
-          </div>
+            <Grid item xs={6}>
+              <Paper elevation={1}>
+                <Typography variant='h5'>
+                  Saved Plans
+                </Typography>
+                <Typography variant='body1'>
+                  *Insert Static Plan Here*
+                </Typography>
+              </Paper>
+            </Grid>
+          </Grid>
         </div>
       </MuiThemeProvider>
     );
