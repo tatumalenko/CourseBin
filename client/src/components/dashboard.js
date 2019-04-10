@@ -137,7 +137,7 @@ class Dashboard extends Component {
               </Typography>
             </div>
             <Grid container spacing={24} alignContent='space-between' justify='center' alignItems='center'>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} md={6}>
                 <Paper className={classes.leftpaper} elevation={1}>
                   <div className={classes.dashboardHeader}>
                     <Typography variant='h5'>
@@ -254,7 +254,7 @@ class Dashboard extends Component {
 
                 </Paper>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} md={6}>
                 <Paper className={classes.rightPaper} elevation={1}>
                   <Typography variant='h5'>
                     Saved Plans
