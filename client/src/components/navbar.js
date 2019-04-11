@@ -115,6 +115,7 @@ class Navbar extends Component {
                       <MenuItem
                         to='/planner'
                         component={RouterLink}
+                        onClick={this.handleClose}
                       >
                         Planner
                       </MenuItem>
@@ -182,12 +183,14 @@ class Navbar extends Component {
                       <MenuItem
                         to='/login'
                         component={RouterLink}
+                        onClick={this.handleClose}
                       >
                         Login
                       </MenuItem>
                       <MenuItem
                         to='/signup'
                         component={RouterLink}
+                        onClick={this.handleClose}
                       >
                         Signup
                       </MenuItem>

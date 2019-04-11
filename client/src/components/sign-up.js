@@ -43,6 +43,9 @@ class Signup extends Component {
 
   componentDidMount() {
     this._isMounted = true;
+    if (this.props.auth.isAuthenticated()) {
+      this.props.history.push('/');
+    }
   }
 
   componentWillUnmount() {

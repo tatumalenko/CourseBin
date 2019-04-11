@@ -31,19 +31,23 @@ export default class Authentication {
   }
 
   getStudent = (cb) => {
-    axios.get('/user/student').then((response) => {
-      if (response.data.student) {
-        this.student = response.data.student;
-        cb(response.data.student);
-      } else {
+    try {
+      axios.get('/user/student').then((response) => {
+        if (response.data.student) {
+          this.student = response.data.student;
+          cb(response.data.student);
+        } else {
+          this.student = null;
+          cb(new Error('No student found'));
+        }
+      }).catch((error) => {
         this.student = null;
-        cb(new Error('No student found'));
-      }
-    }).catch((error) => {
-      console.error(error);
-      this.student = null;
-      cb(error.response);
-    });
+        cb(error.response.data.student);
+      });
+    } catch (e) {
+      console.log('caught it');
+      cb(e.response.data.student);
+    }
   }
 
   signup = ({ username, password }, cb) => {

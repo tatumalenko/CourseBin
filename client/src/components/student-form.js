@@ -1,7 +1,6 @@
 /* eslint-disable react/destructuring-assignment */
-/* eslint-disable react/jsx-boolean-value */
-/* eslint-disable react/jsx-indent-props */
-/* eslint-disable react/jsx-indent */
+
+
 /* eslint-disable react/sort-comp */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable prefer-destructuring */
@@ -9,7 +8,7 @@
 
 
 import React, { Component } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, Route } from 'react-router-dom';
 import axios from 'axios';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -37,6 +36,7 @@ import {
 import cyan from '@material-ui/core/colors/cyan';
 
 import Plan from './plan';
+import SnackbarAlert from './snackbar-alerts';
 
 const custTheme = createMuiTheme({
   palette: {
@@ -111,43 +111,82 @@ TabContainer.propTypes = {
 class StudentForm extends Component {
   constructor(props) {
     super(props);
+    console.log('student-form props:', props);
+
+    const preferences = JSON.parse(localStorage.getItem('preferences'));
 
     this.catalog = {};
     this.faculty = '';
     this.generatedPlan = {};
     this.MAX_NUM_COURSES = 6;
 
-    this.state = {
-      courseMap: null,
+    if (preferences) {
+      this.state = {
+        courseMap: null,
 
-      currentView: 0,
-      terms: ['fall', 'winter', 'summer'],
+        currentView: 0,
+        terms: [ 'fall', 'winter', 'summer' ],
 
-      fallTimePreference: false,
-      fallNumOfCourses: 4,
-      fallSelectedFaculty: null,
-      fallSelectedCourse: '',
-      fallSelectedCourses: [],
-      fallErrMsg: null,
+        fallTimePreference: preferences.fall.eveningTimePreference,
+        fallNumOfCourses: preferences.fall.numberOfCourses,
+        fallSelectedFaculty: null,
+        fallSelectedCourse: '',
+        fallSelectedCourses: preferences.fall.requestedCourses,
+        fallErrMsg: null,
 
-      winterTimePreference: false,
-      winterNumOfCourses: 4,
-      winterSelectedFaculty: null,
-      winterSelectedCourse: '',
-      winterSelectedCourses: [],
-      winterErrMsg: null,
+        winterTimePreference: preferences.winter.eveningTimePreference,
+        winterNumOfCourses: preferences.winter.numberOfCourses,
+        winterSelectedFaculty: null,
+        winterSelectedCourse: '',
+        winterSelectedCourses: preferences.winter.requestedCourses,
+        winterErrMsg: null,
 
-      summerTimePreference: false,
-      summerNumOfCourses: 4,
-      summerSelectedFaculty: null,
-      summerSelectedCourse: '',
-      summerSelectedCourses: [],
-      summerErrMsg: null,
+        summerTimePreference: preferences.summer.eveningTimePreference,
+        summerNumOfCourses: preferences.summer.numberOfCourses,
+        summerSelectedFaculty: null,
+        summerSelectedCourse: '',
+        summerSelectedCourses: preferences.summer.requestedCourses,
+        summerErrMsg: null,
 
-      formErrorMsg: [],
-      showPlan: false,
-      showSpinner: false,
-    };
+        formErrorMsg: [],
+        showSpinner: false,
+        allErrorMsgs: {},
+        latestErrorMsg: null,
+      };
+    } else {
+      this.state = {
+        courseMap: null,
+
+        currentView: 0,
+        terms: [ 'fall', 'winter', 'summer' ],
+
+        fallTimePreference: false,
+        fallNumOfCourses: 4,
+        fallSelectedFaculty: null,
+        fallSelectedCourse: '',
+        fallSelectedCourses: [],
+        fallErrMsg: null,
+
+        winterTimePreference: false,
+        winterNumOfCourses: 4,
+        winterSelectedFaculty: null,
+        winterSelectedCourse: '',
+        winterSelectedCourses: [],
+        winterErrMsg: null,
+
+        summerTimePreference: false,
+        summerNumOfCourses: 4,
+        summerSelectedFaculty: null,
+        summerSelectedCourse: '',
+        summerSelectedCourses: [],
+        summerErrMsg: null,
+
+        formErrorMsg: [],
+        showSpinner: false,
+        allErrorMsgs: {},
+        latestErrorMsg: null,
+      };
+    }
 
     this.handleViewChange = this.handleViewChange.bind(this);
     this.handleChangeIndex = this.handleChangeIndex.bind(this);
@@ -168,11 +207,14 @@ class StudentForm extends Component {
 
   setErrMsg(season, msg) {
     switch (season) {
-      case 'fallSelectedCourses': this.setState({ fallErrMsg: msg });
+      case 'fallSelectedCourses':
+        this.setState({ fallErrMsg: msg, latestErrorMsg: msg });
         break;
-      case 'winterSelectedCourses': this.setState({ winterErrMsg: msg });
+      case 'winterSelectedCourses':
+        this.setState({ winterErrMsg: msg, latestErrorMsg: msg });
         break;
-      case 'summerSelectedCourses': this.setState({ summerErrMsg: msg });
+      case 'summerSelectedCourses':
+        this.setState({ summerErrMsg: msg, latestErrorMsg: msg });
         break;
       default:
     }
@@ -191,7 +233,7 @@ class StudentForm extends Component {
 
   removeFallCourseSelection = course => () => {
     this.setState((state) => {
-      const fallSelectedCourses = [...state.fallSelectedCourses];
+      const fallSelectedCourses = [ ...state.fallSelectedCourses ];
       const toDelete = fallSelectedCourses.indexOf(course);
       fallSelectedCourses.splice(toDelete, 1);
       return { fallSelectedCourses };
@@ -200,7 +242,7 @@ class StudentForm extends Component {
 
   removeWinterCourseSelection = course => () => {
     this.setState((state) => {
-      const winterSelectedCourses = [...state.winterSelectedCourses];
+      const winterSelectedCourses = [ ...state.winterSelectedCourses ];
       const toDelete = winterSelectedCourses.indexOf(course);
       winterSelectedCourses.splice(toDelete, 1);
       return { winterSelectedCourses };
@@ -209,7 +251,7 @@ class StudentForm extends Component {
 
   removeSummerCourseSelection = course => () => {
     this.setState((state) => {
-      const summerSelectedCourses = [...state.summerSelectedCourses];
+      const summerSelectedCourses = [ ...state.summerSelectedCourses ];
       const toDelete = summerSelectedCourses.indexOf(course);
       summerSelectedCourses.splice(toDelete, 1);
       return { summerSelectedCourses };
@@ -264,13 +306,13 @@ class StudentForm extends Component {
 
     if (!state[property]) {
       this.setState({
-        [property]: [courseCode],
+        [property]: [ courseCode ],
       });
       this.setErrMsg(property, null);
-    } else if (state[property].length === state[numCourses]) {
-      this.setErrMsg(property, 'Cannot add more courses than you have requested per semester');
+    } else if (state[property].length >= state[numCourses]) {
+      this.setErrMsg(property, 'Cannot add more courses than you have requested per term');
     } else if (state[property].length === this.MAX_NUM_COURSES) {
-      this.setErrMsg(property, 'You have added the maximum number of courses per semester');
+      this.setErrMsg(property, 'You have added the maximum number of courses per term');
     } else if (_.includes(state[property], courseCode)) {
       this.setErrMsg(property, `You have already added the course ${courseCode}`);
     } else if (state[property]) {
@@ -293,67 +335,86 @@ class StudentForm extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    this.setState({
-      showSpinner: true,
-    });
-
     const state = this.state;
 
     if (state.fallNumOfCourses === 0
       && state.summerNumOfCourses === 0
       && state.winterNumOfCourses === 0) {
-      const msg = 'You have selected a preference of no courses for every semester,'
-        + 'please try again!';
-      const newState = Object.assign({}, state);
-      newState.formErrorMsg.push(msg);
-      this.setState(newState);
+      const msg = 'You have selected a preference of no courses for every term, '
+        + 'please select at least one course in one term!';
+      // const newState = Object.assign({}, state);
+      // newState.formErrorMsg.push(msg);
+      // this.setState(newState);
+      this.setState({ formErrorMsg: [ msg ], latestErrorMsg: msg });
       return;
     }
 
     if (state.fallSelectedCourses.length !== state.fallNumOfCourses) {
       const msg = `You indicated a preference of ${state.fallNumOfCourses}
       courses for Fall, but did not select that amount!`;
-      const newState = Object.assign({}, state);
-      newState.formErrorMsg.push(msg);
-      this.setState(newState);
+      // const newState = Object.assign({}, state);
+      // newState.formErrorMsg.push(msg);
+      // this.setState(newState);
+      this.setState({ formErrorMsg: [ msg ], latestErrorMsg: msg });
       return;
     }
     if (state.winterSelectedCourses.length !== state.winterNumOfCourses) {
       const msg = `You indicated a preference of ${state.winterNumOfCourses}
       courses for Winter, but did not select that amount!`;
-      const newState = Object.assign({}, state);
-      newState.formErrorMsg.push(msg);
-      this.setState(newState);
+      // const newState = Object.assign({}, state);
+      // newState.formErrorMsg.push(msg);
+      // this.setState(newState);
+      this.setState({ formErrorMsg: [ msg ], latestErrorMsg: msg });
       return;
     }
     if (state.summerSelectedCourses.length !== state.summerNumOfCourses) {
       const msg = `You indicated a preference of ${state.summerNumOfCourses}
       courses for Summer, but did not select that amount!`;
-      const newState = Object.assign({}, state);
-      newState.formErrorMsg.push(msg);
-      this.setState(newState);
+      // const newState = Object.assign({}, state);
+      // newState.formErrorMsg.push(msg);
+      // this.setState(newState);
+      this.setState({ formErrorMsg: [ msg ], latestErrorMsg: msg });
       return;
     }
 
+    this.setState({
+      showSpinner: true,
+    });
+
     const jsonObject = {
       fall: {
-        requestedCourses: state.fallSelectedCourses.map(e => e.slice(0, 7)),
+        requestedCourses: state.fallSelectedCourses,
         eveningTimePreference: state.fallTimePreference,
         numberOfCourses: state.fallNumOfCourses,
       },
 
       winter: {
-        requestedCourses: state.winterSelectedCourses.map(e => e.slice(0, 7)),
+        requestedCourses: state.winterSelectedCourses,
         eveningTimePreference: state.winterTimePreference,
         numberOfCourses: state.winterNumOfCourses,
       },
 
       summer: {
-        requestedCourses: state.summerSelectedCourses.map(e => e.slice(0, 7)),
+        requestedCourses: state.summerSelectedCourses,
         eveningTimePreference: state.summerTimePreference,
         numberOfCourses: state.summerNumOfCourses,
       },
     };
+
+    const preferences = Object.assign({ ...jsonObject },
+      {
+        fall: {
+          requestedCourses: state.fallSelectedCourses.map(e => e.slice(0, 7)),
+        },
+        winter: {
+          requestedCourses: state.winterSelectedCourses.map(e => e.slice(0, 7)),
+        },
+        summer: {
+          requestedCourses: state.summerSelectedCourses.map(e => e.slice(0, 7)),
+        },
+      });
+
+    localStorage.setItem('preferences', JSON.stringify(jsonObject));
 
     // TESTER CODE
     // const jsonObject = {
@@ -375,17 +436,21 @@ class StudentForm extends Component {
     //     numberOfCourses: 4,
     //   },
     // };
+    const { student } = this.props.auth;
 
-    axios.post('/user/plan', jsonObject)
+    axios.post('/user/plan', { student, ...preferences })
       .then((response) => {
         this.generatedPlan = response.data.plan;
         // go to plan page
-        this.setState({
-          showPlan: true,
-        });
+        this.props.history.push('/planner/view');
+        this.setState({ latestErrorMsg: null });
       })
       .catch((error) => {
         console.log(error);
+        this.setState({ latestErrorMsg: error.message });
+      })
+      .finally(() => {
+        this.setState({ showSpinner: false });
       });
   }
 
@@ -440,7 +505,7 @@ class StudentForm extends Component {
           }
 
           if (!map[departmentName] && displayName !== '') {
-            map[departmentName] = [displayName];
+            map[departmentName] = [ displayName ];
           } else {
             map[departmentName].push(displayName);
           }
@@ -467,7 +532,7 @@ class StudentForm extends Component {
   removeCourseSelection = (course, property) => (event) => {
     event.preventDefault();
     this.setState((state) => {
-      const selectedCourses = [...state[property]];
+      const selectedCourses = [ ...state[property] ];
       const toDelete = selectedCourses.indexOf(course);
       selectedCourses.splice(toDelete, 1);
       return { [property]: selectedCourses };
@@ -475,244 +540,280 @@ class StudentForm extends Component {
   }
 
   render() {
-    const { classes, theme } = this.props;
+    const { classes, theme, auth } = this.props;
 
     const {
       courseMap,
       currentView,
       terms,
       formErrorMsg,
-      showPlan,
       showSpinner,
+      allErrorMsgs,
     } = this.state;
 
-    return (showPlan
-      ? <Plan formData={this.generatedPlan} />
-      : (
-        <MuiThemeProvider theme={custTheme}>
-          {!showSpinner ? (
-            <div className='student-form'>
-              <form onSubmit={this.handleSubmit}>
-                <div className={classes.formContent}>
-                  <div className='header-logo'>
-                    <Typography
-                      to='/'
-                      component={RouterLink}
-                      variant='h4'
-                    >
-                      CourseBin
+    Object.keys(this.state)
+      .filter(
+        key => [ 'errmsg', 'error' ].some(
+          errSubStr => key.toLowerCase().includes(errSubStr),
+        )
+          && !!this.state[key] && !_.isEmpty(this.state[key]) && key !== 'allErrorMsgs',
+      )
+      .forEach((key) => { allErrorMsgs[key] = this.state[key]; });
 
-                    </Typography>
-                  </div>
-                  <Typography
-                    component='h3'
-                    variant='h6'
-                    id='form-header'
-                  >
-                    First, we will just need some basic information...
-                  </Typography>
-                  <AppBar position='static' color='default'>
-                    <Tabs
-                      value={currentView}
-                      onChange={this.handleViewChange}
-                      indicatorColor='secondary'
-                      textColor='secondary'
-                      variant='fullWidth'
-                    >
-                      <Tab label='Fall ' />
-                      <Tab label='Winter ' />
-                      <Tab label='Summer ' />
-                    </Tabs>
-                  </AppBar>
-                  <SwipeableViews
-                    axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                    index={currentView}
-                    onChangeIndex={this.handleChangeIndex}
-                  >
-                    {
-                      terms.map(term => (
-                        <TabContainer dir={theme.direction}>
-                          <Paper className={classes.formPaper}>
-                            <Grid container spacing={16}>
-                              <Grid item xs={12}>
-                                <FormLabel className='preference-label time'>
-                                  What is your
-                                {' '}
-                                  {_.startCase(term)}
-                                  {' '}
-                                  time preference?
-                                </FormLabel>
-                              </Grid>
-                              <Grid item xs={12}>
-                                <div className={classes.toggleContainer}>
-                                  <ToggleButtonGroup
-                                    defaultValue={false}
-                                    value={this.state[`${term}TimePreference`]}
-                                    exclusive
-                                    onChange={this.handleTimeChange(`${term}TimePreference`)}
-                                  >
-                                    <ToggleButton value={false} variant='outline-info'>
-                                      <i className='material-icons toggle'>
-                                        wb_sunny
-                                      </i>
-                                      Day
-                                    </ToggleButton>
-                                    <ToggleButton value={true} variant='outline-info'>
-                                      <i className='material-icons toggle'>
-                                        school
-                                      </i>
-                                      Evening
-                                    </ToggleButton>
-                                  </ToggleButtonGroup>
-                                </div>
-                              </Grid>
-                              <Grid item xs={12}>
-                                <FormLabel className='preference-label'>
-                                  How many courses do you prefer to take in the
-                                {' '}
-                                  {_.startCase(term)}
-                                  ?
-                                </FormLabel>
-                              </Grid>
-                              <Grid item xs={12}>
-                                <FormControl className='student-form-control'>
-                                  <div className={classes.toggleContainer}>
-                                    <ToggleButtonGroup
-                                      defaultValue
-                                      value={this.state[`${term}NumOfCourses`]}
-                                      exclusive
-                                      onChange={this.handleNumCourseChange(`${term}NumOfCourses`)}
-                                    >
-                                      <ToggleButton value={0} variant='outline-info'>None!</ToggleButton>
-                                      <ToggleButton value={1} variant='outline-info'>1</ToggleButton>
-                                      <ToggleButton value={2} variant='outline-info'>2</ToggleButton>
-                                      <ToggleButton value={3} variant='outline-info'>3</ToggleButton>
-                                      <ToggleButton value={4} variant='outline-info'>4</ToggleButton>
-                                      <ToggleButton value={5} variant='outline-info'>5</ToggleButton>
-                                      <ToggleButton value={6} variant='outline-info'>6</ToggleButton>
-                                    </ToggleButtonGroup>
-                                  </div>
-                                </FormControl>
-                              </Grid>
-                              <div className='selected-courses-container'>
-                                {courseMap ? (
-                                  <Grid container spacing={16}>
-                                    <Grid item xs={12}>
-                                      <FormLabel className='selector-label'>
-                                        Choose a department:
-                                      </FormLabel>
-                                    </Grid>
+    console.log(this.state);
 
-                                    <Grid item xs={12}>
-                                      <FormControl className='course-selector'>
-                                        <Select
-                                          native
-                                          value={this.state[`${term}SelectedFaculty`]}
-                                          onChange={this.handleFacultyChange(`${term}SelectedCourse`, `${term}SelectedFaculty`)}
-                                          inputProps={{
-                                            name: `${term}SelectedFaculty`,
-                                            id: 'demo-controlled-open-select',
-                                          }}
-                                        >
-                                          {courseMap ? Object.keys(courseMap).map(faculty => (
-                                            <option key={`${term}-${faculty}`} value={faculty}>
-                                              {faculty}
-                                            </option>
-                                          )) : null}
-                                        </Select>
-                                      </FormControl>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                      <FormLabel className='selector-label'>
-                                        Choose your courses:
-                                      </FormLabel>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                      <FormControl className='course-selector'>
-                                        <NativeSelect
-                                          value={this.state[`${term}SelectedCourse`]}
-                                          onChange={this.handleCourseSelection(`${term}SelectedCourse`)}
-                                          name={`${term}SelectedCourse`}
-                                        >
-                                          <option value='' disabled>
-                                            Select
-                                          </option>
-                                          {courseMap
-                                            && this.state[`${term}SelectedFaculty`]
-                                            && courseMap[this.state[`${term}SelectedFaculty`]]
-                                            ? courseMap[this.state[`${term}SelectedFaculty`]].map(course => (
-                                              <option key={`${term}-${course}`} value={course}>
-                                                {course}
-                                              </option>
-                                            )) : null
-                                          }
-                                        </NativeSelect>
-                                      </FormControl>
-                                    </Grid>
+    return (
+      <MuiThemeProvider theme={custTheme}>
+        <Route
+          exact
+          path={this.props.match.path}
+          render={() => (
+            <div>
+              {!showSpinner ? (
+                <div className='student-form'>
+                  <form onSubmit={this.handleSubmit}>
+                    <div className={classes.formContent}>
+                      <div className='header-logo'>
+                        <Typography
+                          to='/'
+                          component={RouterLink}
+                          variant='h4'
+                        >
+                          CourseBin
+
+                        </Typography>
+                      </div>
+                      <Typography
+                        component='h3'
+                        variant='h6'
+                        id='form-header'
+                      >
+                        First, we will just need some basic information...
+                      </Typography>
+                      <AppBar position='static' color='default'>
+                        <Tabs
+                          value={currentView}
+                          onChange={this.handleViewChange}
+                          indicatorColor='secondary'
+                          textColor='secondary'
+                          variant='fullWidth'
+                        >
+                          <Tab label='Fall ' />
+                          <Tab label='Winter ' />
+                          <Tab label='Summer ' />
+                        </Tabs>
+                      </AppBar>
+                      <SwipeableViews
+                        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+                        index={currentView}
+                        onChangeIndex={this.handleChangeIndex}
+                      >
+                        {
+                          terms.map(term => (
+                            <TabContainer dir={theme.direction}>
+                              <Paper className={classes.formPaper}>
+                                <Grid container spacing={16}>
+                                  <Grid item xs={12}>
+                                    <FormLabel className='preference-label time'>
+                                      What is your
+                                      {' '}
+                                      {_.startCase(term)}
+                                      {' '}
+                                      time preference?
+                                    </FormLabel>
                                   </Grid>
-                                )
-                                  : null
-                                }
-                                <Grid item xs={12}>
-                                  <div className='course-err-msg'>{this.state[`${term}ErrMsg`]}</div>
-                                  <FormLabel
-                                    className='selected-courses'
-                                    style={{ display: this.state[`${term}SelectedCourses`].length === 0 ? 'none' : 'initial' }}
-                                  >
-                                    Selected Courses:
-                                  </FormLabel>
-                                  {this.state[`${term}SelectedCourses`].length > 0 ? (
-                                    <div className={classes.chips}>
-                                      {this.state[`${term}SelectedCourses`].map(course => (
-                                        <Chip
-                                          key={`${term}-${course}`}
-                                          variant='outlined'
-                                          label={course}
-                                          name={`${term}SelectedCourses`}
-                                          onDelete={this.removeCourseSelection(course, `${term}SelectedCourses`)}
-                                          className={classes.chip}
-                                        />
-                                      ))}
-                                    </div>) : <div />
-                                  }
+                                  <Grid item xs={12}>
+                                    <div className={classes.toggleContainer}>
+                                      <ToggleButtonGroup
+                                        defaultValue={false}
+                                        value={this.state[`${term}TimePreference`]}
+                                        exclusive
+                                        onChange={this.handleTimeChange(`${term}TimePreference`)}
+                                      >
+                                        <ToggleButton value={false} variant='outline-info'>
+                                          <i className='material-icons toggle'>
+                                            wb_sunny
+                                          </i>
+                                          Day
+                                        </ToggleButton>
+                                        <ToggleButton value variant='outline-info'>
+                                          <i className='material-icons toggle'>
+                                            school
+                                          </i>
+                                          Evening
+                                        </ToggleButton>
+                                      </ToggleButtonGroup>
+                                    </div>
+                                  </Grid>
+                                  <Grid item xs={12}>
+                                    <FormLabel className='preference-label'>
+                                      How many courses do you prefer to take in the
+                                      {' '}
+                                      {_.startCase(term)}
+                                      ?
+                                    </FormLabel>
+                                  </Grid>
+                                  <Grid item xs={12}>
+                                    <FormControl className='student-form-control'>
+                                      <div className={classes.toggleContainer}>
+                                        <ToggleButtonGroup
+                                          defaultValue
+                                          value={this.state[`${term}NumOfCourses`]}
+                                          exclusive
+                                          onChange={this.handleNumCourseChange(`${term}NumOfCourses`)}
+                                        >
+                                          <ToggleButton value={0} variant='outline-info'>None!</ToggleButton>
+                                          <ToggleButton value={1} variant='outline-info'>1</ToggleButton>
+                                          <ToggleButton value={2} variant='outline-info'>2</ToggleButton>
+                                          <ToggleButton value={3} variant='outline-info'>3</ToggleButton>
+                                          <ToggleButton value={4} variant='outline-info'>4</ToggleButton>
+                                          <ToggleButton value={5} variant='outline-info'>5</ToggleButton>
+                                          <ToggleButton value={6} variant='outline-info'>6</ToggleButton>
+                                        </ToggleButtonGroup>
+                                      </div>
+                                    </FormControl>
+                                  </Grid>
+                                  <div className='selected-courses-container'>
+                                    {courseMap ? (
+                                      <Grid container spacing={16}>
+                                        <Grid item xs={12}>
+                                          <FormLabel className='selector-label'>
+                                            Choose a department:
+                                          </FormLabel>
+                                        </Grid>
+
+                                        <Grid item xs={12}>
+                                          <FormControl className='course-selector'>
+                                            <Select
+                                              native
+                                              value={this.state[`${term}SelectedFaculty`]}
+                                              onChange={this.handleFacultyChange(`${term}SelectedCourse`, `${term}SelectedFaculty`)}
+                                              inputProps={{
+                                                name: `${term}SelectedFaculty`,
+                                                id: 'demo-controlled-open-select',
+                                              }}
+                                            >
+                                              {courseMap ? Object.keys(courseMap).map(faculty => (
+                                                <option key={`${term}-${faculty}`} value={faculty}>
+                                                  {faculty}
+                                                </option>
+                                              )) : null}
+                                            </Select>
+                                          </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                          <FormLabel className='selector-label'>
+                                            Choose your courses:
+                                          </FormLabel>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                          <FormControl className='course-selector'>
+                                            <NativeSelect
+                                              value={this.state[`${term}SelectedCourse`]}
+                                              onChange={this.handleCourseSelection(`${term}SelectedCourse`)}
+                                              name={`${term}SelectedCourse`}
+                                            >
+                                              <option value='' disabled>
+                                                Select
+                                              </option>
+                                              {courseMap
+                                                && this.state[`${term}SelectedFaculty`]
+                                                && courseMap[this.state[`${term}SelectedFaculty`]]
+                                                ? courseMap[this.state[`${term}SelectedFaculty`]].map(course => (
+                                                  <option key={`${term}-${course}`} value={course}>
+                                                    {course}
+                                                  </option>
+                                                )) : null
+                                              }
+                                            </NativeSelect>
+                                          </FormControl>
+                                        </Grid>
+                                      </Grid>
+                                    )
+                                      : null
+                                    }
+                                    <Grid item xs={12}>
+                                      {/* <div className='course-err-msg'>{this.state[`${term}ErrMsg`]}</div> */}
+                                      <FormLabel
+                                        className='selected-courses'
+                                        style={{ display: this.state[`${term}SelectedCourses`].length === 0 ? 'none' : 'initial' }}
+                                      >
+                                        Selected Courses:
+                                      </FormLabel>
+                                      {this.state[`${term}SelectedCourses`].length > 0 ? (
+                                        <div className={classes.chips}>
+                                          {this.state[`${term}SelectedCourses`].map(course => (
+                                            <Chip
+                                              key={`${term}-${course}`}
+                                              variant='outlined'
+                                              label={course}
+                                              name={`${term}SelectedCourses`}
+                                              onDelete={this.removeCourseSelection(course, `${term}SelectedCourses`)}
+                                              className={classes.chip}
+                                            />
+                                          ))}
+                                        </div>) : <div />
+                                      }
+                                    </Grid>
+                                  </div>
                                 </Grid>
-                              </div>
-                            </Grid>
-                          </Paper>
-                        </TabContainer>
-                      ))
-                    }
-                  </SwipeableViews>
-                  <Button
-                    id='submit'
-                    size='large'
-                    variant='outlined'
-                    color='primary'
-                    type='submit'
-                  >
-                    Generate My Schedule!
-                  </Button>
-                  <Grid container spacing={24}>
-                    {formErrorMsg.length > 0 ? formErrorMsg.map(msg => (
-                      <FormLabel className='submit-error' color='secondary'>
-                        {msg}
-                      </FormLabel>
-                    )) : null}
-                  </Grid>
+                              </Paper>
+                            </TabContainer>
+                          ))
+                        }
+                      </SwipeableViews>
+                      <Button
+                        id='submit'
+                        size='large'
+                        variant='outlined'
+                        color='primary'
+                        type='submit'
+                      >
+                        Generate My Schedule!
+                      </Button>
+                      {/* <Grid container spacing={24}>
+                        {formErrorMsg.length > 0 ? formErrorMsg.map(msg => (
+                          <div>
+                            <FormLabel className='submit-error' color='secondary'>
+                              {msg}
+                            </FormLabel>
+                          </div>
+                        )) : null}
+                      </Grid> */}
+                    </div>
+                  </form>
                 </div>
-              </form>
+              )
+                : (
+                  <div className='progress'>
+                    <Typography variant='h5'>Hold on while we gather your information...</Typography>
+                    <br />
+                    <CircularProgress className={classes.progress} />
+                  </div>
+                )
+              }
             </div>
-          )
-            : (
-              <div className='progress'>
-                <Typography variant='h5'>Hold on while we gather your information...</Typography>
-                <br />
-                <CircularProgress className={classes.progress} />
-              </div>
-            )
-          }
-        </MuiThemeProvider>
-      ));
+          )}
+        />
+        <Route path={`${this.props.match.url}/:subpath`} render={props => <Plan auth={auth} formData={this.generatedPlan} {...props} />} />
+        {this.state.latestErrorMsg && (
+          <SnackbarAlert
+            open={!!this.state.latestErrorMsg}
+            variant='error'
+            message={this.state.latestErrorMsg}
+            onClose={() => {
+              this.setState((prevState) => {
+                const copy = _.cloneDeep(prevState);
+                Object.keys(allErrorMsgs).forEach((key) => {
+                  copy[key] = null;
+                });
+                return Object.assign(copy, { allErrorMsgs: {}, formErrorMsg: [] });
+              });
+            }}
+          />)
+        }
+      </MuiThemeProvider>
+    );
   }
 }
 

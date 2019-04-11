@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import Button from '@material-ui/core/Button';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
 import InfoIcon from '@material-ui/icons/Info';
@@ -35,7 +34,7 @@ const styles1 = theme => ({
     backgroundColor: amber[700],
   },
   icon: {
-    fontSize: 20,
+    fontSize: 30,
   },
   iconVariant: {
     opacity: 0.9,
@@ -44,6 +43,7 @@ const styles1 = theme => ({
   message: {
     display: 'flex',
     alignItems: 'center',
+    fontSize: 16,
   },
 });
 
@@ -96,27 +96,21 @@ const styles2 = theme => ({
 });
 
 class SnackbarAlert extends React.Component {
-  state = {
-    open: true,
-  };
-
-  handleClick = () => {
-    this.setState({ open: true });
-  };
-
   handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
 
-    this.setState({ open: false });
+    if (this.props.onClose) {
+      this.props.onClose();
+    }
   };
 
   render() {
     const {
       classes, anchorOrigin, variant, message,
     } = this.props;
-    const { open } = this.state;
+    const { open } = this.props;
 
     return (
       <div>
