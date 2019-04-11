@@ -60,7 +60,11 @@ const styles = theme => ({
   profile: {
     marginLeft: theme.spacing.unit * 4,
     marginTop: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 2,
     textAlign: 'left',
+  },
+  topPanel: {
+    marginBottom: theme.spacing.unit * 4,
   },
 });
 
@@ -136,7 +140,7 @@ class Dashboard extends Component {
         <div className={classes.root}>
           <div className={classes.dashboardTitle}>
             <Typography variant='h4'>
-                Your Dashboard
+              Your Dashboard
             </Typography>
           </div>
           <Grid container spacing={24} alignContent='space-between' justify='center' alignItems='center'>
@@ -144,12 +148,10 @@ class Dashboard extends Component {
               <Paper className={classes.leftpaper} elevation={1}>
                 <div className={classes.dashboardHeader}>
                   <Typography variant='h5'>
-                      Profile
+                    Profile
                   </Typography>
                 </div>
-                <Divider variant='middle' />
-
-                <ExpansionPanel>
+                <ExpansionPanel className={classes.topPanel}>
                   <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography className={classes.heading}>Summary</Typography>
                   </ExpansionPanelSummary>
@@ -176,7 +178,7 @@ class Dashboard extends Component {
 
                         <TableRow key='degree'>
                           <TableCell component='th' scope='row'>
-                          Degree:
+                            Degree:
                           </TableCell>
                           <TableCell align='center'>
                             {student && student.record && student.record.degree ? 'SOEN' : ''}
@@ -185,7 +187,7 @@ class Dashboard extends Component {
 
                         <TableRow key='option'>
                           <TableCell component='th' scope='row'>
-                          Option:
+                            Option:
                           </TableCell>
                           <TableCell align='center'>
                             {student && student.record && student.record.degree ? student.record.degree.option : ''}
@@ -194,7 +196,7 @@ class Dashboard extends Component {
 
                         <TableRow key='gpa'>
                           <TableCell component='th' scope='row'>
-                          GPA:
+                            GPA:
                           </TableCell>
                           <TableCell align='center'>
                             {student ? student.gpa : ''}
@@ -203,7 +205,7 @@ class Dashboard extends Component {
 
                         <TableRow key='standing'>
                           <TableCell component='th' scope='row'>
-                          Standing:
+                            Standing:
                           </TableCell>
                           <TableCell align='center'>
                             {student ? student.standing : ''}
@@ -224,12 +226,9 @@ class Dashboard extends Component {
 
                 <div className={classes.dashboardHeader}>
                   <Typography variant='h5'>
-                      Academics
+                    Academics
                   </Typography>
                 </div>
-
-                <Divider variant='middle' />
-
                 <ExpansionPanel>
                   <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography className={classes.heading}>Completed Courses</Typography>
@@ -239,7 +238,7 @@ class Dashboard extends Component {
                       <TableHead>
                         <TableRow>
                           <TableCell>Course Code</TableCell>
-                          <TableCell align='right'>Grade</TableCell>
+                          <TableCell align='center'>Grade</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -263,27 +262,26 @@ class Dashboard extends Component {
             <Grid item xs={12} md={6}>
               <Paper className={classes.rightPaper} elevation={1}>
                 <Typography variant='h5'>
-                    Saved Plans
+                  Saved Plans
                 </Typography>
                 <Typography variant='body1'>
-                    *Insert Static Plan Here*
+                  *Insert Static Plan Here*
                 </Typography>
               </Paper>
             </Grid>
           </Grid>
         </div>
-)
         {this.state.errorMsg && (
-        <SnackbarAlert
-          open
-          variant='error'
-          message='No student record to show!'
-          onClose={() => {
-            this.setState({
-              errorMsg: null,
-            });
-          }}
-        />
+          <SnackbarAlert
+            open
+            variant='error'
+            message='No student record to show!'
+            onClose={() => {
+              this.setState({
+                errorMsg: null,
+              });
+            }}
+          />
         )}
       </MuiThemeProvider>
     );
