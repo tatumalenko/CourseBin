@@ -99,17 +99,17 @@ class Dashboard extends Component {
   calcProgressData() {
     const { student } = this.state;
     if (!student || !student.record) {
-      return [ {
+      return [{
         name: 'Academic Progress',
         percent: 0,
         fill: '#00bcd4',
-      } ];
+      }];
     }
-    const data = [ {
+    const data = [{
       name: 'Academic Progress',
       percent: Math.floor(student.record.completedCourses.length / 40 * 100),
       fill: '#00bcd4',
-    } ];
+    }];
 
     return data;
   }
@@ -148,62 +148,62 @@ class Dashboard extends Component {
                   <Divider variant='middle' />
                   <Grid className={classes.profile} container spacing={12}>
                     <Grid item xs={2}>
-                      <Typography inline>
+                      <Typography inline variant='overline'>
                         Name:
                       </Typography>
                     </Grid>
                     <Grid item xs={10}>
-                      <Typography inline>
+                      <Typography inline variant='overline'>
                         {student && student.name ? `${student.name.first} ${student.name.last}` : ''}
                       </Typography>
                     </Grid>
                     <Grid item xs={2}>
-                      <Typography inline>
+                      <Typography inline variant='overline'>
                         ID:
                       </Typography>
                     </Grid>
                     <Grid item xs={10}>
-                      <Typography inline>
+                      <Typography inline variant='overline'>
                         {student ? student.id : ''}
                       </Typography>
                     </Grid>
                     <Grid item xs={2}>
-                      <Typography inline>
+                      <Typography inline variant='overline'>
                         Degree:
                       </Typography>
                     </Grid>
                     <Grid item xs={10}>
-                      <Typography inline>
+                      <Typography inline variant='overline'>
                         {student && student.record ? 'SOEN' : ''}
                       </Typography>
                     </Grid>
                     <Grid item xs={2}>
-                      <Typography inline>
+                      <Typography inline variant='overline'>
                         Option:
                       </Typography>
                     </Grid>
                     <Grid item xs={10}>
-                      <Typography inline>
+                      <Typography inline variant='overline'>
                         {student && student.record ? student.record.degree.option : ''}
                       </Typography>
                     </Grid>
                     <Grid item xs={2}>
-                      <Typography inline>
+                      <Typography inline variant='overline'>
                         GPA:
                       </Typography>
                     </Grid>
                     <Grid item xs={10}>
-                      <Typography inline>
+                      <Typography inline variant='overline'>
                         {student ? student.gpa : ''}
                       </Typography>
                     </Grid>
                     <Grid item xs={2}>
-                      <Typography inline>
+                      <Typography inline variant='overline'>
                         Standing:
                       </Typography>
                     </Grid>
                     <Grid item xs={10}>
-                      <Typography inline>
+                      <Typography inline variant='overline'>
                         {student ? student.standing : ''}
                       </Typography>
                     </Grid>
