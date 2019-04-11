@@ -43,6 +43,9 @@ class LoginForm extends Component {
 
   componentDidMount() {
     this._isMounted = true;
+    if (this.props.auth.isAuthenticated()) {
+      this.props.history.push('/');
+    }
   }
 
   componentWillUnmount() {
@@ -166,27 +169,6 @@ class LoginForm extends Component {
     );
   }
 }
-
-// export const auth = {
-//   user: null,
-//   isAuthenticated: false,
-//   async authenticate() {
-//     axios.get('/user').then((response) => {
-//       if (response.data.user) {
-//         this.isAuthenticated = true;
-//         this.user = response.data.user;
-//       } else {
-//         this.isAuthenticated = false;
-//         this.user = null;
-//       }
-//     }).catch((error) => {
-//       this.isAuthenticated = false;
-//       this.user = null;
-
-//       console.error(error);
-//     });
-//   },
-// };
 
 LoginForm.propTypes = {
   classes: PropTypes.object.isRequired,

@@ -15,6 +15,8 @@ import concordiaLogo from './assets/concordia-logo.jpeg';
 class App extends Component {
   constructor(props) {
     super(props);
+    this.student = null;
+    this.errorMsg = null;
     this._isMounted = false;
   }
 

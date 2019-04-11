@@ -29,9 +29,9 @@ import { KeyboardArrowLeft, KeyboardArrowRight } from '@material-ui/icons';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import moment from 'moment';
 import { withStyles } from '@material-ui/core/styles';
+import _ from 'lodash';
 import ChildBox from './box-child';
 
-const _ = require('lodash');
 
 const burgundy = {
   50: '#571D2E',
@@ -68,6 +68,8 @@ const styles = theme => ({
 class Plan extends Component {
   constructor(props) {
     super(props);
+    console.log('plan props:', this.props);
+    console.log('plan state:', this.state);
     const plan = props.formData;
     this.schedules = plan.schedules;
     this.sequences = plan.sequences;
@@ -80,7 +82,7 @@ class Plan extends Component {
 
     this.state = {
       // sequences
-      sequenceMap: this.parseSequences(),
+      sequenceMap: null,
 
       // ===== for parsing schedule data for each term ====
       terms: [],
@@ -118,7 +120,17 @@ class Plan extends Component {
   }
 
   componentDidMount() {
+    if (_.isEmpty(this.props.formData)) {
+      this.props.history.push('/planner');
+      return;
+    }
+    this.setState({
+      sequenceMap: this.parseSequences(),
+    });
+
     this.parseSchedules();
+    console.log('plan state: ', this.state);
+    console.log('plan props: ', this.props);
   }
 
   parseSchedules = () => {

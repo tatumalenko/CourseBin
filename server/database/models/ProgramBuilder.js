@@ -300,6 +300,7 @@ class ProgramBuilder {
     const termCourses = [];
     const terms = [ 'fall', 'winter', 'summer' ];
     const numberOfTerms = terms.length;
+    const MAX_LOOP_ITERATIONS = 20;
 
     let termTracker = 0;
     let year = (new Date()).getFullYear();
@@ -312,7 +313,9 @@ class ProgramBuilder {
       completedCourses: completed,
       requiredCourses: required,
     });
+    let currentLoopIteration = 0;
     while (_.difference(required, completed).length > 0) {
+      currentLoopIteration += 1;
       year = getTermYear(year, termTracker + termsPassedOffset);
       if (preferences[terms[termTracker % numberOfTerms]].numberOfCourses !== 0) {
         // Of the candidate courses, pick at most the number specified in
@@ -333,6 +336,10 @@ class ProgramBuilder {
         });
       }
       termTracker += 1;
+
+      if (currentLoopIteration >= MAX_LOOP_ITERATIONS) {
+        throw new Error('Maximum number of sequence iterations attempted. Issue with requirements.');
+      }
     }
 
     return termCourses;

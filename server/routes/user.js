@@ -161,11 +161,17 @@ router.post('/plan', async (req, res) => {
   console.log('post plan');
   try {
     if (req.user) {
-      const preferences = req.body;
-      const student = await Student.findOne({ id: 40055122 });
+      const preferences = {
+        fall: req.body.fall,
+        winter: req.body.winter,
+        summer: req.body.summer,
+      };
+      const { student } = req.body;// ? await Student.findOne({ id: student.id }) : ;
       const plan = await ProgramBuilder.findCandidatePlan({
-        completedCourses: student.record.completedCourses,
-        requiredCourses: SoftwareEngineeringDegree.requirements(student.record.degree.option),
+        completedCourses: student && student.record ? student.record.completedCourses : [],
+        requiredCourses: SoftwareEngineeringDegree.requirements(
+          student && student.record ? student.record.degree.option : 'GENERAL',
+        ),
         preferences: new Preferences(preferences),
       });
       res
@@ -192,6 +198,7 @@ router.post('/plan', async (req, res) => {
       .status(500)
       .json({ message: e.message });
   }
+  console.log('post plan request sent!');
 });
 
 module.exports = router;
