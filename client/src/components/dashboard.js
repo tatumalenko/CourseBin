@@ -102,17 +102,17 @@ class Dashboard extends Component {
   calcProgressData() {
     const { student } = this.state;
     if (!student || !student.record) {
-      return [{
+      return [ {
         name: 'Academic Progress',
         percent: 0,
         fill: '#00bcd4',
-      }];
+      } ];
     }
-    const data = [{
+    const data = [ {
       name: 'Academic Progress',
       percent: Math.floor(student.record.completedCourses.length / 40 * 100),
       fill: '#00bcd4',
-    }];
+    } ];
 
     return data;
   }
@@ -137,7 +137,7 @@ class Dashboard extends Component {
         <div className={classes.root}>
           <div className={classes.dashboardTitle}>
             <Typography variant='h4'>
-                Your Dashboard
+              Your Dashboard
             </Typography>
           </div>
           <Grid container spacing={24} alignContent='space-between' justify='center' alignItems='center'>
@@ -145,78 +145,10 @@ class Dashboard extends Component {
               <Paper className={classes.leftpaper} elevation={1}>
                 <div className={classes.dashboardHeader}>
                   <Typography variant='h5'>
-                      Profile
-<<<<<<< HEAD
-                    </Typography>
-                  </div>
-                  <Divider variant='middle' />
-                  <Grid className={classes.profile} container spacing={12}>
-                    <Grid item xs={2}>
-                      <Typography inline variant='overline'>
-                        Name:
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={10}>
-                      <Typography inline variant='overline'>
-                        {student && student.name ? `${student.name.first} ${student.name.last}` : ''}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={2}>
-                      <Typography inline variant='overline'>
-                        ID:
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={10}>
-                      <Typography inline variant='overline'>
-                        {student ? student.id : ''}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={2}>
-                      <Typography inline variant='overline'>
-                        Degree:
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={10}>
-                      <Typography inline variant='overline'>
-                        {student && student.record ? 'SOEN' : ''}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={2}>
-                      <Typography inline variant='overline'>
-                        Option:
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={10}>
-                      <Typography inline variant='overline'>
-                        {student && student.record ? student.record.degree.option : ''}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={2}>
-                      <Typography inline variant='overline'>
-                        GPA:
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={10}>
-                      <Typography inline variant='overline'>
-                        {student ? student.gpa : ''}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={2}>
-                      <Typography inline variant='overline'>
-                        Standing:
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={10}>
-                      <Typography inline variant='overline'>
-                        {student ? student.standing : ''}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-=======
+                    Profile
                   </Typography>
                 </div>
                 <Divider variant='middle' />
->>>>>>> a25240920c1d98270d69d525100b417b53ec0fa1
 
                 <ExpansionPanel>
                   <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
@@ -245,7 +177,7 @@ class Dashboard extends Component {
 
                         <TableRow key='degree'>
                           <TableCell component='th' scope='row'>
-                          Degree:
+                            Degree:
                           </TableCell>
                           <TableCell align='center'>
                             {student && student.record && student.record.degree ? 'SOEN' : ''}
@@ -254,7 +186,7 @@ class Dashboard extends Component {
 
                         <TableRow key='option'>
                           <TableCell component='th' scope='row'>
-                          Option:
+                            Option:
                           </TableCell>
                           <TableCell align='center'>
                             {student && student.record && student.record.degree ? student.record.degree.option : ''}
@@ -263,7 +195,7 @@ class Dashboard extends Component {
 
                         <TableRow key='gpa'>
                           <TableCell component='th' scope='row'>
-                          GPA:
+                            GPA:
                           </TableCell>
                           <TableCell align='center'>
                             {student ? student.gpa : ''}
@@ -272,7 +204,7 @@ class Dashboard extends Component {
 
                         <TableRow key='standing'>
                           <TableCell component='th' scope='row'>
-                          Standing:
+                            Standing:
                           </TableCell>
                           <TableCell align='center'>
                             {student ? student.standing : ''}
@@ -293,24 +225,12 @@ class Dashboard extends Component {
 
                 <div className={classes.dashboardHeader}>
                   <Typography variant='h5'>
-                      Academics
+                    Academics
                   </Typography>
                 </div>
 
                 <Divider variant='middle' />
 
-<<<<<<< HEAD
-                  <ExpansionPanel>
-                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                      <Typography className={classes.heading}>Completed Courses</Typography>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
-                      <Table className={classes.table}>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Course Code</TableCell>
-                            <TableCell align='center'>Grade</TableCell>
-=======
                 <ExpansionPanel>
                   <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography className={classes.heading}>Completed Courses</Typography>
@@ -332,7 +252,6 @@ class Dashboard extends Component {
                             <TableCell align='center'>
                               {course.grade}
                             </TableCell>
->>>>>>> a25240920c1d98270d69d525100b417b53ec0fa1
                           </TableRow>
                         ))}
                       </TableBody>
@@ -345,27 +264,27 @@ class Dashboard extends Component {
             <Grid item xs={12} md={6}>
               <Paper className={classes.rightPaper} elevation={1}>
                 <Typography variant='h5'>
-                    Saved Plans
+                  Saved Plans
                 </Typography>
                 <Typography variant='body1'>
-                    *Insert Static Plan Here*
+                  *Insert Static Plan Here*
                 </Typography>
               </Paper>
             </Grid>
           </Grid>
         </div>
-)
+        )
         {this.state.errorMsg && (
-        <SnackbarAlert
-          open
-          variant='error'
-          message='No student record to show!'
-          onClose={() => {
-            this.setState({
-              errorMsg: null,
-            });
-          }}
-        />
+          <SnackbarAlert
+            open
+            variant='error'
+            message='No student record to show!'
+            onClose={() => {
+              this.setState({
+                errorMsg: null,
+              });
+            }}
+          />
         )}
       </MuiThemeProvider>
     );
