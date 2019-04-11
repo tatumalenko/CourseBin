@@ -63,6 +63,9 @@ const styles = theme => ({
     marginBottom: theme.spacing.unit * 2,
     textAlign: 'left',
   },
+  topPanel: {
+    marginBottom: theme.spacing.unit * 4,
+  },
 });
 
 const custTheme = createMuiTheme({
@@ -148,9 +151,7 @@ class Dashboard extends Component {
                     Profile
                   </Typography>
                 </div>
-                <Divider variant='middle' />
-
-                <ExpansionPanel>
+                <ExpansionPanel className={classes.topPanel}>
                   <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography className={classes.heading}>Summary</Typography>
                   </ExpansionPanelSummary>
@@ -228,9 +229,6 @@ class Dashboard extends Component {
                     Academics
                   </Typography>
                 </div>
-
-                <Divider variant='middle' />
-
                 <ExpansionPanel>
                   <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography className={classes.heading}>Completed Courses</Typography>
@@ -240,7 +238,7 @@ class Dashboard extends Component {
                       <TableHead>
                         <TableRow>
                           <TableCell>Course Code</TableCell>
-                          <TableCell align='right'>Grade</TableCell>
+                          <TableCell align='center'>Grade</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -273,7 +271,6 @@ class Dashboard extends Component {
             </Grid>
           </Grid>
         </div>
-        )
         {this.state.errorMsg && (
           <SnackbarAlert
             open
