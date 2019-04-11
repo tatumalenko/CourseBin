@@ -58,6 +58,7 @@ const styles = theme => ({
   profile: {
     marginLeft: theme.spacing.unit * 4,
     marginTop: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 2,
     textAlign: 'left',
   },
 });
@@ -145,64 +146,64 @@ class Dashboard extends Component {
                     </Typography>
                   </div>
                   <Divider variant='middle' />
-                  <Grid className={classes.profile} item xs={6}>
-                    <Grid item xs>
-                      <Typography variant='overline'>
+                  <Grid className={classes.profile} container spacing={12}>
+                    <Grid item xs={2}>
+                      <Typography inline>
                         Name:
                       </Typography>
                     </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
+                    <Grid item xs={10}>
+                      <Typography inline>
                         {student && student.name ? `${student.name.first} ${student.name.last}` : ''}
                       </Typography>
                     </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
+                    <Grid item xs={2}>
+                      <Typography inline>
                         ID:
                       </Typography>
                     </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
+                    <Grid item xs={10}>
+                      <Typography inline>
                         {student ? student.id : ''}
                       </Typography>
                     </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
+                    <Grid item xs={2}>
+                      <Typography inline>
                         Degree:
                       </Typography>
                     </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
+                    <Grid item xs={10}>
+                      <Typography inline>
                         {student && student.record ? 'SOEN' : ''}
                       </Typography>
                     </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
+                    <Grid item xs={2}>
+                      <Typography inline>
                         Option:
                       </Typography>
                     </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
+                    <Grid item xs={10}>
+                      <Typography inline>
                         {student && student.record ? student.record.degree.option : ''}
                       </Typography>
                     </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
+                    <Grid item xs={2}>
+                      <Typography inline>
                         GPA:
                       </Typography>
                     </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
+                    <Grid item xs={10}>
+                      <Typography inline>
                         {student ? student.gpa : ''}
                       </Typography>
                     </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
+                    <Grid item xs={2}>
+                      <Typography inline>
                         Standing:
                       </Typography>
                     </Grid>
-                    <Grid item xs>
-                      <Typography variant='overline'>
+                    <Grid item xs={10}>
+                      <Typography inline>
                         {student ? student.standing : ''}
                       </Typography>
                     </Grid>
@@ -233,7 +234,7 @@ class Dashboard extends Component {
                         <TableHead>
                           <TableRow>
                             <TableCell>Course Code</TableCell>
-                            <TableCell align='right'>Grade</TableCell>
+                            <TableCell align='center'>Grade</TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
