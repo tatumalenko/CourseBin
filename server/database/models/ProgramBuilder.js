@@ -15,10 +15,10 @@ class ProgramBuilder {
   }
 
   static hasNoUnmetDependenciesPartial({ completedCourses }) {
-    return async (uncompletedCourse) => {
+    return (uncompletedCourse, missingDependencies) => {
       let allDependenciesMet;
       try {
-        const course = await Catalog.findOne({ code: uncompletedCourse });
+        const course = Catalog.findOne({ code: uncompletedCourse });
         // Verify if all prerequisites are met
         // Check if completedCourses is an array of {} or ''
         allDependenciesMet = course.prerequisiteCodes ? course.prerequisiteCodes.every(
@@ -350,6 +350,9 @@ class ProgramBuilder {
     requiredCourses,
     preferences,
   }) {
+    const hasNoUnmetDependencies = this.hasNoUnmetDependenciesPartial({ completedCourses });
+
+
     const candidateSchedules = await this.findCandidateSchedules({
       completedCourses,
       requiredCourses,
