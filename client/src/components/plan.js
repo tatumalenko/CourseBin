@@ -372,15 +372,6 @@ class Plan extends Component {
       <div className='plan-container'>
         <Grid container spacing={16}>
           <Grid item xs={12} className='schedule-container'>
-            <div className='header-logo plan'>
-              <Typography
-                to='/'
-                component={RouterLink}
-                variant='h4'
-              >
-                CourseBin
-              </Typography>
-            </div>
             <Typography id='schedule-header' variant='h4'>
               Here's what we came up with...
             </Typography>

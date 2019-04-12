@@ -75,18 +75,12 @@
   color: #A98638;
   text-decoration: none;
   position: relative;
-  bottom: 52px;
-  margin-left: 250px;
-  margin-right: 250px;
+  top: 4px;
+
 }
 
 .header-logo a:hover{
   text-decoration: none;
-}
-
-.header-logo.plan a{
-    position: relative;
-    bottom: 88px;
 }
 
 .student-form #form-header{
@@ -180,6 +174,10 @@
   margin-top: -30px;
   margin-bottom: 25px;
   text-align: left;
+}
+
+.plan-container{
+  margin-top: 50px;
 }
 
 .plan-container h5{

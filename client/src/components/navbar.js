@@ -7,7 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-  AppBar, Toolbar, MenuItem, IconButton, Menu, MuiThemeProvider, createMuiTheme,
+  AppBar, Toolbar, MenuItem, IconButton, Menu, MuiThemeProvider, createMuiTheme, Typography,
 } from '@material-ui/core';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -121,6 +121,16 @@ class Navbar extends Component {
                       </MenuItem>
                     </Menu>
                   </div>
+                  <span className='header-logo'>
+                    <Typography
+                      to='/'
+                      component={RouterLink}
+                      variant='h4'
+                      inline
+                    >
+                      CourseBin
+                    </Typography>
+                  </span>
                   <div className={classes.profileIcon}>
                     <IconButton
                       aria-owns={openProfile ? 'menu-appbar' : undefined}

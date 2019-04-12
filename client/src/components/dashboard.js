@@ -26,7 +26,7 @@ import SnackbarAlert from './snackbar-alerts';
 const styles = theme => ({
   root: {
     ...theme.mixins.gutters(),
-    marginTop: '0',
+    marginTop: theme.spacing.unit * 8,
     marginBottom: theme.spacing.unit * 4,
     marginLeft: '8%',
     marginRight: '8%',
@@ -105,17 +105,17 @@ class Dashboard extends Component {
   calcProgressData() {
     const { student } = this.state;
     if (!student || !student.record) {
-      return [ {
+      return [{
         name: 'Academic Progress',
         percent: 0,
         fill: '#00bcd4',
-      } ];
+      }];
     }
-    const data = [ {
+    const data = [{
       name: 'Academic Progress',
       percent: Math.floor(student.record.completedCourses.length / 40 * 100),
       fill: '#00bcd4',
-    } ];
+    }];
 
     return data;
   }
@@ -127,16 +127,6 @@ class Dashboard extends Component {
     console.log(this.props);
     return (
       <MuiThemeProvider theme={custTheme}>
-        <div className='header-logo'>
-          <Typography
-            to='/'
-            component={RouterLink}
-            variant='h4'
-          >
-            CourseBin
-
-          </Typography>
-        </div>
         <div className={classes.root}>
           <div className={classes.dashboardTitle}>
             <Typography variant='h4'>

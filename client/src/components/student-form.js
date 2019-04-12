@@ -86,7 +86,8 @@ const styles = theme => ({
   },
   formContent: {
     margin: '0 24%',
-    minWidth: '330px',
+    marginTop: theme.spacing.unit * 8,
+    minWidth: '360px',
   },
   chips: {
     display: 'flex',
@@ -570,16 +571,6 @@ class StudentForm extends Component {
                 <div className='student-form'>
                   <form onSubmit={this.handleSubmit}>
                     <div className={classes.formContent}>
-                      <div className='header-logo'>
-                        <Typography
-                          to='/'
-                          component={RouterLink}
-                          variant='h4'
-                        >
-                          CourseBin
-
-                        </Typography>
-                      </div>
                       <Typography
                         component='h3'
                         variant='h6'
