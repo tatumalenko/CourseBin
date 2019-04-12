@@ -11,6 +11,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import WarningIcon from '@material-ui/icons/Warning';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
 
 const variantIcon = {
@@ -22,28 +23,30 @@ const variantIcon = {
 
 const styles1 = theme => ({
   success: {
-    backgroundColor: green[600],
+    backgroundColor: fade(green[600], 0.8),
   },
   error: {
-    backgroundColor: theme.palette.error.dark,
+    backgroundColor: fade(theme.palette.error.dark, 0.8),
   },
   info: {
-    backgroundColor: theme.palette.primary.dark,
+    backgroundColor: fade(theme.palette.primary.dark, 0.8),
   },
   warning: {
-    backgroundColor: '#571D2E', // amber[700],
+    backgroundColor: fade('#571D2E', 0.8), // amber[700],
   },
   icon: {
-    fontSize: 30,
+    fontSize: 18,
+    verticalAlign: 'middle',
+    color: '#e5b54b',
   },
   iconVariant: {
     opacity: 0.9,
     marginRight: theme.spacing.unit,
+    color: '#e5b54b',
   },
   message: {
-    display: 'flex',
-    alignItems: 'center',
-    fontSize: 16,
+    fontSize: 12,
+    color: '#e5b54b',
   },
 });
 
@@ -62,7 +65,7 @@ function SnackbarAlertContent(props) {
           <Icon className={classNames(classes.icon, classes.iconVariant)} />
           {message}
         </span>
-  )}
+      )}
       action={[
         <IconButton
           key='close'

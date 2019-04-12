@@ -114,7 +114,7 @@ class StudentForm extends Component {
     super(props);
     console.log('student-form props:', props);
 
-    const preferences = JSON.parse(localStorage.getItem('preferences'));
+    const preferences = null;
 
     this.catalog = {};
     this.faculty = '';
@@ -403,7 +403,7 @@ class StudentForm extends Component {
       },
     };
 
-    const preferences = _.cloneDeep(jsonObject);
+    const preferences = null;
     _.set(preferences, 'fall.requestedCourses', state.fallSelectedCourses.map(e => e.slice(0, 7)));
     _.set(preferences, 'winter.requestedCourses', state.winterSelectedCourses.map(e => e.slice(0, 7)));
     _.set(preferences, 'summer.requestedCourses', state.summerSelectedCourses.map(e => e.slice(0, 7)));
