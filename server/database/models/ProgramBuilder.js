@@ -315,7 +315,7 @@ class ProgramBuilder {
     const termCourses = [];
     const terms = [ 'fall', 'winter', 'summer' ];
     const numberOfTerms = terms.length;
-    const MAX_LOOP_ITERATIONS = 20;
+    const MAX_LOOP_ITERATIONS = 1000;
 
     let termTracker = 0;
     let year = (new Date()).getFullYear();
@@ -345,7 +345,7 @@ class ProgramBuilder {
         termCourses.push(sequence);
         completed = _.uniq([ ...completed, ..._.flatten(sequence.courses.map(e => e.code)) ]);
         // eslint-disable-next-line
-        candidateCourses = await this.findCandidateCourses({ 
+        candidateCourses = await this.findCandidateCourses({
           completedCourses: completed,
           requiredCourses: required,
         });

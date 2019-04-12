@@ -339,69 +339,91 @@ class StudentForm extends Component {
     event.preventDefault();
     const state = this.state;
 
-    if (state.fallNumOfCourses === 0
-      && state.summerNumOfCourses === 0
-      && state.winterNumOfCourses === 0) {
-      const msg = 'You have selected a preference of no courses for every term, '
-        + 'please select at least one course in one term!';
-      // const newState = Object.assign({}, state);
-      // newState.formErrorMsg.push(msg);
-      // this.setState(newState);
-      this.setState({ formErrorMsg: [ msg ], latestErrorMsg: msg });
-      return;
-    }
+    // if (state.fallNumOfCourses === 0
+    //   && state.summerNumOfCourses === 0
+    //   && state.winterNumOfCourses === 0) {
+    //   const msg = 'You have selected a preference of no courses for every term, '
+    //     + 'please select at least one course in one term!';
+    //   // const newState = Object.assign({}, state);
+    //   // newState.formErrorMsg.push(msg);
+    //   // this.setState(newState);
+    //   this.setState({ formErrorMsg: [ msg ], latestErrorMsg: msg });
+    //   return;
+    // }
 
-    if (state.fallSelectedCourses.length !== state.fallNumOfCourses) {
-      const msg = `You indicated a preference of ${state.fallNumOfCourses}
-      courses for Fall, but did not select that amount!`;
-      // const newState = Object.assign({}, state);
-      // newState.formErrorMsg.push(msg);
-      // this.setState(newState);
-      this.setState({ formErrorMsg: [ msg ], latestErrorMsg: msg });
-      return;
-    }
-    if (state.winterSelectedCourses.length !== state.winterNumOfCourses) {
-      const msg = `You indicated a preference of ${state.winterNumOfCourses}
-      courses for Winter, but did not select that amount!`;
-      // const newState = Object.assign({}, state);
-      // newState.formErrorMsg.push(msg);
-      // this.setState(newState);
-      this.setState({ formErrorMsg: [ msg ], latestErrorMsg: msg });
-      return;
-    }
-    if (state.summerSelectedCourses.length !== state.summerNumOfCourses) {
-      const msg = `You indicated a preference of ${state.summerNumOfCourses}
-      courses for Summer, but did not select that amount!`;
-      // const newState = Object.assign({}, state);
-      // newState.formErrorMsg.push(msg);
-      // this.setState(newState);
-      this.setState({ formErrorMsg: [ msg ], latestErrorMsg: msg });
-      return;
-    }
+    // if (state.fallSelectedCourses.length !== state.fallNumOfCourses) {
+    //   const msg = `You indicated a preference of ${state.fallNumOfCourses}
+    //   courses for Fall, but did not select that amount!`;
+    //   // const newState = Object.assign({}, state);
+    //   // newState.formErrorMsg.push(msg);
+    //   // this.setState(newState);
+    //   this.setState({ formErrorMsg: [ msg ], latestErrorMsg: msg });
+    //   return;
+    // }
+    // if (state.winterSelectedCourses.length !== state.winterNumOfCourses) {
+    //   const msg = `You indicated a preference of ${state.winterNumOfCourses}
+    //   courses for Winter, but did not select that amount!`;
+    //   // const newState = Object.assign({}, state);
+    //   // newState.formErrorMsg.push(msg);
+    //   // this.setState(newState);
+    //   this.setState({ formErrorMsg: [ msg ], latestErrorMsg: msg });
+    //   return;
+    // }
+    // if (state.summerSelectedCourses.length !== state.summerNumOfCourses) {
+    //   const msg = `You indicated a preference of ${state.summerNumOfCourses}
+    //   courses for Summer, but did not select that amount!`;
+    //   // const newState = Object.assign({}, state);
+    //   // newState.formErrorMsg.push(msg);
+    //   // this.setState(newState);
+    //   this.setState({ formErrorMsg: [ msg ], latestErrorMsg: msg });
+    //   return;
+    // }
 
-    this.setState({
-      showSpinner: true,
-    });
+    // this.setState({
+    //   showSpinner: true,
+    // });
 
+    // const jsonObject = {
+    //   fall: {
+    //     requestedCourses: state.fallSelectedCourses,
+    //     eveningTimePreference: state.fallTimePreference,
+    //     numberOfCourses: state.fallNumOfCourses,
+    //   },
+
+    //   winter: {
+    //     requestedCourses: state.winterSelectedCourses,
+    //     eveningTimePreference: state.winterTimePreference,
+    //     numberOfCourses: state.winterNumOfCourses,
+    //   },
+
+    //   summer: {
+    //     requestedCourses: state.summerSelectedCourses,
+    //     eveningTimePreference: state.summerTimePreference,
+    //     numberOfCourses: state.summerNumOfCourses,
+    //   },
+    // };
+
+    // TESTER CODE
     const jsonObject = {
       fall: {
-        requestedCourses: state.fallSelectedCourses,
-        eveningTimePreference: state.fallTimePreference,
-        numberOfCourses: state.fallNumOfCourses,
+        requestedCourses: [ 'COMP232', 'COMP248', 'ENGR201', 'ENGR213' ],
+        eveningTimePreference: false,
+        numberOfCourses: 4,
       },
 
       winter: {
-        requestedCourses: state.winterSelectedCourses,
-        eveningTimePreference: state.winterTimePreference,
-        numberOfCourses: state.winterNumOfCourses,
+        requestedCourses: [ 'COMP249', 'SOEN287', 'SOEN228', 'ENGR233' ],
+        eveningTimePreference: false,
+        numberOfCourses: 4,
       },
 
       summer: {
-        requestedCourses: state.summerSelectedCourses,
-        eveningTimePreference: state.summerTimePreference,
-        numberOfCourses: state.summerNumOfCourses,
+        requestedCourses: [ 'ENCS282', 'ENGR202', 'COMP248', 'COMP352' ],
+        eveningTimePreference: true,
+        numberOfCourses: 4,
       },
     };
+    // END OF TESTER CODE
 
     const preferences = null;
     _.set(preferences, 'fall.requestedCourses', state.fallSelectedCourses.map(e => e.slice(0, 7)));
@@ -410,26 +432,6 @@ class StudentForm extends Component {
 
     localStorage.setItem('preferences', JSON.stringify(jsonObject));
 
-    // TESTER CODE
-    // const jsonObject = {
-    //   fall: {
-    //     requestedCourses: [ 'COMP232', 'COMP248', 'ENGR201', 'ENGR213' ],
-    //     eveningTimePreference: false,
-    //     numberOfCourses: 4,
-    //   },
-
-    //   winter: {
-    //     requestedCourses: [ 'COMP249', 'SOEN287', 'SOEN228', 'ENGR233' ],
-    //     eveningTimePreference: false,
-    //     numberOfCourses: 4,
-    //   },
-
-    //   summer: {
-    //     requestedCourses: [ 'ENCS282', 'ENGR202', 'COMP248', 'COMP352' ],
-    //     eveningTimePreference: true,
-    //     numberOfCourses: 4,
-    //   },
-    // };
     const { student } = this.props.auth;
     console.log('preferences:', preferences);
     console.log('jsonObject:', jsonObject);
@@ -544,7 +546,6 @@ class StudentForm extends Component {
       courseMap,
       currentView,
       terms,
-      formErrorMsg,
       showSpinner,
       allErrorMsgs,
     } = this.state;
