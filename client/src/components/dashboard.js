@@ -108,7 +108,7 @@ class Dashboard extends Component {
       });
     });
 
-    axios.post('/user/plan/example', { })
+    axios.post('/user/plan/example', {})
       .then((response) => {
         this.setState({
           savedPlan: response.data.plan,
@@ -151,158 +151,157 @@ class Dashboard extends Component {
 
     return (
       <MuiThemeProvider theme={custTheme}>
-      {savedPlan? (
-        <div className={classes.root}>
-          <div className={classes.dashboardTitle}>
-            <Typography variant='h4'>
-              {(student && student.name) ? `${student.name.first}'s Dashboard` : 'Your Dashboard'}
-            </Typography>
-          </div>
-          <Grid container spacing={24} alignContent='space-between' justify='center'>
-            <Grid item xs={12} lg={4}>
-              <Paper className={classes.leftpaper} elevation={1}>
-                <div className={classes.dashboardHeader}>
-                  <Typography variant='h5'>
-                    Profile
-                  </Typography>
-                </div>
-                <ExpansionPanel className={classes.topPanel}>
-                  <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography className={classes.heading}>Summary</Typography>
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
-                    <Table className={classes.table}>
-                      <TableBody>
-                        <TableRow key='name'>
-                          <TableCell component='th' scope='row'>
-                            Name:
-                          </TableCell>
-                          <TableCell align='center'>
-                            {(student && student.name) ? `${student.name.first} ${student.name.last}` : ''}
-                          </TableCell>
-                        </TableRow>
-
-                        <TableRow key='id'>
-                          <TableCell component='th' scope='row'>
-                            ID:
-                          </TableCell>
-                          <TableCell align='center'>
-                            {student && student.id}
-                          </TableCell>
-                        </TableRow>
-
-                        <TableRow key='degree'>
-                          <TableCell component='th' scope='row'>
-                            Degree:
-                          </TableCell>
-                          <TableCell align='center'>
-                            {student && student.record && student.record.degree ? 'SOEN' : ''}
-                          </TableCell>
-                        </TableRow>
-
-                        <TableRow key='option'>
-                          <TableCell component='th' scope='row'>
-                            Option:
-                          </TableCell>
-                          <TableCell align='center'>
-                            {student && student.record && student.record.degree ? student.record.degree.option : ''}
-                          </TableCell>
-                        </TableRow>
-
-                        <TableRow key='gpa'>
-                          <TableCell component='th' scope='row'>
-                            GPA:
-                          </TableCell>
-                          <TableCell align='center'>
-                            {student ? student.gpa : ''}
-                          </TableCell>
-                        </TableRow>
-
-                        <TableRow key='standing'>
-                          <TableCell component='th' scope='row'>
-                            Standing:
-                          </TableCell>
-                          <TableCell align='center'>
-                            {student ? student.standing : ''}
-                          </TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
-
-                {true
-                  ? (
-                    <Grid item xs={12} className='donut'>
-                      <ProgressDonut data={this.calcProgressData()} />
-                    </Grid>
-                  )
-                  : JSON.stringify(this.calcProgressData())}
-
-                <div className={classes.dashboardHeader}>
-                  <Typography variant='h5'>
-                    Academics
-                  </Typography>
-                </div>
-                <ExpansionPanel>
-                  <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography className={classes.heading}>Completed Courses</Typography>
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
-                    <Table className={classes.table}>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Course Code</TableCell>
-                          <TableCell align='center'>Grade</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {(student && student.record) && (student.record.completedCourses.length > 0 ? student.record.completedCourses : { code: 'NA', grade: 'NA' }).map((course, i) => (
-                          <TableRow key={i}>
+        {savedPlan ? (
+          <div className={classes.root}>
+            <div className={classes.dashboardTitle}>
+              <Typography variant='h4'>
+                Your Dashboard
+              </Typography>
+            </div>
+            <Grid container spacing={24} alignContent='space-between' justify='center'>
+              <Grid item xs={12} lg={4}>
+                <Paper className={classes.leftpaper} elevation={1}>
+                  <div className={classes.dashboardHeader}>
+                    <Typography variant='h5'>
+                      Profile
+                    </Typography>
+                  </div>
+                  <ExpansionPanel className={classes.topPanel} defaultExpanded>
+                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                      <Typography className={classes.heading}>Summary</Typography>
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails>
+                      <Table className={classes.table}>
+                        <TableBody>
+                          <TableRow key='name'>
                             <TableCell component='th' scope='row'>
-                              {course.code}
+                              Name:
                             </TableCell>
                             <TableCell align='center'>
-                              {course.grade}
+                              {(student && student.name) ? `${student.name.first} ${student.name.last}` : ''}
                             </TableCell>
                           </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                          <TableRow key='id'>
+                            <TableCell component='th' scope='row'>
+                              ID:
+                            </TableCell>
+                            <TableCell align='center'>
+                              {student && student.id}
+                            </TableCell>
+                          </TableRow>
 
-              </Paper>
-            </Grid>
-            <Grid item xs={12} lg={8}>
-              <Paper className={classes.rightpaper} elevation={1}>
-                <div className={classes.planHeader}>
-                  <Typography variant='h5'>
-                    Saved Plans
-                  </Typography>
-                </div>
-                <Typography variant='body1' />
-                {savedPlan && savedUnableToAddReasonsMap
+                          <TableRow key='degree'>
+                            <TableCell component='th' scope='row'>
+                              Degree:
+                            </TableCell>
+                            <TableCell align='center'>
+                              {student && student.record && student.record.degree ? 'SOEN' : ''}
+                            </TableCell>
+                          </TableRow>
+
+                          <TableRow key='option'>
+                            <TableCell component='th' scope='row'>
+                              Option:
+                            </TableCell>
+                            <TableCell align='center'>
+                              {student && student.record && student.record.degree ? student.record.degree.option : ''}
+                            </TableCell>
+                          </TableRow>
+
+                          <TableRow key='gpa'>
+                            <TableCell component='th' scope='row'>
+                              GPA:
+                            </TableCell>
+                            <TableCell align='center'>
+                              {student ? student.gpa : ''}
+                            </TableCell>
+                          </TableRow>
+
+                          <TableRow key='standing'>
+                            <TableCell component='th' scope='row'>
+                              Standing:
+                            </TableCell>
+                            <TableCell align='center'>
+                              {student ? student.standing : ''}
+                            </TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    </ExpansionPanelDetails>
+                  </ExpansionPanel>
+
+                  {true
+                    ? (
+                      <Grid item xs={12} className='donut'>
+                        <ProgressDonut data={this.calcProgressData()} />
+                      </Grid>
+                    )
+                    : JSON.stringify(this.calcProgressData())}
+
+                  <div className={classes.dashboardHeader}>
+                    <Typography variant='h5'>
+                      Academics
+                    </Typography>
+                  </div>
+                  <ExpansionPanel>
+                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                      <Typography className={classes.heading}>Completed Courses</Typography>
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails>
+                      <Table className={classes.table}>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Course Code</TableCell>
+                            <TableCell align='center'>Grade</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {(student && student.record) && (student.record.completedCourses.length > 0 ? student.record.completedCourses : { code: 'NA', grade: 'NA' }).map((course, i) => (
+                            <TableRow key={i}>
+                              <TableCell component='th' scope='row'>
+                                {course.code}
+                              </TableCell>
+                              <TableCell align='center'>
+                                {course.grade}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </ExpansionPanelDetails>
+                  </ExpansionPanel>
+
+                </Paper>
+              </Grid>
+              <Grid item xs={12} lg={8}>
+                <Paper className={classes.rightpaper} elevation={1}>
+                  <div className={classes.planHeader}>
+                    <Typography variant='h5'>
+                      Saved Plans
+                    </Typography>
+                  </div>
+                  <Typography variant='body1' />
+                  {savedPlan && savedUnableToAddReasonsMap
                     && (
-                    <Plan
-                      auth={this.props.auth}
-                      formData={savedPlan}
-                      unableToAddReasonsMap={savedUnableToAddReasonsMap}
-                      hideHeader
-                      hideNotice
-                    />
+                      <Plan
+                        auth={this.props.auth}
+                        formData={savedPlan}
+                        unableToAddReasonsMap={savedUnableToAddReasonsMap}
+                        hideHeader
+                        hideNotice
+                      />
                     )
                   }
-              </Paper>
+                </Paper>
+              </Grid>
             </Grid>
-          </Grid>
-        </div>
-        ): (
-          <div className='progress'>
-            <Typography variant='h5'>Hold on while we gather your information...</Typography>
-            <br />
-            <CircularProgress className={classes.progress} />
           </div>
+        ) : (
+          <div className='progress'>
+              <Typography variant='h5'>Hold on while we gather your information...</Typography>
+              <br />
+              <CircularProgress className={classes.progress} />
+            </div>
         )}
         {this.state.errorMsg && (
           <SnackbarAlert
