@@ -20,12 +20,19 @@ class ProgramBuilder {
     }
     return (uncompletedCourse, missingDependencies) => {
       let allDependenciesMet;
+      if (!uncompletedCourse) {
+        console.error('hasNoUnmetDependenciesPartial: falsy value detected inside uncompletedCourse.');
+        return false;
+      }
       try {
         let course;
         if (_.isString(uncompletedCourse)) {
           course = Catalog.findOne({ code: uncompletedCourse });
         } else if (uncompletedCourse.code) {
           course = Catalog.findOne({ code: uncompletedCourse.code });
+        }
+        if (!course) {
+          return true;
         }
         // Verify if all prerequisites are met
         // Check if completedCourses is an array of {} or ''
@@ -334,7 +341,7 @@ class ProgramBuilder {
     const termCourses = [];
     const terms = [ 'fall', 'winter', 'summer' ];
     const numberOfTerms = terms.length;
-    const MAX_LOOP_ITERATIONS = 1000;
+    const MAX_LOOP_ITERATIONS = 100;
 
     let termTracker = 0;
     let year = (new Date()).getFullYear();
@@ -372,7 +379,8 @@ class ProgramBuilder {
       termTracker += 1;
 
       if (currentLoopIteration >= MAX_LOOP_ITERATIONS) {
-        throw new Error('Maximum number of sequence iterations attempted. Issue with requirements.');
+        // throw new Error('Maximum number of sequence iterations attempted. Issue with requirements.');
+        break;
       }
     }
 

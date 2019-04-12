@@ -9,6 +9,24 @@ class Catalog {
   static get courses() {
     return [
       {
+        title: 'Introduction to Game Development',
+        code: 'COMP376',
+        credits: '4.00',
+        rawpre: 'Never Taken: COMP476 You must complete 1 of the following rules   Course Prerequisite: COMP471; Course prerequisite: COMP371',
+        prerequisiteCodes: [ [ 'COMP371' ] ],
+        corequisiteCodes: null,
+        equivalentCodes: null,
+      },
+      {
+        title: 'Advanced Game Development',
+        code: 'COMP476',
+        credits: '4.00',
+        rawpre: 'Course Prerequisite: COMP376; COMP361 or ENGR391',
+        prerequisiteCodes: [ [ 'COMP376' ], [ 'COMP361', 'ENGR391' ] ],
+        corequisiteCodes: null,
+        equivalentCodes: null,
+      },
+      {
         title: 'FLIGHT CONTROL SYSTEMS',
         code: 'AERO480',
         credits: '3.50',
