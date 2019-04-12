@@ -403,18 +403,20 @@ class Plan extends Component {
                   <ExpansionPanelDetails>
                     <Grid item xs={4}>
                       <div className={classes.notice}>
-                        <Typography align='left' variant='button'>Fall</Typography>
+                        <Typography align='left' variant='overline'>Fall</Typography>
                         <Divider />
+                        <br />
                         <div>
                           {/* <MuiThemeProvider theme={theme}> */}
                           {this.props.unableToAddReasonsMap.fall
                             && Object.keys(this.props.unableToAddReasonsMap.fall).map(
                               courseCode => (
                                 <div>
-                                  <Typography variant='overline' align='left'>
-                                    {`${courseCode}: `}
+                                  <Typography variant='caption' align='left'>
+                                    {`${courseCode} – `}
                                     {`${this.props.unableToAddReasonsMap.fall[courseCode]}`}
                                   </Typography>
+                                  <br />
                                 </div>
                               ),
                             )
@@ -425,8 +427,9 @@ class Plan extends Component {
                     </Grid>
                     <Grid item xs={4}>
                       <div className={classes.notice}>
-                        <Typography align='left' variant='button'>Winter</Typography>
+                        <Typography align='left' variant='overline'>Winter</Typography>
                         <Divider />
+                        <br />
                         <div>
                           {/* <MuiThemeProvider theme={theme}> */}
                           {this.props.unableToAddReasonsMap.winter
@@ -434,10 +437,11 @@ class Plan extends Component {
                               courseCode => (
 
                                 <div>
-                                  <Typography variant='overline' align='left'>
-                                    {`${courseCode}: `}
+                                  <Typography variant='caption' align='left'>
+                                    {`${courseCode} – `}
                                     {`${this.props.unableToAddReasonsMap.winter[courseCode]}`}
                                   </Typography>
+                                  <br />
                                 </div>
                               ),
                             )
@@ -448,18 +452,20 @@ class Plan extends Component {
                     </Grid>
                     <Grid item xs={4}>
                       <div className={classes.notice}>
-                        <Typography align='left' variant='button'>Summer</Typography>
+                        <Typography align='left' variant='overline'>Summer</Typography>
                         <Divider />
+                        <br />
                         <div>
                           {/* <MuiThemeProvider theme={theme}> */}
                           {this.props.unableToAddReasonsMap.summer
                             && Object.keys(this.props.unableToAddReasonsMap.summer).map(
                               courseCode => (
                                 <div>
-                                  <Typography align='left' variant='overline' fontWeight={600}>
-                                    {`${courseCode}: `}
+                                  <Typography align='left' variant='caption'>
+                                    {`${courseCode} – `}
                                     {`${this.props.unableToAddReasonsMap.summer[courseCode]}`}
                                   </Typography>
+                                  <br />
                                 </div>
                               ),
                             )
@@ -472,7 +478,7 @@ class Plan extends Component {
                 </ExpansionPanel>
               )
             }
-            {terms ? (
+            {this.state.fallSchedulerArr.length > 0 || this.state.winterSchedulerArr.length > 0 || this.state.summerSchedulerArr.length > 0 ? (
               <Typography variant='h5'>Agenda Views</Typography>
             ) : null}
             {terms
@@ -500,7 +506,7 @@ class Plan extends Component {
                             <Scheduler data={this.state[`${term}SchedulerData`]}>
                               <ViewState currentDate={this[`${term}StartDate`]} />
                               <WeekView
-                                excludedDays={[ 0, 6 ]}
+                                excludedDays={[0, 6]}
                                 cellDuration={60}
                                 startDayHour={8}
                                 endDayHour={24}
@@ -522,8 +528,8 @@ class Plan extends Component {
                                   {theme.direction === 'rtl' ? (
                                     <KeyboardArrowLeft />
                                   ) : (
-                                    <KeyboardArrowRight />
-                                  )}
+                                      <KeyboardArrowRight />
+                                    )}
                                 </Button>
                               )}
                               backButton={(
@@ -535,8 +541,8 @@ class Plan extends Component {
                                   {theme.direction === 'rtl' ? (
                                     <KeyboardArrowRight />
                                   ) : (
-                                    <KeyboardArrowLeft />
-                                  )}
+                                      <KeyboardArrowLeft />
+                                    )}
                                   Back
                                 </Button>
                               )}
