@@ -121,16 +121,20 @@ class Navbar extends Component {
                       </MenuItem>
                     </Menu>
                   </div>
-                  <span className='header-logo'>
-                    <Typography
-                      to='/'
-                      component={RouterLink}
-                      variant='h4'
-                      inline
-                    >
-                      CourseBin
-                    </Typography>
-                  </span>
+                  {window.location.pathname !== '/'
+                    && (
+                    <span className='header-logo'>
+                      <Typography
+                        to='/'
+                        component={RouterLink}
+                        variant='h4'
+                        inline
+                      >
+                        CourseBin
+                      </Typography>
+                    </span>
+                    )
+                  }
                   <div className={classes.profileIcon}>
                     <IconButton
                       aria-owns={openProfile ? 'menu-appbar' : undefined}
