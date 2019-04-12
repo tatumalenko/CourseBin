@@ -423,14 +423,18 @@ class StudentForm extends Component {
         numberOfCourses: 4,
       },
     };
+    const preferences = _.cloneDeep(jsonObject);
+    _.set(preferences, 'fall.requestedCourses', jsonObject.fall.requestedCourses.map(e => e.slice(0, 7)));
+    _.set(preferences, 'winter.requestedCourses', jsonObject.winter.requestedCourses.map(e => e.slice(0, 7)));
+    _.set(preferences, 'summer.requestedCourses', jsonObject.summer.requestedCourses.map(e => e.slice(0, 7)));
     // END OF TESTER CODE
 
-    const preferences = _.cloneDeep(jsonObject);
-    _.set(preferences, 'fall.requestedCourses', state.fallSelectedCourses.map(e => e.slice(0, 7)));
-    _.set(preferences, 'winter.requestedCourses', state.winterSelectedCourses.map(e => e.slice(0, 7)));
-    _.set(preferences, 'summer.requestedCourses', state.summerSelectedCourses.map(e => e.slice(0, 7)));
+    // const preferences = _.cloneDeep(jsonObject);
+    // _.set(preferences, 'fall.requestedCourses', state.fallSelectedCourses.map(e => e.slice(0, 7)));
+    // _.set(preferences, 'winter.requestedCourses', state.winterSelectedCourses.map(e => e.slice(0, 7)));
+    // _.set(preferences, 'summer.requestedCourses', state.summerSelectedCourses.map(e => e.slice(0, 7)));
 
-    localStorage.setItem('preferences', JSON.stringify(jsonObject));
+    // localStorage.setItem('preferences', JSON.stringify(jsonObject));
 
     const { student } = this.props.auth;
     console.log('preferences:', preferences);
