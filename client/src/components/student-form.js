@@ -91,7 +91,7 @@ const styles = theme => ({
   },
   chips: {
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'left',
     flexWrap: 'wrap',
     padding: theme.spacing.unit * 2,
   },
