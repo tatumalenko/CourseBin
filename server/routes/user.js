@@ -84,6 +84,49 @@ router.get('/', (req, res) => { // this is hijacking all routes in yarn dev
   }
 });
 
+router.get('/student', async (req, res) => {
+  const { user } = req;
+  if (user && (!!Number(user.username) || !!user.studentId)) {
+    let student = await Student.findOne({
+      id: user.studentId ?
+        user.studentId : user.username,
+    });
+    if (student) {
+      const studentId = student.id;
+      student = student.toObject({
+        getters: true,
+        virtuals: true,
+        versionKey: false,
+        transform: (doc, ret) => {
+          [ '_id', 'id' ].forEach((key) => {
+            // eslint-disable-next-line
+            delete ret[key];
+          });
+        },
+      });
+      student = { id: studentId, ...student };
+      console.log(student);
+    }
+    res
+      .status(200)
+      .json({
+        message: 'OK',
+        user,
+        student,
+      });
+  } else {
+    const message = !user ? 'No user logged in' : 'No student associated to user';
+    console.log(message);
+    res
+      .status(404)
+      .json({
+        message,
+        user: null,
+        student: null,
+      });
+  }
+});
+
 router.post('/login', (req, res, next) => {
   console.log('post login');
   console.log('req.body: ', req.body);
@@ -118,12 +161,18 @@ router.post('/plan', async (req, res) => {
   console.log('post plan');
   try {
     if (req.user) {
-      const preferences = req.body;
-      const student = await Student.findOne({ id: 40055122 });
+      const preferences = new Preferences({
+        fall: req.body.fall,
+        winter: req.body.winter,
+        summer: req.body.summer,
+      });
+      const student = req.body.student ? req.body.student : await Student.findOne({ id: req.user.username }); // ? await Student.findOne({ id: student.id }) : ;
       const plan = await ProgramBuilder.findCandidatePlan({
-        completedCourses: student.record.completedCourses,
-        requiredCourses: SoftwareEngineeringDegree.requirements(student.record.degree.option),
-        preferences: new Preferences(preferences),
+        completedCourses: student && student.record ? student.record.completedCourses : [],
+        requiredCourses: SoftwareEngineeringDegree.requirements(
+          student && student.record ? student.record.degree.option : 'GENERAL',
+        ),
+        preferences,
       });
       res
         .status(200)
@@ -131,12 +180,13 @@ router.post('/plan', async (req, res) => {
           message: 'OK',
           plan: new Plan({
             schedules: {
-              fall: plan.schedules.fall.slice(0, 50),
+              fall: plan.schedules.fall,
               winter: plan.schedules.winter,
               summer: plan.schedules.summer,
             },
             sequences: plan.sequences,
           }),
+          unableToAddReasonsMap: preferences.unableToAddReasonsMap,
         });
     } else {
       res
@@ -149,6 +199,73 @@ router.post('/plan', async (req, res) => {
       .status(500)
       .json({ message: e.message });
   }
+  console.log('post plan request sent!');
+});
+
+router.post('/plan/example', async (req, res) => {
+  console.log('post plan example');
+  try {
+    if (req.user) {
+      const preferences = new Preferences({
+        fall: {
+          requestedCourses: [ 'COMP232', 'COMP248', 'ENGR201', 'ENGR213' ],
+          eveningTimePreference: false,
+          numberOfCourses: 4,
+        },
+        winter: {
+          requestedCourses: [ 'COMP249', 'SOEN287', 'SOEN228', 'ENGR233' ],
+          eveningTimePreference: false,
+          numberOfCourses: 4,
+        },
+        summer: {
+          requestedCourses: [ 'ENCS282', 'ENGR202', 'COMP248', 'COMP352' ],
+          eveningTimePreference: true,
+          numberOfCourses: 4,
+        },
+      });
+      let student = req.body.student;
+
+      if (!student) {
+        student = await Student.findOne({ id: req.user.username });
+      }
+
+      if (!student) {
+        await Student.findOne({ id: 40055122 });
+      }
+
+      const plan = await ProgramBuilder.findCandidatePlan({
+        completedCourses: student && student.record ? student.record.completedCourses : [],
+        requiredCourses: SoftwareEngineeringDegree.requirements(
+          student && student.record ? student.record.degree.option : 'GENERAL',
+        ),
+        preferences,
+      });
+      res
+        .status(200)
+        .json({
+          message: 'OK',
+          plan: new Plan({
+            schedules: {
+              fall: plan.schedules.fall,
+              winter: plan.schedules.winter,
+              summer: plan.schedules.summer,
+            },
+            sequences: plan.sequences,
+          }),
+          unableToAddReasonsMap: preferences.unableToAddReasonsMap,
+        });
+    } else {
+      res
+        .status(404)
+        .json({ message: 'No user logged in' });
+    }
+  } catch (e) {
+    console.error('routes.js: /user/plan:', e);
+    res
+      .status(500)
+      .json({ message: e.message });
+  }
+  console.log('post plan request sent!');
 });
 
 module.exports = router;

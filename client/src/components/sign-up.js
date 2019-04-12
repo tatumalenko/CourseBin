@@ -5,7 +5,6 @@ import { Redirect, Link as RouterLink } from 'react-router-dom';
 import {
   Button, Grid, Link, TextField, MuiThemeProvider, createMuiTheme, Typography,
 } from '@material-ui/core';
-import axios from 'axios';
 import cyan from '@material-ui/core/colors/cyan';
 
 const custTheme = createMuiTheme({
@@ -20,7 +19,6 @@ const custTheme = createMuiTheme({
     useNextVariants: true,
   },
 });
-
 
 const styles = theme => ({
   textField: {
@@ -45,6 +43,9 @@ class Signup extends Component {
 
   componentDidMount() {
     this._isMounted = true;
+    if (this.props.auth.isAuthenticated()) {
+      this.props.history.push('/');
+    }
   }
 
   componentWillUnmount() {
@@ -63,24 +64,14 @@ class Signup extends Component {
     const { username, password } = this.state;
     event.preventDefault();
 
-    // request to server to add a new username/password
-    axios.post('/user/', {
-      username,
-      password,
-    })
-      .then((response) => {
-        if (!response.data.errmsg) {
-          this.setState({
-            redirectTo: '/',
-          });
-        }
-      }).catch((error) => {
-        this.setState({
-          username: '',
-          password: '',
-          signupError: error.response,
-        });
-      });
+    this.props.auth.signup({ username, password }, (error) => {
+      this.setState(state => ({
+        username: !error ? state.username : '',
+        password: !error ? state.password : '',
+        redirectTo: !error ? '/login' : null,
+        signupError: error || false,
+      }));
+    });
   }
 
   render() {
@@ -151,6 +142,7 @@ class Signup extends Component {
             </Grid>
             <Grid item xs={12}>
               <Link
+                className='links'
                 to='/'
                 component={RouterLink}
                 color='primary'

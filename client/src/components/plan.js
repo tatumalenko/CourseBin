@@ -1,5 +1,6 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import { ViewState } from '@devexpress/dx-react-scheduler';
 import PropTypes from 'prop-types';
 import {
@@ -26,11 +27,13 @@ import {
 } from '@material-ui/core';
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@material-ui/icons';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ErrorIcon from '@material-ui/icons/Error';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 import moment from 'moment';
 import { withStyles } from '@material-ui/core/styles';
+import _ from 'lodash';
+import Divider from '@material-ui/core/Divider';
 import ChildBox from './box-child';
-
-const _ = require('lodash');
 
 const burgundy = {
   50: '#571D2E',
@@ -62,11 +65,31 @@ const styles = theme => ({
   sequence: {
     backgroundColor: 'rgba(0, 188, 212, 0.2)',
   },
+  notice: {
+    margin: 0,
+    marginBottom: '-25px',
+    minWidth: '275px',
+    padding: theme.spacing.unit * 2,
+  },
+  error: {
+    backgroundColor: fade('#571D2E', 1),
+    color: '#A98643',
+  },
+  errorMsg: {
+    color: '#A98643',
+  },
+  errorIcon: {
+    color: '#A98643',
+    marginTop: '3px',
+    marginRight: '5px',
+  },
 });
 
 class Plan extends Component {
   constructor(props) {
     super(props);
+    console.log('plan props:', this.props);
+    console.log('plan state:', this.state);
     const plan = props.formData;
     this.schedules = plan.schedules;
     this.sequences = plan.sequences;
@@ -79,7 +102,7 @@ class Plan extends Component {
 
     this.state = {
       // sequences
-      sequenceMap: this.parseSequences(),
+      sequenceMap: null,
 
       // ===== for parsing schedule data for each term ====
       terms: [],
@@ -101,13 +124,6 @@ class Plan extends Component {
       summerSchedulerArr: [],
       summerCourseInfo: [],
       summerActiveStep: 0,
-
-      // dummy info for the description box component
-      // TODO real implementation
-      course: 'COMP-472',
-      subject: 'Artificial Intelligence',
-      lecture: 'LEC LL 1234, Hall building 937',
-      tutorial: 'TUT A, Hall building 435 ',
     };
 
     this.createDate = this.createDate.bind(this);
@@ -123,8 +139,18 @@ class Plan extends Component {
     this.handleStepChange = this.handleStepChange.bind(this);
   }
 
-  componentDidMount(){
+  componentDidMount() {
+    if (_.isEmpty(this.props.formData)) {
+      this.props.history.push('/planner');
+      return;
+    }
+    this.setState({
+      sequenceMap: this.parseSequences(),
+    });
+
     this.parseSchedules();
+    console.log('plan state: ', this.state);
+    console.log('plan props: ', this.props);
   }
 
   parseSchedules = () => {
@@ -151,7 +177,7 @@ class Plan extends Component {
               startDate: beginDateTime.format('YYYY-MM-DD HH:mm'),
               endDate: finishDateTime.format('YYYY-MM-DD HH:mm'),
               id: scheduleIndex,
-              section: section,
+              section,
             });
           });
         });
@@ -159,29 +185,27 @@ class Plan extends Component {
     });
 
     this.state.terms.forEach((term, index) => {
-
       const schedules = this.state[`${term}Schedule`];
-      schedules.forEach((schedule, index) =>{
+      schedules.forEach((schedule, index) => {
         const scheduler = schedules.filter(el => el.id === index);
-        if(scheduler && scheduler.length > 0){
+        if (scheduler && scheduler.length > 0) {
           this.state[`${term}SchedulerArr`].push(scheduler);
         }
       });
-            
+
       const step = this.state[`${term}ActiveStep`];
 
-      //initial schedule view
+      // initial schedule view
       const initialView = this.state[`${term}SchedulerArr`][0];
-    
 
-      //description box for each course
+
+      // description box for each course
       const info = this.parseScheduleDetails(initialView, term, step);
 
       this.setState({
         [`${term}SchedulerData`]: initialView,
         [`${term}CourseInfo`]: info,
       });
-
     });
   }
 
@@ -236,55 +260,55 @@ class Plan extends Component {
   };
 
   parseScheduleDetails = (data, term, activeStep) => {
-    this[`${term}DetailMap`] = {}; //clear the map each time we go to next schedule      
-      data.forEach((schedule) => {
-        const section = schedule.section;
-        const courseCode = section.courseCode;
-        if (courseCode && !this[`${term}DetailMap`][`${courseCode}-${activeStep}`]) {
-          const location = section.location;
-          const kind = section.kind;
-          const description = `${kind} ${section.code} ${location.building} building Room: ${location.room}`;
-          const title = section.title;
-          if (kind === 'LEC') {
-            this[`${term}DetailMap`][`${courseCode}-${activeStep}`] = {
-              course: courseCode,
-              subject: title,
-              lecture: description,
-              id: activeStep,
-            };
-          } else if (kind === 'TUT') {
-            this[`${term}DetailMap`][`${courseCode}-${activeStep}`] = {
-              course: courseCode,
-              subject: title,
-              tutorial: description,
-              id: activeStep,
-            };
-          } else if (kind === 'LAB') {
-            this[`${term}DetailMap`][`${courseCode}-${activeStep}`] = {
-              course: courseCode,
-              subject: title,
-              lab: description,
-              id: activeStep,
-            };
-          }
-        } else {
-          const location = section.location;
-          const kind = section.kind;
-          const description = `${kind} ${section.code}, ${location.building} Building, Room ${location.room}`;
-          if (kind === 'LEC') {
-            this[`${term}DetailMap`][`${courseCode}-${activeStep}`].lecture = description;
-          } else if (kind === 'TUT') {
-            this[`${term}DetailMap`][`${courseCode}-${activeStep}`].tutorial = description;
-          } else if (kind === 'LAB') {
-            this[`${term}DetailMap`][`${courseCode}-${activeStep}`].lab = description;
-          }
+    this[`${term}DetailMap`] = {}; // clear the map each time we go to next schedule
+    data.forEach((schedule) => {
+      const section = schedule.section;
+      const courseCode = section.courseCode;
+      if (courseCode && !this[`${term}DetailMap`][`${courseCode}-${activeStep}`]) {
+        const location = section.location;
+        const kind = section.kind;
+        const description = `${kind} ${section.code} ${location.building} ${location.room}`;
+        const title = section.title;
+        if (kind === 'LEC') {
+          this[`${term}DetailMap`][`${courseCode}-${activeStep}`] = {
+            course: courseCode,
+            subject: title,
+            lecture: description,
+            id: activeStep,
+          };
+        } else if (kind === 'TUT') {
+          this[`${term}DetailMap`][`${courseCode}-${activeStep}`] = {
+            course: courseCode,
+            subject: title,
+            tutorial: description,
+            id: activeStep,
+          };
+        } else if (kind === 'LAB') {
+          this[`${term}DetailMap`][`${courseCode}-${activeStep}`] = {
+            course: courseCode,
+            subject: title,
+            lab: description,
+            id: activeStep,
+          };
         }
-      });
-      const map = this[`${term}DetailMap`];
+      } else {
+        const location = section.location;
+        const kind = section.kind;
+        const description = `${kind} ${section.code}, ${location.building} ${location.room}`;
+        if (kind === 'LEC') {
+          this[`${term}DetailMap`][`${courseCode}-${activeStep}`].lecture = description;
+        } else if (kind === 'TUT') {
+          this[`${term}DetailMap`][`${courseCode}-${activeStep}`].tutorial = description;
+        } else if (kind === 'LAB') {
+          this[`${term}DetailMap`][`${courseCode}-${activeStep}`].lab = description;
+        }
+      }
+    });
+    const map = this[`${term}DetailMap`];
     const courseDetails = [];
-    //push the details into array for UI
-    Object.keys(map).forEach((key)=>{
-        courseDetails.push(map[key]);
+    // push the details into array for UI
+    Object.keys(map).forEach((key) => {
+      courseDetails.push(map[key]);
     });
     return courseDetails;
   }
@@ -292,9 +316,9 @@ class Plan extends Component {
   setScheduleDetailsState = (term) => {
     const map = this[`${term}DetailMap`];
     const courseDetails = [];
-    //push the details into array for UI
-    Object.keys(map).forEach((key)=>{
-        courseDetails.push(map[key]);
+    // push the details into array for UI
+    Object.keys(map).forEach((key) => {
+      courseDetails.push(map[key]);
     });
     return courseDetails;
   }
@@ -322,7 +346,7 @@ class Plan extends Component {
     const scheduler = this.state[`${term}SchedulerArr`];
     const i = this.state[`${term}ActiveStep`] + 1;
     const data = scheduler[i];
-    const info =  this.parseScheduleDetails(data, term, i);
+    const info = this.parseScheduleDetails(data, term, i);
 
     this.setState(prevState => ({
       [termStep]: prevState[termStep] + 1,
@@ -336,7 +360,7 @@ class Plan extends Component {
     const scheduler = this.state[`${term}SchedulerArr`];
     const i = this.state[`${term}ActiveStep`] - 1;
     const data = scheduler[i];
-    const info =  this.parseScheduleDetails(data, term, i);
+    const info = this.parseScheduleDetails(data, term, i);
 
     this.setState(prevState => ({
       [termStep]: prevState[termStep] - 1,
@@ -363,29 +387,120 @@ class Plan extends Component {
       <div className='plan-container'>
         <Grid container spacing={16}>
           <Grid item xs={12} className='schedule-container'>
-            <div className='header-logo plan'>
-              <Typography variant='h4'>CourseBin</Typography>
-            </div>
-            <Typography id='schedule-header' variant='h4'>
-              Here's what we came up with...
-            </Typography>
-            <Typography variant='h5'>Agenda Views</Typography>
+            { !this.props.hideHeader
+              && (
+              <Typography id='schedule-header' variant='h4'>
+                  Here's what we came up with...
+              </Typography>
+              )
+            }
+
+            {!_.isEmpty(this.props.unableToAddReasonsMap) && !this.props.hideNotice
+              && (
+                <ExpansionPanel>
+                  <ExpansionPanelSummary className={classes.error} expandIcon={<ExpandMoreIcon className={classes.errorMsg} />}>
+                    <ErrorIcon className={classes.errorIcon} />
+                    <Typography className={classes.errorMsg} variant='h6'>
+                      We were unable to add certain courses you requested
+                    </Typography>
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails>
+                    <Grid item xs={4}>
+                      <div className={classes.notice}>
+                        <Typography align='left' variant='overline'>Fall</Typography>
+                        <Divider />
+                        <br />
+                        <div>
+                          {/* <MuiThemeProvider theme={theme}> */}
+                          {this.props.unableToAddReasonsMap.fall
+                            && Object.keys(this.props.unableToAddReasonsMap.fall).map(
+                              courseCode => (
+                                <div>
+                                  <Typography variant='caption' align='left'>
+                                    {`${courseCode} – `}
+                                    {`${this.props.unableToAddReasonsMap.fall[courseCode]}`}
+                                  </Typography>
+                                  <br />
+                                </div>
+                              ),
+                            )
+                          }
+                          {/* </MuiThemeProvider> */}
+                        </div>
+                      </div>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <div className={classes.notice}>
+                        <Typography align='left' variant='overline'>Winter</Typography>
+                        <Divider />
+                        <br />
+                        <div>
+                          {/* <MuiThemeProvider theme={theme}> */}
+                          {this.props.unableToAddReasonsMap.winter
+                            && Object.keys(this.props.unableToAddReasonsMap.winter).map(
+                              courseCode => (
+
+                                <div>
+                                  <Typography variant='caption' align='left'>
+                                    {`${courseCode} – `}
+                                    {`${this.props.unableToAddReasonsMap.winter[courseCode]}`}
+                                  </Typography>
+                                  <br />
+                                </div>
+                              ),
+                            )
+                          }
+                          {/* </MuiThemeProvider> */}
+                        </div>
+                      </div>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <div className={classes.notice}>
+                        <Typography align='left' variant='overline'>Summer</Typography>
+                        <Divider />
+                        <br />
+                        <div>
+                          {/* <MuiThemeProvider theme={theme}> */}
+                          {this.props.unableToAddReasonsMap.summer
+                            && Object.keys(this.props.unableToAddReasonsMap.summer).map(
+                              courseCode => (
+                                <div>
+                                  <Typography align='left' variant='caption'>
+                                    {`${courseCode} – `}
+                                    {`${this.props.unableToAddReasonsMap.summer[courseCode]}`}
+                                  </Typography>
+                                  <br />
+                                </div>
+                              ),
+                            )
+                          }
+                          {/* </MuiThemeProvider> */}
+                        </div>
+                      </div>
+                    </Grid>
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
+              )
+            }
+            {this.state.fallSchedulerArr.length > 0 || this.state.winterSchedulerArr.length > 0 || this.state.summerSchedulerArr.length > 0 ? (
+              <Typography variant='h5'>Agenda Views</Typography>
+            ) : null}
             {terms
               ? terms.map((term, index) => (
-                <ExpansionPanel defaultExpanded={index === 0}>
+                <ExpansionPanel>
                   <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography>{_.startCase(term)}</Typography>
                   </ExpansionPanelSummary>
 
                   <ExpansionPanelDetails>
                     <Grid item xs={3}>
-                      {this.state[`${term}CourseInfo`].map((courseDetails) => (
-                      <ChildBox
-                        titleClass={courseDetails.course}
-                        subject={courseDetails.subject}
-                        lecture={courseDetails.lecture}
-                        tutorial={courseDetails.tutorial}
-                      />
+                      {this.state[`${term}CourseInfo`].map(courseDetails => (
+                        <ChildBox
+                          titleClass={courseDetails.course}
+                          subject={courseDetails.subject}
+                          lecture={courseDetails.lecture}
+                          tutorial={courseDetails.tutorial}
+                        />
                       ))}
                     </Grid>
                     <Grid item xs={9}>
@@ -395,7 +510,7 @@ class Plan extends Component {
                             <Scheduler data={this.state[`${term}SchedulerData`]}>
                               <ViewState currentDate={this[`${term}StartDate`]} />
                               <WeekView
-                                excludedDays={[0, 6]}
+                                excludedDays={[ 0, 6 ]}
                                 cellDuration={60}
                                 startDayHour={8}
                                 endDayHour={24}
@@ -417,8 +532,8 @@ class Plan extends Component {
                                   {theme.direction === 'rtl' ? (
                                     <KeyboardArrowLeft />
                                   ) : (
-                                      <KeyboardArrowRight />
-                                    )}
+                                    <KeyboardArrowRight />
+                                  )}
                                 </Button>
                               )}
                               backButton={(
@@ -430,8 +545,8 @@ class Plan extends Component {
                                   {theme.direction === 'rtl' ? (
                                     <KeyboardArrowRight />
                                   ) : (
-                                      <KeyboardArrowLeft />
-                                    )}
+                                    <KeyboardArrowLeft />
+                                  )}
                                   Back
                                 </Button>
                               )}

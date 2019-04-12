@@ -15,17 +15,27 @@ class ProgramBuilder {
   }
 
   static hasNoUnmetDependenciesPartial({ completedCourses }) {
-    return async (uncompletedCourse) => {
+    return (uncompletedCourse, missingDependencies) => {
       let allDependenciesMet;
       try {
-        const course = await Catalog.findOne({ code: uncompletedCourse });
+        let course;
+        if (_.isString(uncompletedCourse)) {
+          course = Catalog.findOne({ code: uncompletedCourse });
+        } else if (uncompletedCourse.code) {
+          course = Catalog.findOne({ code: uncompletedCourse.code });
+        }
         // Verify if all prerequisites are met
         // Check if completedCourses is an array of {} or ''
         allDependenciesMet = course.prerequisiteCodes ? course.prerequisiteCodes.every(
           prerequisiteOrCodes => prerequisiteOrCodes.some(
-            prerequisiteCode => (completedCourses[0] && _.isString(completedCourses[0]) ?
-              completedCourses.includes(prerequisiteCode) :
-              completedCourses.map(e => e.code).includes(prerequisiteCode)),
+            (prerequisiteCode) => {
+              // Supplied courses are simply strings of the course codes
+              if (completedCourses[0] && _.isString(completedCourses[0])) {
+                return completedCourses.includes(prerequisiteCode);
+              }
+              // Supplied courses are actually objects with code and grade props
+              return completedCourses.map(e => e.code).includes(prerequisiteCode);
+            },
           ),
         ) : true;
 
@@ -38,12 +48,17 @@ class ProgramBuilder {
             ),
           ) : true;
         }
+
+        if (!allDependenciesMet && missingDependencies && _.isArray(missingDependencies)) {
+          missingDependencies.push(course.rawpre);
+        }
       } catch (err) {
         console.error(
           `Error caught for hasUnmetDependencies with uncompletedCourse: ${uncompletedCourse}`,
         );
         console.error(err);
       }
+
       return allDependenciesMet;
     };
   }
@@ -300,6 +315,7 @@ class ProgramBuilder {
     const termCourses = [];
     const terms = [ 'fall', 'winter', 'summer' ];
     const numberOfTerms = terms.length;
+    const MAX_LOOP_ITERATIONS = 1000;
 
     let termTracker = 0;
     let year = (new Date()).getFullYear();
@@ -312,7 +328,9 @@ class ProgramBuilder {
       completedCourses: completed,
       requiredCourses: required,
     });
+    let currentLoopIteration = 0;
     while (_.difference(required, completed).length > 0) {
+      currentLoopIteration += 1;
       year = getTermYear(year, termTracker + termsPassedOffset);
       if (preferences[terms[termTracker % numberOfTerms]].numberOfCourses !== 0) {
         // Of the candidate courses, pick at most the number specified in
@@ -327,12 +345,16 @@ class ProgramBuilder {
         termCourses.push(sequence);
         completed = _.uniq([ ...completed, ..._.flatten(sequence.courses.map(e => e.code)) ]);
         // eslint-disable-next-line
-        candidateCourses = await this.findCandidateCourses({ 
+        candidateCourses = await this.findCandidateCourses({
           completedCourses: completed,
           requiredCourses: required,
         });
       }
       termTracker += 1;
+
+      if (currentLoopIteration >= MAX_LOOP_ITERATIONS) {
+        throw new Error('Maximum number of sequence iterations attempted. Issue with requirements.');
+      }
     }
 
     return termCourses;
@@ -343,6 +365,8 @@ class ProgramBuilder {
     requiredCourses,
     preferences,
   }) {
+    const hasNoUnmetDependencies = this.hasNoUnmetDependenciesPartial({ completedCourses });
+
     const candidateSchedules = await this.findCandidateSchedules({
       completedCourses,
       requiredCourses,
@@ -384,6 +408,60 @@ class ProgramBuilder {
     plan.schedules.fall.splice(50);
     plan.schedules.winter.splice(50);
     plan.schedules.summer.splice(50);
+
+    const unableToAddReasonsMap = {
+      fall: {},
+      winter: {},
+      summer: {},
+    };
+    // Retrieve missing requisites for courses not able to
+    const ableToAddCoursesMap = {
+      fall: plan.schedules.fall[0] && !!plan.schedules.fall[0].sections.length ? this.findCoursesFromSections(plan.schedules.fall[0].sections) : null,
+      winter: plan.schedules.winter[0] && !!plan.schedules.winter[0].sections.length ? this.findCoursesFromSections(plan.schedules.winter[0].sections) : null,
+      summer: plan.schedules.summer[0] && !!plan.schedules.summer[0].sections.length ? this.findCoursesFromSections(plan.schedules.summer[0].sections) : null,
+    };
+    const unableToAddCoursesMap = {
+      fall: _.difference(preferences.fall.requestedCourses.map(e => (e.code ? e.code : e)), ableToAddCoursesMap.fall),
+      winter: _.difference(preferences.winter.requestedCourses.map(e => (e.code ? e.code : e)), ableToAddCoursesMap.winter),
+      summer: _.difference(preferences.summer.requestedCourses.map(e => (e.code ? e.code : e)), ableToAddCoursesMap.summer),
+    };
+    Object.keys(unableToAddCoursesMap).forEach((termKey) => {
+      let updatedCompletedCourses;
+
+      if (termKey === 'fall') {
+        updatedCompletedCourses = completedCourses.map(e => e.code);
+      } else if (termKey === 'winter') {
+        updatedCompletedCourses = [
+          ...completedCourses.map(e => e.code),
+          ...(ableToAddCoursesMap.fall ? ableToAddCoursesMap.fall : []),
+        ];
+      } else if (termKey === 'summer') {
+        updatedCompletedCourses = [
+          ...completedCourses.map(e => e.code),
+          ...(ableToAddCoursesMap.fall ? ableToAddCoursesMap.fall : []),
+          ...(ableToAddCoursesMap.winter ? ableToAddCoursesMap.winter : []),
+        ];
+      } else {
+        throw new Error('Something went wrong!');
+      }
+
+      updatedCompletedCourses = _.uniq(updatedCompletedCourses);
+
+      const hasNoUnmetDependencies = this.hasNoUnmetDependenciesPartial({ completedCourses: updatedCompletedCourses });
+
+      // eslint-disable-next-line
+      for (const unableToAddCourse of unableToAddCoursesMap[termKey]) {
+        const reason = [];
+        if (!hasNoUnmetDependencies(unableToAddCourse, reason)) {
+          unableToAddReasonsMap[termKey][unableToAddCourse] = reason[0] ? reason[0].trim() : 'Unmet requisite';
+        } else {
+          unableToAddReasonsMap[termKey][unableToAddCourse] = 'No sections found';
+        }
+      }
+    });
+
+    // eslint-disable-next-line
+    preferences.unableToAddReasonsMap = unableToAddReasonsMap;
 
     return plan;
   }

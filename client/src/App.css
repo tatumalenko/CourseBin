@@ -17,12 +17,16 @@
   text-decoration: none;
  }
 
+ .links:hover{
+   color: #571D2E;
+   text-decoration: none;
+ }
 
 /* global styles */
 
 .title-wrapper{
-  margin-top: 100px;
-  margin-bottom: 50px;
+  margin-top: 50px;
+  margin-bottom: 25px;
 }
 
 .title-wrapper h1{
@@ -66,18 +70,17 @@
   font-size: 12px;
 }
 
-.header-logo h4{
+.header-logo a{
   font-family: 'Londrina Solid', cursive;
   color: #A98638;
+  text-decoration: none;
   position: relative;
-  bottom: 58px
+  top: 4px;
+
 }
 
-.header-logo.plan h4{
-    position: relative;
-    bottom: 82px;
-    margin-left: 300px;
-    margin-right: 300px;
+.header-logo a:hover{
+  text-decoration: none;
 }
 
 .student-form #form-header{
@@ -164,13 +167,18 @@
 }
 
 .progress{
-  margin: 25%;
+  margin-bottom: 10%;
+  margin-top: 15%;
 }
 
 #schedule-header{
   margin-top: -30px;
   margin-bottom: 25px;
   text-align: left;
+}
+
+.plan-container{
+  margin-top: 50px;
 }
 
 .plan-container h5{
@@ -192,6 +200,10 @@
 
 .box-container {
   margin-bottom: 15px;
+}
+
+.donut .recharts-wrapper{
+  width: 100% !important;
 }
 
 

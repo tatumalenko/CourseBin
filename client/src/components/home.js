@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
 import {
- Button, MuiThemeProvider, createMuiTheme, Typography 
+  Button, Grid, MuiThemeProvider, createMuiTheme, Typography,
 } from '@material-ui/core';
 import cyan from '@material-ui/core/colors/cyan';
-import StudentForm from './student-form';
 
 const custTheme = createMuiTheme({
   palette: {
@@ -19,53 +20,64 @@ const custTheme = createMuiTheme({
   },
 });
 
+const styles = theme => ({
+  button: {
+    marginBottom: '15px',
+    width: '225px',
+  },
+});
+
+// eslint-disable-next-line
 class Home extends Component {
-  // eslint-disable-next-line no-useless-constructor
-  constructor(props) {
-    super(props);
-    this.state = {
-      showForm: false,
-    };
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  handleClick() {
-    this.setState({
-      showForm: true,
-    });
-  }
-
   render() {
-    const { redirectTo, showForm } = this.state;
-    if (redirectTo) {
-      return <Redirect to={{ pathname: redirectTo }} />;
-    }
-
+    const { classes } = this.props;
     return (
       <MuiThemeProvider theme={custTheme}>
-        {showForm
-          ? <StudentForm />
-          : (
-            <div>
-              <div className='title-wrapper'>
-                <Typography variant='h1'>CourseBin</Typography>
-              </div>
+        {(
+          <div>
+            <div className='title-wrapper'>
+              <Typography variant='h1'>CourseBin</Typography>
+            </div>
+            <Grid item xs={12}>
               <Button
+                className={classes.button}
                 id='submit'
                 size='large'
                 variant='outlined'
                 color='primary'
                 type='submit'
-                onClick={this.handleClick}
+                component={Link}
+                to='/dashboard'
               >
-                Let&apos;s Get Started!
+                Head to dashboard
               </Button>
-            </div>
-          )
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                className={classes.button}
+                id='submit'
+                size='large'
+                variant='outlined'
+                color='primary'
+                type='submit'
+                component={Link}
+                to='/planner'
+              >
+                Plan my schedule
+              </Button>
+            </Grid>
+          </div>
+        )
         }
       </MuiThemeProvider>
     );
   }
 }
 
-export default Home;
+
+Home.propTypes = {
+  classes: PropTypes.object.isRequired,
+  theme: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles, { withTheme: true })(Home);

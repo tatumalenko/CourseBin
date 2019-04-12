@@ -5,7 +5,6 @@ import { Redirect, Link as RouterLink } from 'react-router-dom';
 import {
   Button, Grid, Link, TextField, MuiThemeProvider, createMuiTheme, Typography,
 } from '@material-ui/core';
-import axios from 'axios';
 import cyan from '@material-ui/core/colors/cyan';
 
 const custTheme = createMuiTheme({
@@ -28,14 +27,13 @@ const styles = theme => ({
   },
 });
 
-
 class LoginForm extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       username: '',
       password: '',
-      redirectTo: null,
+      redirectToReferrer: false,
       loginError: false,
     };
     this._isMounted = false;
@@ -45,6 +43,9 @@ class LoginForm extends Component {
 
   componentDidMount() {
     this._isMounted = true;
+    if (this.props.auth.isAuthenticated()) {
+      this.props.history.push('/');
+    }
   }
 
   componentWillUnmount() {
@@ -62,46 +63,29 @@ class LoginForm extends Component {
   handleSubmit(event) {
     event.preventDefault();
     const { username, password } = this.state;
-    const { updateUser } = this.props;
 
-    axios
-      .post('/user/login', {
-        username,
-        password,
-      })
-      .then((response) => {
-        if (response.status === 200) {
-          // update App.js state
-          updateUser({
-            loggedIn: true,
-            username: response.data.username,
-          });
-          // update the state to redirect to home
-          if (this._isMounted) {
-            this.setState({
-              redirectTo: '/',
-            });
-          }
-        }
-      }).catch((error) => {
-        if (this._isMounted) {
-          this.setState({
-            username: '',
-            password: '',
-            redirectTo: null,
-            loginError: error,
-          });
-        }
+    this.props.auth.login({ username, password }, (error) => {
+      this.setState({
+        username: '',
+        password: '',
+        redirectToReferrer: !error,
+        loginError: error,
       });
+    });
   }
 
   render() {
     const { classes } = this.props;
+    const { from } = this.props.location.state || { from: { pathname: '/' } };
+
     const {
-      redirectTo, loginError,
+      redirectToReferrer, loginError,
     } = this.state;
-    if (redirectTo) {
-      return <Redirect to={{ pathname: redirectTo }} />;
+
+    if (redirectToReferrer) {
+      return (
+        <Redirect to={from} />
+      );
     }
 
     return (
@@ -170,6 +154,7 @@ class LoginForm extends Component {
             </Grid>
             <Grid item xs={12}>
               <Link
+                className='links'
                 to='/signup'
                 component={RouterLink}
                 color='primary'
