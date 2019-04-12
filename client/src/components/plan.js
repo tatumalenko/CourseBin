@@ -367,84 +367,75 @@ class Plan extends Component {
       <div className='plan-container'>
         <Grid container spacing={16}>
           <Grid item xs={12} className='schedule-container'>
-            <div className='header-logo plan'>
-              <Typography
-                to='/'
-                component={RouterLink}
-                variant='h4'
-              >
-                CourseBin
-              </Typography>
-            </div>
             <Typography id='schedule-header' variant='h4'>
               Here's what we came up with...
             </Typography>
 
             {!_.isEmpty(this.props.unableToAddReasonsMap)
               && (
-              <ExpansionPanel defaultExpanded={0}>
-                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography>Notice</Typography>
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                  <Grid item xs={12} className='schedule-container'>
-                    <div className='schedule'>
-                      <MuiThemeProvider theme={theme}>
-                        <Paper>
-                          {this.props.unableToAddReasonsMap.fall
-                          && Object.keys(this.props.unableToAddReasonsMap.fall).map(
-                            courseCode => (
-                              <Paper>
-                                <div>
-                                  <Typography align='left'>
-                                    {`${courseCode}:`}
-                                  </Typography>
-                                  <Typography align='left'>
-                                    {`${this.props.unableToAddReasonsMap.fall[courseCode]}`}
-                                  </Typography>
-                                </div>
-                              </Paper>
-                            ),
-                          )
-                        }
-                          {this.props.unableToAddReasonsMap.winter
-                          && Object.keys(this.props.unableToAddReasonsMap.winter).map(
-                            courseCode => (
-                              <Paper>
-                                <div>
-                                  <Typography align='left'>
-                                    {`${courseCode}:`}
-                                  </Typography>
-                                  <Typography align='left'>
-                                    {`${this.props.unableToAddReasonsMap.winter[courseCode]}`}
-                                  </Typography>
-                                </div>
-                              </Paper>
-                            ),
-                          )
-                        }
-                          {this.props.unableToAddReasonsMap.summer
-                          && Object.keys(this.props.unableToAddReasonsMap.summer).map(
-                            courseCode => (
-                              <Paper>
-                                <div>
-                                  <Typography align='left'>
-                                    {`${courseCode}:`}
-                                  </Typography>
-                                  <Typography align='left'>
-                                    {`${this.props.unableToAddReasonsMap.summer[courseCode]}`}
-                                  </Typography>
-                                </div>
-                              </Paper>
-                            ),
-                          )
-                        }
-                        </Paper>
-                      </MuiThemeProvider>
-                    </div>
-                  </Grid>
-                </ExpansionPanelDetails>
-              </ExpansionPanel>
+                <ExpansionPanel defaultExpanded={0}>
+                  <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography>Notice</Typography>
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails>
+                    <Grid item xs={12} className='schedule-container'>
+                      <div className='schedule'>
+                        <MuiThemeProvider theme={theme}>
+                          <Paper>
+                            {this.props.unableToAddReasonsMap.fall
+                              && Object.keys(this.props.unableToAddReasonsMap.fall).map(
+                                courseCode => (
+                                  <Paper>
+                                    <div>
+                                      <Typography align='left'>
+                                        {`${courseCode}:`}
+                                      </Typography>
+                                      <Typography align='left'>
+                                        {`${this.props.unableToAddReasonsMap.fall[courseCode]}`}
+                                      </Typography>
+                                    </div>
+                                  </Paper>
+                                ),
+                              )
+                            }
+                            {this.props.unableToAddReasonsMap.winter
+                              && Object.keys(this.props.unableToAddReasonsMap.winter).map(
+                                courseCode => (
+                                  <Paper>
+                                    <div>
+                                      <Typography align='left'>
+                                        {`${courseCode}:`}
+                                      </Typography>
+                                      <Typography align='left'>
+                                        {`${this.props.unableToAddReasonsMap.winter[courseCode]}`}
+                                      </Typography>
+                                    </div>
+                                  </Paper>
+                                ),
+                              )
+                            }
+                            {this.props.unableToAddReasonsMap.summer
+                              && Object.keys(this.props.unableToAddReasonsMap.summer).map(
+                                courseCode => (
+                                  <Paper>
+                                    <div>
+                                      <Typography align='left'>
+                                        {`${courseCode}:`}
+                                      </Typography>
+                                      <Typography align='left'>
+                                        {`${this.props.unableToAddReasonsMap.summer[courseCode]}`}
+                                      </Typography>
+                                    </div>
+                                  </Paper>
+                                ),
+                              )
+                            }
+                          </Paper>
+                        </MuiThemeProvider>
+                      </div>
+                    </Grid>
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
 
               )
             }
