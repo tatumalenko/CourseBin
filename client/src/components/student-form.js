@@ -379,9 +379,9 @@ class StudentForm extends Component {
     //   return;
     // }
 
-    // this.setState({
-    //   showSpinner: true,
-    // });
+    this.setState({
+      showSpinner: true,
+    });
 
     // const jsonObject = {
     //   fall: {
@@ -425,7 +425,7 @@ class StudentForm extends Component {
     };
     // END OF TESTER CODE
 
-    const preferences = null;
+    const preferences = _.cloneDeep(jsonObject);
     _.set(preferences, 'fall.requestedCourses', state.fallSelectedCourses.map(e => e.slice(0, 7)));
     _.set(preferences, 'winter.requestedCourses', state.winterSelectedCourses.map(e => e.slice(0, 7)));
     _.set(preferences, 'summer.requestedCourses', state.summerSelectedCourses.map(e => e.slice(0, 7)));
