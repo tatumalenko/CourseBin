@@ -67,7 +67,7 @@ const styles = theme => ({
   },
   notice: {
     margin: 0,
-    marginBottom: '-30px',
+    marginBottom: '-25px',
     minWidth: '275px',
     padding: theme.spacing.unit * 2,
   },
