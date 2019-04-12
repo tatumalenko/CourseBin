@@ -151,7 +151,7 @@ class Dashboard extends Component {
 
     return (
       <MuiThemeProvider theme={custTheme}>
-      {this.props.auth ? (
+      {savedPlan? (
         <div className={classes.root}>
           <div className={classes.dashboardTitle}>
             <Typography variant='h4'>

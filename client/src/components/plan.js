@@ -72,14 +72,14 @@ const styles = theme => ({
     padding: theme.spacing.unit * 2,
   },
   error: {
-    backgroundColor: fade('#571D2E', 0.7),
-    color: '#e5b54b',
+    backgroundColor: fade('#571D2E', 1),
+    color: '#A98643',
   },
   errorMsg: {
-    color: '#e5b54b',
+    color: '#A98643',
   },
   errorIcon: {
-    color: '#e5b54b',
+    color: '#A98643',
     marginTop: '3px',
     marginRight: '5px',
   },
@@ -487,7 +487,7 @@ class Plan extends Component {
             ) : null}
             {terms
               ? terms.map((term, index) => (
-                <ExpansionPanel defaultExpanded={index === 0}>
+                <ExpansionPanel>
                   <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography>{_.startCase(term)}</Typography>
                   </ExpansionPanelSummary>
