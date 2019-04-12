@@ -155,7 +155,7 @@ class Dashboard extends Component {
           <div className={classes.root}>
             <div className={classes.dashboardTitle}>
               <Typography variant='h4'>
-                Your Dashboard
+                {(student && student.name) ? `${student.name.first}'s Dashboard` : 'Your Dashboard'}
               </Typography>
             </div>
             <Grid container spacing={24} alignContent='space-between' justify='center'>
