@@ -571,7 +571,7 @@ class StudentForm extends Component {
           exact
           path={this.props.match.path}
           render={() => (
-            <div>
+            <span>
               {!showSpinner ? (
                 <div className='student-form'>
                   <form onSubmit={this.handleSubmit}>
@@ -785,7 +785,7 @@ class StudentForm extends Component {
                   </div>
                 )
               }
-            </div>
+            </span>
           )}
         />
         <Route
