@@ -91,7 +91,7 @@ const styles = theme => ({
   },
   chips: {
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'left',
     flexWrap: 'wrap',
     padding: theme.spacing.unit * 2,
   },
@@ -114,7 +114,7 @@ class StudentForm extends Component {
     super(props);
     console.log('student-form props:', props);
 
-    const preferences = JSON.parse(localStorage.getItem('preferences'));
+    const preferences = null;
 
     this.catalog = {};
     this.faculty = '';
@@ -127,7 +127,7 @@ class StudentForm extends Component {
         courseMap: null,
 
         currentView: 0,
-        terms: [ 'fall', 'winter', 'summer' ],
+        terms: ['fall', 'winter', 'summer'],
 
         fallTimePreference: preferences.fall.eveningTimePreference,
         fallNumOfCourses: preferences.fall.numberOfCourses,
@@ -160,7 +160,7 @@ class StudentForm extends Component {
         courseMap: null,
 
         currentView: 0,
-        terms: [ 'fall', 'winter', 'summer' ],
+        terms: ['fall', 'winter', 'summer'],
 
         fallTimePreference: false,
         fallNumOfCourses: 4,
@@ -235,7 +235,7 @@ class StudentForm extends Component {
 
   removeFallCourseSelection = course => () => {
     this.setState((state) => {
-      const fallSelectedCourses = [ ...state.fallSelectedCourses ];
+      const fallSelectedCourses = [...state.fallSelectedCourses];
       const toDelete = fallSelectedCourses.indexOf(course);
       fallSelectedCourses.splice(toDelete, 1);
       return { fallSelectedCourses };
@@ -244,7 +244,7 @@ class StudentForm extends Component {
 
   removeWinterCourseSelection = course => () => {
     this.setState((state) => {
-      const winterSelectedCourses = [ ...state.winterSelectedCourses ];
+      const winterSelectedCourses = [...state.winterSelectedCourses];
       const toDelete = winterSelectedCourses.indexOf(course);
       winterSelectedCourses.splice(toDelete, 1);
       return { winterSelectedCourses };
@@ -253,7 +253,7 @@ class StudentForm extends Component {
 
   removeSummerCourseSelection = course => () => {
     this.setState((state) => {
-      const summerSelectedCourses = [ ...state.summerSelectedCourses ];
+      const summerSelectedCourses = [...state.summerSelectedCourses];
       const toDelete = summerSelectedCourses.indexOf(course);
       summerSelectedCourses.splice(toDelete, 1);
       return { summerSelectedCourses };
@@ -308,7 +308,7 @@ class StudentForm extends Component {
 
     if (!state[property]) {
       this.setState({
-        [property]: [ courseCode ],
+        [property]: [courseCode],
       });
       this.setErrMsg(property, null);
     } else if (state[property].length >= state[numCourses]) {
@@ -347,7 +347,7 @@ class StudentForm extends Component {
       // const newState = Object.assign({}, state);
       // newState.formErrorMsg.push(msg);
       // this.setState(newState);
-      this.setState({ formErrorMsg: [ msg ], latestErrorMsg: msg });
+      this.setState({ formErrorMsg: [msg], latestErrorMsg: msg });
       return;
     }
 
@@ -357,7 +357,7 @@ class StudentForm extends Component {
       // const newState = Object.assign({}, state);
       // newState.formErrorMsg.push(msg);
       // this.setState(newState);
-      this.setState({ formErrorMsg: [ msg ], latestErrorMsg: msg });
+      this.setState({ formErrorMsg: [msg], latestErrorMsg: msg });
       return;
     }
     if (state.winterSelectedCourses.length !== state.winterNumOfCourses) {
@@ -366,7 +366,7 @@ class StudentForm extends Component {
       // const newState = Object.assign({}, state);
       // newState.formErrorMsg.push(msg);
       // this.setState(newState);
-      this.setState({ formErrorMsg: [ msg ], latestErrorMsg: msg });
+      this.setState({ formErrorMsg: [msg], latestErrorMsg: msg });
       return;
     }
     if (state.summerSelectedCourses.length !== state.summerNumOfCourses) {
@@ -375,7 +375,7 @@ class StudentForm extends Component {
       // const newState = Object.assign({}, state);
       // newState.formErrorMsg.push(msg);
       // this.setState(newState);
-      this.setState({ formErrorMsg: [ msg ], latestErrorMsg: msg });
+      this.setState({ formErrorMsg: [msg], latestErrorMsg: msg });
       return;
     }
 
@@ -403,13 +403,6 @@ class StudentForm extends Component {
       },
     };
 
-    const preferences = _.cloneDeep(jsonObject);
-    _.set(preferences, 'fall.requestedCourses', state.fallSelectedCourses.map(e => e.slice(0, 7)));
-    _.set(preferences, 'winter.requestedCourses', state.winterSelectedCourses.map(e => e.slice(0, 7)));
-    _.set(preferences, 'summer.requestedCourses', state.summerSelectedCourses.map(e => e.slice(0, 7)));
-
-    localStorage.setItem('preferences', JSON.stringify(jsonObject));
-
     // TESTER CODE
     // const jsonObject = {
     //   fall: {
@@ -425,11 +418,24 @@ class StudentForm extends Component {
     //   },
 
     //   summer: {
-    //     requestedCourses: [ 'ENCS282', 'ENGR202', 'COMP248', 'COMP352' ],
+    //     requestedCourses: [ 'ENCS282', 'ENGR202', 'COMP348', 'COMP352' ],
     //     eveningTimePreference: true,
     //     numberOfCourses: 4,
     //   },
     // };
+    // const preferences = _.cloneDeep(jsonObject);
+    // _.set(preferences, 'fall.requestedCourses', jsonObject.fall.requestedCourses.map(e => e.slice(0, 7)));
+    // _.set(preferences, 'winter.requestedCourses', jsonObject.winter.requestedCourses.map(e => e.slice(0, 7)));
+    // _.set(preferences, 'summer.requestedCourses', jsonObject.summer.requestedCourses.map(e => e.slice(0, 7)));
+    // END OF TESTER CODE
+
+    const preferences = _.cloneDeep(jsonObject);
+    _.set(preferences, 'fall.requestedCourses', state.fallSelectedCourses.map(e => e.slice(0, 7)));
+    _.set(preferences, 'winter.requestedCourses', state.winterSelectedCourses.map(e => e.slice(0, 7)));
+    _.set(preferences, 'summer.requestedCourses', state.summerSelectedCourses.map(e => e.slice(0, 7)));
+
+    localStorage.setItem('preferences', JSON.stringify(jsonObject));
+
     const { student } = this.props.auth;
     console.log('preferences:', preferences);
     console.log('jsonObject:', jsonObject);
@@ -503,7 +509,7 @@ class StudentForm extends Component {
           }
 
           if (!map[departmentName] && displayName !== '') {
-            map[departmentName] = [ displayName ];
+            map[departmentName] = [displayName];
           } else {
             map[departmentName].push(displayName);
           }
@@ -530,7 +536,7 @@ class StudentForm extends Component {
   removeCourseSelection = (course, property) => (event) => {
     event.preventDefault();
     this.setState((state) => {
-      const selectedCourses = [ ...state[property] ];
+      const selectedCourses = [...state[property]];
       const toDelete = selectedCourses.indexOf(course);
       selectedCourses.splice(toDelete, 1);
       return { [property]: selectedCourses };
@@ -544,14 +550,13 @@ class StudentForm extends Component {
       courseMap,
       currentView,
       terms,
-      formErrorMsg,
       showSpinner,
       allErrorMsgs,
     } = this.state;
 
     Object.keys(this.state)
       .filter(
-        key => [ 'errmsg', 'error' ].some(
+        key => ['errmsg', 'error'].some(
           errSubStr => key.toLowerCase().includes(errSubStr),
         )
           && !!this.state[key] && !_.isEmpty(this.state[key]) && key !== 'allErrorMsgs',
@@ -566,7 +571,7 @@ class StudentForm extends Component {
           exact
           path={this.props.match.path}
           render={() => (
-            <div>
+            <span>
               {!showSpinner ? (
                 <div className='student-form'>
                   <form onSubmit={this.handleSubmit}>
@@ -780,7 +785,7 @@ class StudentForm extends Component {
                   </div>
                 )
               }
-            </div>
+            </span>
           )}
         />
         <Route

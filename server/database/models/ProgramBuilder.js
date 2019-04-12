@@ -345,7 +345,7 @@ class ProgramBuilder {
         termCourses.push(sequence);
         completed = _.uniq([ ...completed, ..._.flatten(sequence.courses.map(e => e.code)) ]);
         // eslint-disable-next-line
-        candidateCourses = await this.findCandidateCourses({ 
+        candidateCourses = await this.findCandidateCourses({
           completedCourses: completed,
           requiredCourses: required,
         });
