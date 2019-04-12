@@ -418,7 +418,7 @@ class StudentForm extends Component {
       },
 
       summer: {
-        requestedCourses: [ 'ENCS282', 'ENGR202', 'COMP248', 'COMP352' ],
+        requestedCourses: [ 'ENCS282', 'ENGR202', 'COMP348', 'COMP352' ],
         eveningTimePreference: true,
         numberOfCourses: 4,
       },
