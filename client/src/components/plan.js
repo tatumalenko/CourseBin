@@ -74,6 +74,8 @@ class Plan extends Component {
   constructor(props) {
     super(props);
     console.log('plan props:', this.props);
+    console.log('plan json formData', JSON.stringify(this.props.formData));
+    console.log('plan json formData', JSON.stringify(this.props.plan));
     console.log('plan state:', this.state);
     const plan = props.formData;
     this.schedules = plan.schedules;
@@ -372,11 +374,15 @@ class Plan extends Component {
       <div className='plan-container'>
         <Grid container spacing={16}>
           <Grid item xs={12} className='schedule-container'>
+            {!this.props.hideHeader
+            && (
             <Typography id='schedule-header' variant='h4'>
               Here's what we came up with...
             </Typography>
+            )
+          }
 
-            {!_.isEmpty(this.props.unableToAddReasonsMap)
+            {!_.isEmpty(this.props.unableToAddReasonsMap) && !this.props.hideNotice
               && (
               <div>
                 <ExpansionPanel>

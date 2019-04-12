@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Link as RouterLink } from 'react-router-dom';
+import axios from 'axios';
 import {
   Button, MuiThemeProvider, createMuiTheme, Typography,
 } from '@material-ui/core';
@@ -19,6 +20,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Plan from './plan';
 
 import ProgressDonut from './progress-donut';
 import SnackbarAlert from './snackbar-alerts';
@@ -53,7 +55,7 @@ const styles = theme => ({
   rightpaper: {
     ...theme.mixins.gutters(),
     margin: theme.spacing.unit,
-    minWidth: '275px',
+    minWidth: '600',
     paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 2,
   },
@@ -88,6 +90,8 @@ class Dashboard extends Component {
     this.state = {
       student: null,
       errorMsg: null,
+      savedPlan: null,
+      savedUnableToAddReasonsMap: null,
     };
     console.log('dashboard auth: ', this.props.auth);
   }
@@ -100,22 +104,36 @@ class Dashboard extends Component {
         errorMsg: !student || null,
       });
     });
+
+    axios.post('/user/plan/example', { })
+      .then((response) => {
+        this.setState({
+          savedPlan: response.data.plan,
+          savedUnableToAddReasonsMap: response.data.unableToAddReasonsMap,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    // .finally(() => {
+    //   this.setState({ showSpinner: false });
+    // });
   }
 
   calcProgressData() {
     const { student } = this.state;
     if (!student || !student.record) {
-      return [{
+      return [ {
         name: 'Academic Progress',
         percent: 0,
         fill: '#00bcd4',
-      }];
+      } ];
     }
-    const data = [{
+    const data = [ {
       name: 'Academic Progress',
       percent: Math.floor(student.record.completedCourses.length / 40 * 100),
       fill: '#00bcd4',
-    }];
+    } ];
 
     return data;
   }
@@ -125,6 +143,9 @@ class Dashboard extends Component {
     const { student } = this.state;
     console.log(this.state);
     console.log(this.props);
+
+    const { savedPlan, savedUnableToAddReasonsMap } = this.state;
+
     return (
       <MuiThemeProvider theme={custTheme}>
         <div className={classes.root}>
@@ -249,14 +270,25 @@ class Dashboard extends Component {
 
               </Paper>
             </Grid>
-            <Grid item xs={12} md={6}>
-              <Paper className={classes.rightPaper} elevation={1}>
-                <Typography variant='h5'>
-                  Saved Plans
-                </Typography>
-                <Typography variant='body1'>
-                  *Insert Static Plan Here*
-                </Typography>
+            <Grid item xs>
+              <Paper className={classes.rightpaper} elevation={1}>
+                <div className={classes.dashboardHeader}>
+                  <Typography variant='h5'>
+                    Saved Plans
+                  </Typography>
+                </div>
+                <Typography variant='body1' />
+                {savedPlan && savedUnableToAddReasonsMap
+                    && (
+                    <Plan
+                      auth={this.props.auth}
+                      formData={savedPlan}
+                      unableToAddReasonsMap={savedUnableToAddReasonsMap}
+                      hideHeader
+                      hideNotice
+                    />
+                    )
+                  }
               </Paper>
             </Grid>
           </Grid>

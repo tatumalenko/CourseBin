@@ -180,7 +180,73 @@ router.post('/plan', async (req, res) => {
           message: 'OK',
           plan: new Plan({
             schedules: {
-              fall: plan.schedules.fall.slice(0, 50),
+              fall: plan.schedules.fall,
+              winter: plan.schedules.winter,
+              summer: plan.schedules.summer,
+            },
+            sequences: plan.sequences,
+          }),
+          unableToAddReasonsMap: preferences.unableToAddReasonsMap,
+        });
+    } else {
+      res
+        .status(404)
+        .json({ message: 'No user logged in' });
+    }
+  } catch (e) {
+    console.error('routes.js: /user/plan:', e);
+    res
+      .status(500)
+      .json({ message: e.message });
+  }
+  console.log('post plan request sent!');
+});
+
+router.post('/plan/example', async (req, res) => {
+  console.log('post plan example');
+  try {
+    if (req.user) {
+      const preferences = new Preferences({
+        fall: {
+          requestedCourses: [ 'COMP232', 'COMP248', 'ENGR201', 'ENGR213' ],
+          eveningTimePreference: false,
+          numberOfCourses: 4,
+        },
+        winter: {
+          requestedCourses: [ 'COMP249', 'SOEN287', 'SOEN228', 'ENGR233' ],
+          eveningTimePreference: false,
+          numberOfCourses: 4,
+        },
+        summer: {
+          requestedCourses: [ 'ENCS282', 'ENGR202', 'COMP248', 'COMP352' ],
+          eveningTimePreference: true,
+          numberOfCourses: 4,
+        },
+      });
+      let student = req.body.student;
+
+      if (!student) {
+        student = await Student.findOne({ id: req.user.username });
+      }
+
+      if (!student) {
+        await Student.findOne({ id: 40055122 });
+      }
+
+      const plan = await ProgramBuilder.findCandidatePlan({
+        completedCourses: student && student.record ? student.record.completedCourses : [],
+        requiredCourses: SoftwareEngineeringDegree.requirements(
+          student && student.record ? student.record.degree.option : 'GENERAL',
+        ),
+        preferences,
+      });
+      res
+        .status(200)
+        .json({
+          message: 'OK',
+          plan: new Plan({
+            schedules: {
+              fall: plan.schedules.fall,
               winter: plan.schedules.winter,
               summer: plan.schedules.summer,
             },
