@@ -181,7 +181,6 @@ class Dashboard extends Component {
                               {(student && student.name) ? `${student.name.first} ${student.name.last}` : ''}
                             </TableCell>
                           </TableRow>
-
                           <TableRow key='id'>
                             <TableCell component='th' scope='row'>
                               ID:
