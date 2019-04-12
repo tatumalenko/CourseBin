@@ -15,6 +15,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Divider from '@material-ui/core/Divider';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -30,8 +31,8 @@ const styles = theme => ({
     ...theme.mixins.gutters(),
     marginTop: theme.spacing.unit * 8,
     marginBottom: theme.spacing.unit * 4,
-    marginLeft: '8%',
-    marginRight: '8%',
+    marginLeft: '4%',
+    marginRight: '4%',
     paddingTop: '0',
     paddingBottom: theme.spacing.unit * 2,
   },
@@ -44,17 +45,20 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 2,
     marginBottom: theme.spacing.unit * 2,
   },
+  planHeader: {
+    marginBottom: '-120px',
+  },
   leftpaper: {
     ...theme.mixins.gutters(),
     margin: theme.spacing.unit,
-    minWidth: '200px',
+    minWidth: '300px',
     paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 2,
   },
   rightpaper: {
     ...theme.mixins.gutters(),
     margin: theme.spacing.unit,
-    minWidth: '600px',
+    minWidth: '500px',
     paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 2,
   },
@@ -147,14 +151,15 @@ class Dashboard extends Component {
 
     return (
       <MuiThemeProvider theme={custTheme}>
+      {this.props.auth ? (
         <div className={classes.root}>
           <div className={classes.dashboardTitle}>
             <Typography variant='h4'>
               Your Dashboard
             </Typography>
           </div>
-          <Grid container spacing={24} alignContent='space-between' justify='center' alignItems='center'>
-            <Grid item xs={12} md={6}>
+          <Grid container spacing={24} alignContent='space-between' justify='center'>
+            <Grid item xs={12} lg={4}>
               <Paper className={classes.leftpaper} elevation={1}>
                 <div className={classes.dashboardHeader}>
                   <Typography variant='h5'>
@@ -269,9 +274,9 @@ class Dashboard extends Component {
 
               </Paper>
             </Grid>
-            <Grid item xs>
+            <Grid item xs={12} lg={8}>
               <Paper className={classes.rightpaper} elevation={1}>
-                <div className={classes.dashboardHeader}>
+                <div className={classes.planHeader}>
                   <Typography variant='h5'>
                     Saved Plans
                   </Typography>
@@ -292,6 +297,13 @@ class Dashboard extends Component {
             </Grid>
           </Grid>
         </div>
+        ): (
+          <div className='progress'>
+            <Typography variant='h5'>Hold on while we gather your information...</Typography>
+            <br />
+            <CircularProgress className={classes.progress} />
+          </div>
+        )}
         {this.state.errorMsg && (
           <SnackbarAlert
             open
