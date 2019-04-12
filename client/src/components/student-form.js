@@ -118,6 +118,7 @@ class StudentForm extends Component {
     this.catalog = {};
     this.faculty = '';
     this.generatedPlan = {};
+    this.unableToAddReasonsMap = {};
     this.MAX_NUM_COURSES = 6;
 
     if (preferences) {
@@ -401,18 +402,10 @@ class StudentForm extends Component {
       },
     };
 
-    const preferences = Object.assign({ ...jsonObject },
-      {
-        fall: {
-          requestedCourses: state.fallSelectedCourses.map(e => e.slice(0, 7)),
-        },
-        winter: {
-          requestedCourses: state.winterSelectedCourses.map(e => e.slice(0, 7)),
-        },
-        summer: {
-          requestedCourses: state.summerSelectedCourses.map(e => e.slice(0, 7)),
-        },
-      });
+    const preferences = _.cloneDeep(jsonObject);
+    _.set(preferences, 'fall.requestedCourses', state.fallSelectedCourses.map(e => e.slice(0, 7)));
+    _.set(preferences, 'winter.requestedCourses', state.winterSelectedCourses.map(e => e.slice(0, 7)));
+    _.set(preferences, 'summer.requestedCourses', state.summerSelectedCourses.map(e => e.slice(0, 7)));
 
     localStorage.setItem('preferences', JSON.stringify(jsonObject));
 
@@ -437,10 +430,14 @@ class StudentForm extends Component {
     //   },
     // };
     const { student } = this.props.auth;
+    console.log('preferences:', preferences);
+    console.log('jsonObject:', jsonObject);
 
     axios.post('/user/plan', { student, ...preferences })
       .then((response) => {
+        console.log('HEREERERRERERER', response.data);
         this.generatedPlan = response.data.plan;
+        this.unableToAddReasonsMap = response.data.unableToAddReasonsMap;
         // go to plan page
         this.props.history.push('/planner/view');
         this.setState({ latestErrorMsg: null });
@@ -795,11 +792,25 @@ class StudentForm extends Component {
             </div>
           )}
         />
-        <Route path={`${this.props.match.url}/:subpath`} render={props => <Plan auth={auth} formData={this.generatedPlan} {...props} />} />
+        <Route
+          path={`${this.props.match.url}/:subpath`}
+          render={props => (
+            <Plan
+              auth={auth}
+              formData={this.generatedPlan}
+              unableToAddReasonsMap={this.unableToAddReasonsMap}
+              {...props}
+            />
+          )}
+        />
         {this.state.latestErrorMsg && (
           <SnackbarAlert
             open={!!this.state.latestErrorMsg}
-            variant='error'
+            variant={this.state.latestErrorMsg.includes('500') ? 'error' : 'warning'}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
             message={this.state.latestErrorMsg}
             onClose={() => {
               this.setState((prevState) => {

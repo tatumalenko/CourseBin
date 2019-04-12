@@ -161,18 +161,18 @@ router.post('/plan', async (req, res) => {
   console.log('post plan');
   try {
     if (req.user) {
-      const preferences = {
+      const preferences = new Preferences({
         fall: req.body.fall,
         winter: req.body.winter,
         summer: req.body.summer,
-      };
-      const { student } = req.body;// ? await Student.findOne({ id: student.id }) : ;
+      });
+      const student = req.body.student ? req.body.student : await Student.findOne({ id: req.user.username }); // ? await Student.findOne({ id: student.id }) : ;
       const plan = await ProgramBuilder.findCandidatePlan({
         completedCourses: student && student.record ? student.record.completedCourses : [],
         requiredCourses: SoftwareEngineeringDegree.requirements(
           student && student.record ? student.record.degree.option : 'GENERAL',
         ),
-        preferences: new Preferences(preferences),
+        preferences,
       });
       res
         .status(200)
@@ -186,6 +186,7 @@ router.post('/plan', async (req, res) => {
             },
             sequences: plan.sequences,
           }),
+          unableToAddReasonsMap: preferences.unableToAddReasonsMap,
         });
     } else {
       res
