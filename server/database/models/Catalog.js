@@ -8,6 +8,25 @@ const _ = require('lodash');
 class Catalog {
   static get courses() {
     return [
+      {
+        title: 'FLIGHT CONTROL SYSTEMS',
+        code: 'AERO480',
+        credits: '3.50',
+        rawpre: 'You must complete 1 of the following rules   Course Prerequisite: AERO371, ELEC372, MECH371, SOEN385',
+        prerequisiteCodes: [ [ 'AERO371', 'ELEC372', 'MECH371', 'SOEN385' ] ],
+        corequisiteCodes: null,
+        equivalentCodes: null,
+      },
+      // BIOL COURSES
+      {
+        title: 'Elementary Genetics',
+        code: 'BIOL206',
+        credits: '3.00',
+        rawpre: 'Never Taken/Not Registered: BIOL261',
+        prerequisiteCodes: null,
+        corequisiteCodes: null,
+        equivalentCodes: null,
+      },
       // CIVI COURSES
       {
         title: 'Geology for Civil Engineers',
@@ -435,7 +454,17 @@ class Catalog {
         prerequisiteCodes: [ [ 'SOEN343' ] ],
         corequisiteCodes: null,
         equivalentCodes: [ [ 'SOEN390' ], [ 'SOEN448' ], [ 'SOEN449' ], [ 'SOEN490' ] ],
-      }, {
+      },
+      {
+        title: 'Software Testing, Verification and Quality Assurance',
+        code: 'SOEN345',
+        credits: '3.00',
+        rawpre: 'Course Corequisite: SOEN343',
+        prerequisiteCodes: null,
+        corequisiteCodes: null,
+        equivalentCodes: [ [ 'SOEN343' ] ],
+      },
+      {
         title: 'User Interface Design',
         code: 'SOEN357',
         credits: '3.00',
