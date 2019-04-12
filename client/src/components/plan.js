@@ -30,8 +30,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import moment from 'moment';
 import { withStyles } from '@material-ui/core/styles';
 import _ from 'lodash';
+import Divider from '@material-ui/core/Divider';
 import ChildBox from './box-child';
-
 
 const burgundy = {
   50: '#571D2E',
@@ -62,6 +62,11 @@ const theme = createMuiTheme({
 const styles = theme => ({
   sequence: {
     backgroundColor: 'rgba(0, 188, 212, 0.2)',
+  },
+  notice: {
+    margin: theme.spacing.unit * 2,
+    minWidth: '275px',
+    padding: theme.spacing.unit * 2,
   },
 });
 
@@ -373,19 +378,22 @@ class Plan extends Component {
 
             {!_.isEmpty(this.props.unableToAddReasonsMap)
               && (
-                <ExpansionPanel defaultExpanded={0}>
+              <div>
+                <ExpansionPanel>
                   <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography>Notice</Typography>
                   </ExpansionPanelSummary>
                   <ExpansionPanelDetails>
-                    <Grid item xs={12} className='schedule-container'>
-                      <div className='schedule'>
-                        <MuiThemeProvider theme={theme}>
-                          <Paper>
+                    <Grid container spacing={24}>
+                      <Grid item xs>
+                        <Paper className={classes.notice}>
+                          <Typography>Fall</Typography>
+                          <Divider />
+                          <div>
+                            {/* <MuiThemeProvider theme={theme}> */}
                             {this.props.unableToAddReasonsMap.fall
-                              && Object.keys(this.props.unableToAddReasonsMap.fall).map(
-                                courseCode => (
-                                  <Paper>
+                                && Object.keys(this.props.unableToAddReasonsMap.fall).map(
+                                  courseCode => (
                                     <div>
                                       <Typography align='left'>
                                         {`${courseCode}:`}
@@ -393,50 +401,70 @@ class Plan extends Component {
                                       <Typography align='left'>
                                         {`${this.props.unableToAddReasonsMap.fall[courseCode]}`}
                                       </Typography>
+                                      <Divider />
                                     </div>
-                                  </Paper>
-                                ),
-                              )
-                            }
+                                  ),
+                                )
+                              }
+                            {/* </MuiThemeProvider> */}
+                          </div>
+                        </Paper>
+                      </Grid>
+                      <Grid item xs>
+                        <Paper className={classes.notice}>
+                          <Typography>Winter</Typography>
+                          <Divider />
+                          <div>
+                            {/* <MuiThemeProvider theme={theme}> */}
                             {this.props.unableToAddReasonsMap.winter
-                              && Object.keys(this.props.unableToAddReasonsMap.winter).map(
-                                courseCode => (
-                                  <Paper>
+                                && Object.keys(this.props.unableToAddReasonsMap.winter).map(
+                                  courseCode => (
+
                                     <div>
-                                      <Typography align='left'>
+                                      <Typography align='left' fontWeight={600}>
                                         {`${courseCode}:`}
                                       </Typography>
                                       <Typography align='left'>
                                         {`${this.props.unableToAddReasonsMap.winter[courseCode]}`}
                                       </Typography>
+                                      <Divider />
                                     </div>
-                                  </Paper>
-                                ),
-                              )
-                            }
+                                  ),
+                                )
+                              }
+                            {/* </MuiThemeProvider> */}
+                          </div>
+                        </Paper>
+                      </Grid>
+                      <Grid item xs>
+                        <Paper className={classes.notice}>
+                          <Typography>Summer</Typography>
+                          <Divider />
+                          <div>
+                            {/* <MuiThemeProvider theme={theme}> */}
                             {this.props.unableToAddReasonsMap.summer
-                              && Object.keys(this.props.unableToAddReasonsMap.summer).map(
-                                courseCode => (
-                                  <Paper>
+                                && Object.keys(this.props.unableToAddReasonsMap.summer).map(
+                                  courseCode => (
                                     <div>
-                                      <Typography align='left'>
+                                      <Typography align='left' fontWeight={600}>
                                         {`${courseCode}:`}
                                       </Typography>
                                       <Typography align='left'>
                                         {`${this.props.unableToAddReasonsMap.summer[courseCode]}`}
                                       </Typography>
+                                      <Divider />
                                     </div>
-                                  </Paper>
-                                ),
-                              )
-                            }
-                          </Paper>
-                        </MuiThemeProvider>
-                      </div>
+                                  ),
+                                )
+                              }
+                            {/* </MuiThemeProvider> */}
+                          </div>
+                        </Paper>
+                      </Grid>
                     </Grid>
                   </ExpansionPanelDetails>
                 </ExpansionPanel>
-
+              </div>
               )
             }
 
