@@ -55,7 +55,7 @@ const styles = theme => ({
   rightpaper: {
     ...theme.mixins.gutters(),
     margin: theme.spacing.unit,
-    minWidth: '600',
+    minWidth: '600px',
     paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 2,
   },
