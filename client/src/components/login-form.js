@@ -60,6 +60,21 @@ class LoginForm extends Component {
     }
   }
 
+  handleDemoSubmit = (event) => {
+    event.preventDefault();
+    const username = '444444';
+    const password = 'abc123';
+
+    this.props.auth.login({ username, password }, (error) => {
+      this.setState({
+        username: '',
+        password: '',
+        redirectToReferrer: !error,
+        loginError: error,
+      });
+    });
+  }
+
   handleSubmit(event) {
     event.preventDefault();
     const { username, password } = this.state;
@@ -163,6 +178,24 @@ class LoginForm extends Component {
               </Link>
             </Grid>
           </Grid>
+          <form onSubmit={this.handleDemoSubmit}>
+            <Grid container spacing={16}>
+              <Grid item xs={12} />
+              <Grid item xs={12} />
+              <Grid item xs={12} />
+              <Grid item xs={12}>
+                <Button
+                  id='submit'
+                  color='secondary'
+                  size='large'
+                  variant='contained'
+                  type='submit'
+                >
+                  Demo App
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
         </form>
 
       </MuiThemeProvider>
