@@ -29,7 +29,7 @@
     "@material-ui/lab": "^3.0.0-alpha.30",
     "@progress/kendo-react-dropdowns": "^2.8.0",
     "@progress/kendo-react-intl": "^2.8.0",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "connect-mongo": "^2.0.3",
