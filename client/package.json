@@ -11,7 +11,7 @@
     "@material-ui/icons": "^3.0.2",
     "axios": "^0.18.0",
     "create-react-class": "^15.6.3",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.21",
     "material-ui": "^1.0.0-beta.47",
     "moment": "^2.24.0",
     "react": "^16.7.0",
